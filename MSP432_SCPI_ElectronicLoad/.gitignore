@@ -1,12 +1,12 @@
 /.settings/
 /Debug/
+/Release/
 /.ccsproject
 /.cproject
 /.project
 /.xdchelp
 .config/
 /.launches/
-
 /makefile.defs
 /src/
 /targetConfigs/
