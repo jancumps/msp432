@@ -1,0 +1,11 @@
+/.settings/
+/Debug/
+/.ccsproject
+/.cproject
+/.project
+/.xdchelp
+.config/
+
+/makefile.defs
+/src/
+/targetConfigs/
