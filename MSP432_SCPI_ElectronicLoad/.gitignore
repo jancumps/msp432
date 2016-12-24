@@ -5,7 +5,7 @@
 /.project
 /.xdchelp
 .config/
-
+/.launches/
 
 /makefile.defs
 /src/
