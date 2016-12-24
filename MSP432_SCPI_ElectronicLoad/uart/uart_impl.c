@@ -92,9 +92,9 @@ Void fnTaskUART(UArg arg0, UArg arg1)
  * visual clue: dim user LED B after delivering the reply
  */
 size_t SCPI_Write(scpi_t * context, const char * data, size_t len) {
-    (void) context; // todo: implement LED B flash
+    (void) context;
     GPIO_toggle(Board_LED1); // LED B - visual clue that we send a reply over USB
-    UART_write(uart, data, len);
+    UART_write(uart, data, len); // todo: check if this needs to be writePolling()
     GPIO_toggle(Board_LED1); // LED B - visual clue offB
     return len;
 }
