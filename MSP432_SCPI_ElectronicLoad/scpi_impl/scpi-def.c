@@ -99,6 +99,19 @@ const scpi_command_t scpi_commands[] = {
     {.pattern = "SYSTem:VERSion?", .callback = SCPI_SystemVersionQ,},
 
 
+//    /* DMM */
+//    {.pattern = "MEASure:VOLTage:DC?", .callback = DMM_MeasureVoltageDcQ,},
+//    {.pattern = "CONFigure:VOLTage:DC", .callback = DMM_ConfigureVoltageDc,},
+//    {.pattern = "MEASure:VOLTage:DC:RATio?", .callback = SCPI_StubQ,},
+//    {.pattern = "MEASure:VOLTage:AC?", .callback = DMM_MeasureVoltageAcQ,},
+//    {.pattern = "MEASure:CURRent:DC?", .callback = SCPI_StubQ,},
+//    {.pattern = "MEASure:CURRent:AC?", .callback = SCPI_StubQ,},
+//    {.pattern = "MEASure:RESistance?", .callback = SCPI_StubQ,},
+//    {.pattern = "MEASure:FRESistance?", .callback = SCPI_StubQ,},
+//    {.pattern = "MEASure:FREQuency?", .callback = SCPI_StubQ,},
+//    {.pattern = "MEASure:PERiod?", .callback = SCPI_StubQ,},
+
+
     SCPI_CMD_LIST_END
 };
 
