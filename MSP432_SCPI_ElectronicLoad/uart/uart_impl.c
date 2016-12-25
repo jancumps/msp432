@@ -74,16 +74,13 @@ Void fnTaskUART(UArg arg0, UArg arg1)
 
     SEM_uart_rx = Semaphore_create(0, &sem_params, &eb);
 
-    UART_read(uart, &input, 1); // prime the uart bus to read the first character, non blocking
-
     while (1) {
+        UART_read(uart, &input, 1); // prime the uart bus to read the first character, non blocking
         Semaphore_pend(SEM_uart_rx, BIOS_WAIT_FOREVER); // when a character is received via UART, the interrupt handler will release the binary semaphore
         // in my case: I get an interrupt for a single character, no need to loop.
         GPIO_toggle(Board_LED1); // LED B - visual clue that we've received a request over USB
         scpi_instrument_input((const char *)&input, 1);
         GPIO_toggle(Board_LED1); // LED B - visual clue off
-
-        UART_read(uart, &input, 1); // prime the uart bus to read the next character, non blocking
     }
 }
 
