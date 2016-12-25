@@ -87,8 +87,8 @@ const ADCMSP432_HWAttrs adcMSP432HWAttrs[MSP_EXP432P401R_ADCCOUNT] = {
         .gpioPort = GPIO_PORT_P5,
         .gpioPin = GPIO_PIN4,
         .gpioMode = GPIO_TERTIARY_MODULE_FUNCTION,
-        .refVoltage = REF_A_VREF1_45V,
-        .resolution = ADC_8BIT
+        .refVoltage = REF_A_VREF2_5V,
+        .resolution = ADC_14BIT
     }
 };
 

@@ -44,13 +44,13 @@ Void fxAdcSample(UArg arg0, UArg arg1)
 
     ADC_Params_init(&params);
     adc0 = ADC_open(Board_ADC0, &params);
-//    adc1 = ADC_open(Board_ADC1, &params);
+    adc1 = ADC_open(Board_ADC1, &params);
 
     while (1) {
         Task_sleep(((UInt)arg0) / Clock_tickPeriod);
         /* Blocking mode conversion */
         ADC_convert(adc0, &adcValue0);
-//        ADC_convert(adc1, &adcValue1);
+        ADC_convert(adc1, &adcValue1);
     }
     // theoretically close the ADC driver. THis code is never reached
 //    ADC_close(adc0);
