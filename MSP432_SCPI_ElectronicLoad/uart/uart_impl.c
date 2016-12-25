@@ -50,7 +50,7 @@ Void fnTaskUART(UArg arg0, UArg arg1)
     Semaphore_Params sem_params;
 
     // initialise the SCPI interpreter
-    scpi_instrument_init();
+    scpi_instrument_init(); // todo: check if it's the UART duty to initialise SCPI. What if also ethernet?
 
 
 
@@ -104,9 +104,6 @@ size_t SCPI_Write(scpi_t * context, const char * data, size_t len) {
 
 void UART00_IRQHandler(UART_Handle handle, void *buffer, size_t num)
 {
-    // todo: proper TI-RTOS interrupt handling,
-    // http://www.ti.com/lit/ug/spruex3q/spruex3q.pdf
-    // 3.4 Hardware Interrupts
     Semaphore_post(SEM_uart_rx);
 }
 
