@@ -36,7 +36,7 @@ uint16_t adcValue1;
  *  ======== fxAdcSample ========
  *  Open an ADC instance and get a sampling result from a one-shot conversion.
  */
-Void fxAdcSample(UArg arg0, UArg arg1)
+Void fxTaskAdcSample(UArg arg0, UArg arg1)
 {
     ADC_Handle   adc0;
     ADC_Handle   adc1;
