@@ -5,4 +5,8 @@
  *      Author: jancu
  */
 
+#include "eload_api.h"
 
+double eloadGetVoltageDC() {
+    return (double)3.141592653589793; // todo: get input voltage from the sampled value
+}

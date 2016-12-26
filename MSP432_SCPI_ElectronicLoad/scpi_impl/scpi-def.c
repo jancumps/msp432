@@ -51,7 +51,7 @@
 #include "scpi/scpi.h"
 #include "scpi-def.h"
 
-
+#include "eload_api.h"
 
 
 
@@ -71,8 +71,14 @@ static scpi_result_t My_CoreTstQ(scpi_t * context) {
     return SCPI_RES_OK;
 }
 
+/* Electronic Load commands */
 
+static scpi_result_t DMM_MeasureVoltageDcQ(scpi_t * context) {
 
+    SCPI_ResultDouble(context, eloadGetVoltageDC());
+
+    return SCPI_RES_OK;
+}
 
 
 
@@ -100,7 +106,7 @@ const scpi_command_t scpi_commands[] = {
 
 
 //    /* DMM */
-//    {.pattern = "MEASure:VOLTage:DC?", .callback = DMM_MeasureVoltageDcQ,},
+    {.pattern = "MEASure:VOLTage:DC?", .callback = DMM_MeasureVoltageDcQ,},
 //    {.pattern = "CONFigure:VOLTage:DC", .callback = DMM_ConfigureVoltageDc,},
 //    {.pattern = "MEASure:VOLTage:DC:RATio?", .callback = SCPI_StubQ,},
 //    {.pattern = "MEASure:VOLTage:AC?", .callback = DMM_MeasureVoltageAcQ,},
