@@ -31,7 +31,7 @@
  */
 
 /*
- *  ======== uartecho.c ========
+ *  ======== MSP432_SCPI_ElectronicLoad.c ========
  */
 
 /* XDCtools Header files */
