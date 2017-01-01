@@ -78,6 +78,7 @@ int main(void)
     Board_initGPIO();
     Board_initUART();
     Board_initADC();
+    Board_initPWM();
 
     /* Construct BIOS objects */
     // this is done in the TI-RTOS configuration file

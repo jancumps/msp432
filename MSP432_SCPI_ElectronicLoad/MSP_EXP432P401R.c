@@ -321,7 +321,7 @@ const PWMTimerMSP432_HWAttrsV1 pwmTimerMSP432HWAttrs[MSP_EXP432P401R_PWMCOUNT] =
         .clockSource = TIMER_A_CLOCKSOURCE_SMCLK,
         .compareRegister = TIMER_A_CAPTURECOMPARE_REGISTER_1,
         .gpioPort = GPIO_PORT_P2,
-        .gpioPinIndex = GPIO_PIN1,
+        .gpioPinIndex = GPIO_PIN6, // changed Board_PWM0 mapped to 2.6
         .pwmMode = GPIO_PRIMARY_MODULE_FUNCTION
     },
     {
@@ -329,7 +329,7 @@ const PWMTimerMSP432_HWAttrsV1 pwmTimerMSP432HWAttrs[MSP_EXP432P401R_PWMCOUNT] =
         .clockSource = TIMER_A_CLOCKSOURCE_SMCLK,
         .compareRegister = TIMER_A_CAPTURECOMPARE_REGISTER_2,
         .gpioPort = GPIO_PORT_P2,
-        .gpioPinIndex = GPIO_PIN2,
+        .gpioPinIndex = GPIO_PIN4, // changed Board_PWM1 mapped to 2.4
         .pwmMode = GPIO_PRIMARY_MODULE_FUNCTION
     }
 };
@@ -353,10 +353,15 @@ const PWM_Config PWM_config[] = {
  */
 void MSP_EXP432P401R_initPWM(void)
 {
-    /* Use Port Map on Port2 get Timer outputs on pins with LEDs (2.1, 2.2) */
+    /* Use Port Map on Port2 get Timer outputs on pins 2.4, 2.6) */
+    /* this is different then the standard mapping for the Launchpad
+     * that puts Timer outputs on pins with LEDs (2.1, 2.2)
+     * Board_PWM0 mapped to 2.6
+     * Board_PWM1 mapped to 2.4
+     */
     const uint8_t portMap [] = {
-        PM_NONE, PM_TA1CCR1A, PM_TA1CCR2A, PM_NONE,
-        PM_NONE, PM_NONE,     PM_NONE,     PM_NONE
+        PM_NONE, PM_NONE, PM_NONE, PM_NONE,
+        PM_TA1CCR2A, PM_NONE, PM_TA1CCR1A, PM_NONE
     };
 
     /* Mapping capture compare registers to Port 2 */
