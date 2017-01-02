@@ -253,11 +253,11 @@ void MSP_EXP432P401R_initGPIO(void)
 I2CMSP432_Object i2cMSP432Objects[MSP_EXP432P401R_I2CCOUNT];
 
 const I2CMSP432_HWAttrs i2cMSP432HWAttrs[MSP_EXP432P401R_I2CCOUNT] = {
-    {
-        .baseAddr = EUSCI_B0_BASE,
-        .intNum = INT_EUSCIB0,
-        .intPriority = (~0),
-        .clockSource = EUSCI_B_I2C_CLOCKSOURCE_SMCLK
+    { // jc I have changed RTOS default of B0 to B1. Avoids later conflict when we want to use SPI and a CC3100
+     .baseAddr = EUSCI_B1_BASE,
+     .intNum = INT_EUSCIB1,
+     .intPriority = (~0),
+     .clockSource = EUSCI_B_I2C_CLOCKSOURCE_SMCLK
     }
 };
 
@@ -276,14 +276,22 @@ const I2C_Config I2C_config[] = {
 void MSP_EXP432P401R_initI2C(void)
 {
     /*
+     * jc: I have resolved below comments. Using B1 for SCI, Pin 6.4 and 6.5
      * NOTE: TI-RTOS examples configure EUSCIB0 as either SPI or I2C.  Thus,
      * a conflict occurs when the I2C & SPI drivers are used simultaneously in
      * an application.  Modify the pin mux settings in this file and resolve the
      * conflict before running your the application.
      */
-    /* Configure Pins 1.6 & 1.7 as SDA & SCL, respectively. */
-    MAP_GPIO_setAsPeripheralModuleFunctionInputPin(GPIO_PORT_P1,
-        GPIO_PIN6 | GPIO_PIN7, GPIO_PRIMARY_MODULE_FUNCTION);
+    /* Select I2C function for I2C_SCL(P6.5) & I2C_SDA(P6.4) */
+    MAP_GPIO_setAsPeripheralModuleFunctionOutputPin(
+            GPIO_PORT_P6,
+            GPIO_PIN5,
+            GPIO_PRIMARY_MODULE_FUNCTION);
+
+    MAP_GPIO_setAsPeripheralModuleFunctionOutputPin(
+            GPIO_PORT_P6,
+            GPIO_PIN4,
+            GPIO_PRIMARY_MODULE_FUNCTION);
 
     /* Initialize the I2C driver */
     I2C_init();
