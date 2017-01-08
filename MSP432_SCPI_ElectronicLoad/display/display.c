@@ -21,8 +21,8 @@ Graphics_Context g_sContext;
 
 /*
  *  ======== fnTaskDisplay ========
- *  Toggle the Board_LED0. The Task_sleep is determined by arg0 which
- *  is configured for the heartBeat Task instance.
+ *  Handle (the optional) LCD display. The Task_sleep is determined by arg0 which
+ *  is configured for the fnTaskDisplay Task instance.
  */
 Void fnTaskDisplay(UArg arg0, UArg arg1)
 {
