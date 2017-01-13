@@ -9,3 +9,5 @@
    http://brettbeauregard.com/blog/2011/04/improving-the-beginners-pid-introduction/
 
  - For function documentation see:  http://playground.arduino.cc/Code/PIDLibrary
+ 
+ Ported to ti-RTOS by Jan Cumps - please respect the original author license
