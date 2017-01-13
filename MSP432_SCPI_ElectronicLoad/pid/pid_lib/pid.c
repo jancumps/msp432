@@ -18,6 +18,8 @@
 
 #include <xdc/runtime/Timestamp.h>
 
+#include "eload_api.h"
+
     void pidInitialize();
     long millis();
 
@@ -60,10 +62,10 @@
         mySetpoint = Setpoint;
         inAuto = false;
 
-        pidSetOutputLimits(0, 255);               //default output limit corresponds to
+        pidSetOutputLimits(0, 255);               // todo ? default output limit corresponds to
                                                     //the arduino pwm limits
 
-        SampleTime = 100;                           //default Controller Sample Time is 0.1 seconds
+        SampleTime = 100;                           // todo? default Controller Sample Time is 0.1 seconds
 
         pidSetControllerDirection(ControllerDirection);
         pidSetTunings(Kp, Ki, Kd);

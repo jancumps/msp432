@@ -18,23 +18,33 @@
 
 
 #include "pid.h"
+#include "eload_api.h"
+
+//Define Variables we'll be connecting to
+double Setpoint, Input, Output;
+
+
+void strategyConstantCurrentInit(UInt sampleTime, double setPoint);
+void strategyConstantCurrent();
 
 /*
- *  ======== fnTaskPIDy ========
+ *  ======== fnTaskPID ========
  *
  */
 Void fnTaskPID(UArg arg0, UArg arg1)
 {
-    //Define Variables we'll be connecting to
-    double Setpoint, Input, Output;
 
-    //Specify the links and initial tuning parameters
-    double Kp=2, Ki=5, Kd=1;
-    pidInit(&Input, &Output, &Setpoint, Kp, Ki, Kd, PID_DIRECT);
+    switch (eloadGetMode()) {
+    case ELOAD_MODE_CURRENT:
+        strategyConstantCurrentInit(((UInt)arg0) / Clock_tickPeriod, 0.0);
+        break;
+    default:
+        System_exit(-1); // todo:implement other modes
+        break;
+     }
 
-    //initialize the variables we're linked to
 //     Input = analogRead(PIN_INPUT); todo: get a value
-     Setpoint = 100;
+
 
      //turn the PID on
      pidSetMode(PID_AUTOMATIC);
@@ -43,14 +53,36 @@ Void fnTaskPID(UArg arg0, UArg arg1)
     while (1) {
         Task_sleep(((UInt)arg0) / Clock_tickPeriod);
 
-
-//        Input = analogRead(PIN_INPUT); todo: get a value
-        pidCompute();
-//        analogWrite(PIN_OUTPUT, Output);   todo: can go?
-
+        switch (eloadGetMode()) {
+        case ELOAD_MODE_CURRENT:
+            strategyConstantCurrent();
+            break;
+        default:
+            System_exit(-1); // todo:implement other modes
+            break;
+         }
 
     }
 }
 
+
+void strategyConstantCurrentInit(UInt sampleTime, double setPoint) {
+    //Specify the links and initial tuning parameters
+    double Kp=2, Ki=5, Kd=1; // todo make these good values for our strategy
+    Setpoint = setPoint;
+    pidSetSampleTime(sampleTime);
+    pidSetOutputLimits(0, eLoadGetOutputRangeMax());
+    pidInit(&Input, &Output, &Setpoint, Kp, Ki, Kd, PID_DIRECT);
+
+
+
+}
+
+void strategyConstantCurrent() {
+    //        Input = analogRead(PIN_INPUT); todo: get a value
+            pidCompute();
+    //        analogWrite(PIN_OUTPUT, Output);   todo: this must be replaced by the change to the eload
+
+}
 
 

@@ -8,6 +8,16 @@
 #ifndef ELOAD_API_ELOAD_API_H_
 #define ELOAD_API_ELOAD_API_H_
 
+#include <stdint.h>
+
+typedef enum eload_mode {
+    ELOAD_MODE_CURRENT = 0,
+    ELOAD_MODE_VOLTAGE,
+    ELOAD_MODE_POWER,
+    ELOAD_MODE_RESISTANCE,
+    ELOAD_MODE_COUNT
+}eload_mode;
+
 /*!
  *  @brief  Retrieve voltage sampled from the instrument terminals
  *
@@ -19,6 +29,15 @@ e.
  */
 
 double eloadGetVoltageDC();
+
+void eloadSetMode(eload_mode mode);
+eload_mode eloadGetMode();
+
+
+uint32_t eLoadGetCurrentRangeMax();
+uint32_t eLoadGetVoltageRangeMax();
+uint32_t eLoadGetOutputRangeMax();
+
 
 
 #endif /* ELOAD_API_ELOAD_API_H_ */
