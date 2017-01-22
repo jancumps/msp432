@@ -47,6 +47,7 @@ Void fnTaskDisplay(UArg arg0, UArg arg1)
 
     while (1) {
         Task_sleep((UInt)arg0);
+        GrClearDisplay(&g_sContext);
         switch (eloadGetMode()) {
         case ELOAD_MODE_CURRENT:
             GrStringDraw(&g_sContext, "mode: I", -1, 5, 0, 0);
