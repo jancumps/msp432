@@ -18,8 +18,6 @@
 
 #include <xdc/runtime/Timestamp.h>
 
-#include "eload_api.h"
-
     void pidInitialize();
     long millis();
 
