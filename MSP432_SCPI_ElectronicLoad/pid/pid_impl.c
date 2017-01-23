@@ -80,8 +80,9 @@ void strategyConstantCurrentInit(UInt sampleTime, double setPoint) {
 
 void strategyConstantCurrent() {
     //        Input = analogRead(PIN_INPUT); todo: get a value
-            pidCompute();
+            if (pidCompute()) {
     //        analogWrite(PIN_OUTPUT, Output);   todo: this must be replaced by the change to the eload
+            }
 
 }
 
