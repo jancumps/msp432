@@ -41,7 +41,6 @@
 /* BIOS Header files */
 #include <ti/sysbios/BIOS.h>
 #include <ti/sysbios/knl/Task.h>
-#include <ti/sysbios/knl/Clock.h>
 
 /* TI-RTOS Header files */
 #include <ti/drivers/GPIO.h>
@@ -63,7 +62,7 @@ Void fnTaskHeartbeat(UArg arg0, UArg arg1)
     /* Turn on user LED */
     GPIO_write(Board_LED0, Board_LED_ON); // will heartbeat when RTOS runs
     while (1) {
-        Task_sleep(((UInt)arg0) / Clock_tickPeriod);
+        Task_sleep((UInt)arg0);
         GPIO_toggle(Board_LED0);
     }
 }

@@ -122,9 +122,15 @@ static scpi_result_t SCPI_DevelopDac(scpi_t * context) {
 
      /* read first parameter if present */
      if (!SCPI_ParamUInt32(context, &param1, TRUE)) {
+         // todo push error on stack if value missing
          return SCPI_RES_ERR;
      }
-     eLoadDevelopDac(uModule, (uint16_t)param1);
+     if (param1 > UINT16_MAX) {
+         // todo push error on stack if larger than 16 bits
+         return SCPI_RES_ERR;
+     } else {
+         eLoadDevelopDac(uModule, (uint16_t)param1);
+     }
 
 
     return SCPI_RES_OK;

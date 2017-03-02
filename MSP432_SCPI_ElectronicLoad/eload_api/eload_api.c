@@ -11,6 +11,9 @@
 #include <xdc/runtime/Error.h>
 #include <xdc/cfg/global.h> // needed to get the global from the .cfg file
 
+/* BIOS Header files */
+#include <ti/sysbios/BIOS.h>
+
 
 #include <stdint.h>
 #include "eload_api.h"
@@ -48,7 +51,7 @@ void eLoadTest() {
     // todo: make this a system test, currently uset to test different things
     MsgDAC      pMsg;
 
-    pMsg.value = 0xF000;
+    pMsg.value = 0x4000;
     /* enqueue message */
     Mailbox_post(mbDAC, &pMsg, 10);
 
@@ -59,6 +62,6 @@ void eLoadDevelopDac(uint32_t uModule, uint16_t value) {
 
     pMsg.value = value; // todo - for a multi DAC solution, this needs to be extended
     /* enqueue message */
-    Mailbox_post(mbDAC, &pMsg, 10);
+    Mailbox_post(mbDAC, &pMsg, BIOS_WAIT_FOREVER);
 
 }

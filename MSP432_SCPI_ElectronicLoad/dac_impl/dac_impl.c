@@ -28,9 +28,9 @@
 #define DAC_I2C_ADDR           (0x4C)
 
 
-uint8_t         txBuffer[3];
-uint8_t         rxBuffer[1]; // DAC doesn't read
-I2C_Transaction i2cTransaction;
+uint8_t         d_txBuffer[3];
+uint8_t         d_rxBuffer[1]; // DAC doesn't read
+I2C_Transaction d_i2cTransaction;
 MsgDAC msg;
 
 
@@ -40,21 +40,21 @@ MsgDAC msg;
  */
 Void fnTaskDAC(UArg arg0, UArg arg1)
 {
-    i2cTransaction.writeBuf = txBuffer;
-    i2cTransaction.readBuf = rxBuffer;
-    i2cTransaction.slaveAddress = DAC_I2C_ADDR;
-    i2cTransaction.writeCount = 3;
-    i2cTransaction.readCount = 0;
-    txBuffer[0] = 0x10; // set value direct
+    d_i2cTransaction.writeBuf = d_txBuffer;
+    d_i2cTransaction.readBuf = d_rxBuffer;
+    d_i2cTransaction.slaveAddress = DAC_I2C_ADDR;
+    d_i2cTransaction.writeCount = 3;
+    d_i2cTransaction.readCount = 0;
+    d_txBuffer[0] = 0x10; // set value direct
 
     while (1) {
 
         /* wait for mailbox to be posted by writer() */
         if (Mailbox_pend(mbDAC, &msg, BIOS_WAIT_FOREVER)) {
 
-            txBuffer[1] = msg.value >> 8; // MSB
-            txBuffer[2] = msg.value; // LSB
-            if (! I2C_transfer(i2c_implGetHandle(), &i2cTransaction)) {
+            d_txBuffer[1] = msg.value >> 8; // MSB
+            d_txBuffer[2] = msg.value; // LSB
+            if (! I2C_transfer(i2c_implGetHandle(), &d_i2cTransaction)) {
                 System_printf("I2C Bus fault\n");
                 System_flush();
             }
