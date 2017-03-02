@@ -5,8 +5,16 @@
  *      Author: jancu
  */
 
+/* XDCtools Header files */
+#include <xdc/std.h>
+#include <xdc/runtime/System.h>
+#include <xdc/runtime/Error.h>
+#include <xdc/cfg/global.h> // needed to get the global from the .cfg file
+
+
 #include <stdint.h>
 #include "eload_api.h"
+#include "dac_impl.h"
 
 eload_mode eloadMode = ELOAD_MODE_CURRENT;
 
@@ -34,4 +42,23 @@ uint32_t eLoadGetVoltageRangeMax() {
 
 uint32_t eLoadGetOutputRangeMax() {
     return 0b1111111111111111; // 16 bit DAC
+}
+
+void eLoadTest() {
+    // todo: make this a system test, currently uset to test different things
+    MsgDAC      pMsg;
+
+    pMsg.value = 0xF000;
+    /* enqueue message */
+    Mailbox_post(mbDAC, &pMsg, 10);
+
+}
+
+void eLoadDevelopDac(uint32_t uModule, uint16_t value) {
+    MsgDAC      pMsg;
+
+    pMsg.value = value; // todo - for a multi DAC solution, this needs to be extended
+    /* enqueue message */
+    Mailbox_post(mbDAC, &pMsg, 10);
+
 }

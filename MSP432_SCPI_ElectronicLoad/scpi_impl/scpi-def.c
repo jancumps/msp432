@@ -66,6 +66,8 @@
  */
 static scpi_result_t My_CoreTstQ(scpi_t * context) {
 
+    eLoadTest();
+
     SCPI_ResultInt32(context, 0);
 
     return SCPI_RES_OK;
@@ -76,6 +78,54 @@ static scpi_result_t My_CoreTstQ(scpi_t * context) {
 static scpi_result_t DMM_MeasureVoltageDcQ(scpi_t * context) {
 
     SCPI_ResultDouble(context, eloadGetVoltageDC());
+
+    return SCPI_RES_OK;
+}
+
+
+
+static scpi_result_t DACGetModule(scpi_t *context, uint32_t *uModule) {
+    int32_t numbers[1];
+
+    // retrieve the DAC channel. Can be 1 - 4
+    SCPI_CommandNumbers(context, numbers, 1, 1);
+    if (! ((numbers[0] > 0) && (numbers[0] < 5) )) {
+        // todo push error on stack if the DAC CHANNEL not between 1 and 4
+        return SCPI_RES_ERR;
+    } else {
+        *uModule = numbers[0];
+        return SCPI_RES_OK;
+    }
+}
+
+
+
+/**
+ * Set DAC output directly
+
+ *
+ * Return SCPI_RES_OK
+ *
+
+ */
+static scpi_result_t SCPI_DevelopDac(scpi_t * context) {
+
+    uint32_t param1;
+    uint32_t uModule;
+
+
+
+    if (DACGetModule(context, &uModule) == SCPI_RES_ERR) {
+        return SCPI_RES_ERR;
+    }
+
+
+     /* read first parameter if present */
+     if (!SCPI_ParamUInt32(context, &param1, TRUE)) {
+         return SCPI_RES_ERR;
+     }
+     eLoadDevelopDac(uModule, (uint16_t)param1);
+
 
     return SCPI_RES_OK;
 }
@@ -105,7 +155,7 @@ const scpi_command_t scpi_commands[] = {
     {.pattern = "SYSTem:VERSion?", .callback = SCPI_SystemVersionQ,},
 
 
-//    /* DMM */
+    /* DMM */
     {.pattern = "MEASure:VOLTage:DC?", .callback = DMM_MeasureVoltageDcQ,},
 //    {.pattern = "CONFigure:VOLTage:DC", .callback = DMM_ConfigureVoltageDc,},
 //    {.pattern = "MEASure:VOLTage:DC:RATio?", .callback = SCPI_StubQ,},
@@ -116,6 +166,8 @@ const scpi_command_t scpi_commands[] = {
 //    {.pattern = "MEASure:FRESistance?", .callback = SCPI_StubQ,},
 //    {.pattern = "MEASure:FREQuency?", .callback = SCPI_StubQ,},
 //    {.pattern = "MEASure:PERiod?", .callback = SCPI_StubQ,},
+    /* LOW LEVEL for DEVELOP only */
+    {.pattern = "DEVElop:DAC#", .callback = SCPI_DevelopDac,},
 
 
     SCPI_CMD_LIST_END

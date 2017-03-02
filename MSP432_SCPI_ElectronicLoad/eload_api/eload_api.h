@@ -39,5 +39,9 @@ uint32_t eLoadGetVoltageRangeMax();
 uint32_t eLoadGetOutputRangeMax();
 
 
+void eLoadTest();
+void eLoadDevelopDac(uint32_t uModule, uint16_t value);
+
+
 
 #endif /* ELOAD_API_ELOAD_API_H_ */
