@@ -79,10 +79,10 @@ Void fnTaskADC(UArg arg0, UArg arg1)
 
     while (1)
     {
-        for (i =0; i< 3; i++) {
+        for (i =0; i< 4; i++) {
+            // we write value to the inactive robin
+            // store value of ADC[1]
             adcRoundRobin[adcRoundRobinIndex ? 0 : 1].raw[i] = sampleADC(i, (UInt)arg0/4);
-//            Task_sleep((UInt)arg0/4); // sleep one/4th each sample
-//            Task_sleep(500);
         }
 
 
@@ -97,7 +97,6 @@ Void fnTaskADC(UArg arg0, UArg arg1)
         //                          adcImplToFloat(adcRoundRobin[adcRoundRobinIndex ? 0 : 1].raw[0]) );
         //            System_flush();
 
-//        Task_sleep((UInt)arg0);
 
     }
 
@@ -135,10 +134,10 @@ float adcImplToFloat(uint16_t uRaw) {
 
 
 uint16_t sampleADC(uint32_t uModule, UInt uSleep) {
-    // todo: remove - this is for peter Oakes' testbed
-    if (uModule > 1) {
-        return 0xFFFF;
-    }
+//    // todo: remove - this is for peter Oakes' testbed
+//    if (uModule > 1) {
+//        return 0xFFFF;
+//    }
 
     uint16_t uRetval = 0u;
 
@@ -166,8 +165,6 @@ uint16_t sampleADC(uint32_t uModule, UInt uSleep) {
     if (I2C_transfer(i2c_implGetHandle(), &a_i2cTransaction)) {
         /* Extract degrees C from the received data; see TMP102 datasheet */
 
-        // we write value to the inactive robin
-        // store value of ADC0
         uRetval = ((a_rxBuffer[0] << 8) | a_rxBuffer[1]);
 
     }
