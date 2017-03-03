@@ -98,6 +98,20 @@ static scpi_result_t DACGetModule(scpi_t *context, uint32_t *uModule) {
     }
 }
 
+static scpi_result_t ADCGetModule(scpi_t *context, uint32_t *uModule) {
+    int32_t numbers[1];
+
+    // retrieve the ADC channel. Can be 1 - 4
+    SCPI_CommandNumbers(context, numbers, 1, 1);
+    if (! ((numbers[0] > 0) && (numbers[0] < 5) )) {
+        // todo push error on stack if the ADC CHANNEL not between 1 and 4
+        return SCPI_RES_ERR;
+    } else {
+        *uModule = numbers[0];
+        return SCPI_RES_OK;
+    }
+}
+
 
 
 /**
@@ -108,7 +122,7 @@ static scpi_result_t DACGetModule(scpi_t *context, uint32_t *uModule) {
  *
 
  */
-static scpi_result_t SCPI_DevelopDac(scpi_t * context) {
+static scpi_result_t SCPI_DevelopSetDac(scpi_t * context) {
 
     uint32_t param1;
     uint32_t uModule;
@@ -129,9 +143,21 @@ static scpi_result_t SCPI_DevelopDac(scpi_t * context) {
          // todo push error on stack if larger than 16 bits
          return SCPI_RES_ERR;
      } else {
-         eLoadDevelopDac(uModule, (uint16_t)param1);
+         eLoadDevelopSetDac(uModule - 1, param1);
      }
 
+
+    return SCPI_RES_OK;
+}
+
+static scpi_result_t SCPI_DevelopGetAdc(scpi_t * context) {
+
+    uint32_t uModule;
+
+    if (ADCGetModule(context, &uModule) == SCPI_RES_ERR) {
+        return SCPI_RES_ERR;
+    }
+    SCPI_ResultUInt32(context, eLoadDevelopGetAdc(uModule - 1));
 
     return SCPI_RES_OK;
 }
@@ -172,8 +198,10 @@ const scpi_command_t scpi_commands[] = {
 //    {.pattern = "MEASure:FRESistance?", .callback = SCPI_StubQ,},
 //    {.pattern = "MEASure:FREQuency?", .callback = SCPI_StubQ,},
 //    {.pattern = "MEASure:PERiod?", .callback = SCPI_StubQ,},
+
     /* LOW LEVEL for DEVELOP only */
-    {.pattern = "DEVElop:DAC#", .callback = SCPI_DevelopDac,},
+    {.pattern = "DEVElop:DAC#", .callback = SCPI_DevelopSetDac,},
+    {.pattern = "DEVElop:ADC#?", .callback = SCPI_DevelopGetAdc,},
 
 
     SCPI_CMD_LIST_END

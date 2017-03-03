@@ -18,6 +18,7 @@
 #include <stdint.h>
 #include "eload_api.h"
 #include "dac_impl.h"
+#include "adc_impl.h"
 
 eload_mode eloadMode = ELOAD_MODE_CURRENT;
 
@@ -57,11 +58,17 @@ void eLoadTest() {
 
 }
 
-void eLoadDevelopDac(uint32_t uModule, uint16_t value) {
+void eLoadDevelopSetDac(uint32_t uModule, uint32_t value) {
     MsgDAC      pMsg;
 
-    pMsg.value = value; // todo - for a multi DAC solution, this needs to be extended
+    // value has to be validated before it arrives here. We assume it's valid
+    pMsg.value = (uint16_t)value; // todo - for a multi DAC solution, this needs to be extended
     /* enqueue message */
     Mailbox_post(mbDAC, &pMsg, BIOS_WAIT_FOREVER);
 
+}
+
+uint32_t eLoadDevelopGetAdc(uint32_t uModule) {
+
+    return getAdc(uModule);
 }

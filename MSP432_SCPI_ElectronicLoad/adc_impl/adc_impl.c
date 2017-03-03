@@ -34,11 +34,19 @@
 // volts per step
 const float VPS = 6.144 / 32768.0; // todo: is this correct for a 2v ref?
 
-uint16_t        ADCValue;
-float           ADCVoltage;
-bool            ValNegative = false;
 
+// we capture the ADC values in a round robin array of two positions
+// read will always happen from the one that's not written to
+// the non-read buffer is available for writing, and is marked as the active read buffr after that
+// adcRoundRobinIndex points to the active read buffer
+// if you use getAdc() to retrieve values, this is sorted out for you
 
+typedef struct ADCValues {
+    uint16_t value[4];
+} ADCValues;
+
+volatile ADCValues adcRoundRobin[2];
+volatile uint32_t adcRoundRobinIndex = 0;
 
 uint8_t         a_txBuffer[3];
 uint8_t         a_rxBuffer[2];
@@ -50,6 +58,10 @@ I2C_Transaction a_i2cTransaction;
  */
 Void fnTaskADC(UArg arg0, UArg arg1)
 {
+    uint16_t        ADCValue;
+    float           ADCVoltage;
+    bool            ValNegative = false;
+
     a_i2cTransaction.writeBuf = a_txBuffer;
     a_i2cTransaction.readBuf = a_rxBuffer;
     a_i2cTransaction.slaveAddress = ADC_I2C_ADDR;
@@ -85,6 +97,15 @@ Void fnTaskADC(UArg arg0, UArg arg1)
             ADCValue = (ValNegative ? 0x8000 - (int)(0x7FFF&ADCValue) : ADCValue) ;
             ADCVoltage = (ValNegative ? (ADCValue * VPS) *-1: ADCValue * VPS ) ;
 
+            // we write value to the inactive robin
+            // store value of ADC0
+            adcRoundRobin[adcRoundRobinIndex ? 0 : 1].value[0] = ADCValue;
+            // todo: values of ADC 1 - 3
+
+            // after value(s) written, we activate the inactive robin
+            adcRoundRobinIndex = adcRoundRobinIndex ? 0 : 1;
+
+
             System_printf("ADCValue= %d, ADCVolts= %f \n", ADCValue, ADCVoltage );
             System_flush();
         }
@@ -96,6 +117,10 @@ Void fnTaskADC(UArg arg0, UArg arg1)
 
     }
 
+}
+
+uint16_t getAdc(uint32_t uModule) {
+    return adcRoundRobin[adcRoundRobinIndex].value[uModule];
 }
 
 

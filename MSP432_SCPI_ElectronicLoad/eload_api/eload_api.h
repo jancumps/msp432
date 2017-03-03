@@ -40,7 +40,8 @@ uint32_t eLoadGetOutputRangeMax();
 
 
 void eLoadTest();
-void eLoadDevelopDac(uint32_t uModule, uint16_t value);
+void eLoadDevelopSetDac(uint32_t uModule, uint32_t value);
+uint32_t eLoadDevelopGetAdc(uint32_t uModule);
 
 
 
