@@ -62,63 +62,31 @@ uint16_t sampleADC(uint32_t uModule);
  */
 Void fnTaskADC(UArg arg0, UArg arg1)
 {
+    uint32_t i;
 
     a_i2cTransaction.writeBuf = a_txBuffer;
     a_i2cTransaction.readBuf = a_rxBuffer;
     a_i2cTransaction.slaveAddress = ADC_I2C_ADDR;
 
-
-
-    /* Point to the ADC ASD1115 and read input 0 */
-    // ANC1 and GND, 4.096v, 128s/s
-    a_i2cTransaction.writeCount = 3;
-    a_i2cTransaction.readCount = 0;
-    a_txBuffer[0] = 0x01;
-    a_txBuffer[1] = ADS1115_CFG_H;
-    a_txBuffer[2] = ADS1115_CFG_L;
-
-
-
-    /* Init ADC and Start Sampling */
-    if (! I2C_transfer(i2c_implGetHandle(), &a_i2cTransaction)){
-        System_printf("Sampling Start Failed \n");
-    }
-    Task_sleep(500); // todo : do we need to pause here?
     while (1)
     {
+        for (i =0; i< 3; i++) {
+            adcRoundRobin[adcRoundRobinIndex ? 0 : 1].raw[i] = sampleADC(i);
+        }
+
+
+        // after value(s) written, we activate the inactive robin
+        adcRoundRobinIndex = adcRoundRobinIndex ? 0 : 1;
+
+        // commented because mcu spends more time in these lines than in the remainder
+        // enable when needed, then comment out again
+        // check the schedule before uncommenting. Should be 1s or more
+        //            System_printf("ADCValue= %d, ADCVolts= %f \n",
+        //                          adcImplToValue(adcRoundRobin[adcRoundRobinIndex ? 0 : 1].raw[0]),
+        //                          adcImplToFloat(adcRoundRobin[adcRoundRobinIndex ? 0 : 1].raw[0]) );
+        //            System_flush();
+
         Task_sleep((UInt)arg0);
-        a_txBuffer[0] = 0x00;
-        a_i2cTransaction.writeCount = 1;
-        a_i2cTransaction.readCount = 2;
-        /* Read ADC */
-        if (I2C_transfer(i2c_implGetHandle(), &a_i2cTransaction)) {
-            /* Extract degrees C from the received data; see TMP102 datasheet */
-
-            // we write value to the inactive robin
-            // store value of ADC0
-            adcRoundRobin[adcRoundRobinIndex ? 0 : 1].raw[0] = ((a_rxBuffer[0] << 8) | a_rxBuffer[1]);
-             // todo: values of ADC 1 - 3
-
-            // debug for Peter: oxFFFF for not implemented channels
-            adcRoundRobin[adcRoundRobinIndex ? 0 : 1].raw[1] = 0xFFFF;
-            adcRoundRobin[adcRoundRobinIndex ? 0 : 1].raw[2] = 0xFFFF;
-            adcRoundRobin[adcRoundRobinIndex ? 0 : 1].raw[3] = 0xFFFF;
-
-
-            // after value(s) written, we activate the inactive robin
-            adcRoundRobinIndex = adcRoundRobinIndex ? 0 : 1;
-
-
-//            System_printf("ADCValue= %d, ADCVolts= %f \n",
-//                          adcImplToValue(adcRoundRobin[adcRoundRobinIndex ? 0 : 1].raw[0]),
-//                          adcImplToFloat(adcRoundRobin[adcRoundRobinIndex ? 0 : 1].raw[0]) );
-//            System_flush();
-        }
-        else {
-            System_printf("ADC Read I2C Bus fault\n");
-            System_flush();
-        }
-
 
     }
 
@@ -156,7 +124,47 @@ float adcImplToFloat(uint16_t uRaw) {
 
 
 uint16_t sampleADC(uint32_t uModule) {
-    uint16_t retval = 0u;
-    // todo : for 4 ADC ports
+    // todo: remove - this is for peter Oakes' testbed
+    if (uModule > 0) {
+        return 0xFFFF;
+    }
+
+    uint16_t uRetval = 0u;
+
+    /* Point to the ADC ASD1115 and read input 0 */
+    // ANC1 and GND, 4.096v, 128s/s
+    a_i2cTransaction.writeCount = 3;
+    a_i2cTransaction.readCount = 0;
+    a_txBuffer[0] = 0x01;
+    a_txBuffer[1] = ADS1115_CFG_H;
+    a_txBuffer[2] = ADS1115_CFG_L;
+
+
+
+    /* Init ADC and Start Sampling */
+    if (! I2C_transfer(i2c_implGetHandle(), &a_i2cTransaction)){
+        System_printf("Sampling Start Failed \n");
+    }
+
+
+    a_txBuffer[0] = 0x00;
+    a_i2cTransaction.writeCount = 1;
+    a_i2cTransaction.readCount = 2;
+    /* Read ADC */
+    if (I2C_transfer(i2c_implGetHandle(), &a_i2cTransaction)) {
+        /* Extract degrees C from the received data; see TMP102 datasheet */
+
+        // we write value to the inactive robin
+        // store value of ADC0
+        uRetval = ((a_rxBuffer[0] << 8) | a_rxBuffer[1]);
+
+    }
+    else {
+        System_printf("ADC Read I2C Bus fault\n");
+    }
+
+
+
+    return uRetval;
 }
 
