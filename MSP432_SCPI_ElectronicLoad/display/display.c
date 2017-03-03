@@ -18,6 +18,10 @@
 #include <lcddriver/sharp96x96.h>
 
 #include "eload_api.h"
+#include "adc_impl.h"
+
+// for printf
+#include <stdio.h>
 
 Graphics_Context g_sContext;
 
@@ -28,6 +32,10 @@ Graphics_Context g_sContext;
  */
 Void fnTaskDisplay(UArg arg0, UArg arg1)
 {
+    uint32_t i;
+    int8_t formatString[20];
+
+
     Sharp96x96_LCDInit();
     GrContextInit(&g_sContext, &g_sharp96x96LCD);
     GrContextForegroundSet(&g_sContext, ClrBlack);
@@ -56,6 +64,12 @@ Void fnTaskDisplay(UArg arg0, UArg arg1)
             GrStringDraw(&g_sContext, "mode: not implemented", -1, 5, 0, 0);
             break;
          }
+
+//        for (i = 0; i < 4; i++) {
+//            // for demo purpose, show ADC voltages
+//            sprintf(formatString, "ADC%i: %06.3f\0", i + 1, adcImplGetAdcVoltage(i));
+//            GrStringDraw(&g_sContext, formatString, -1, 4, (15 + 12*i), 0);
+//        }
         GrFlush(&g_sContext);
 
     }

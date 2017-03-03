@@ -9,5 +9,6 @@
 #define ADC_IMPL_ADC_IMPL_H_
 
 uint16_t adcImplGetAdc(uint32_t uModule);
+//float adcImplGetAdcVoltage(uint32_t uModule);
 
 #endif /* ADC_IMPL_ADC_IMPL_H_ */

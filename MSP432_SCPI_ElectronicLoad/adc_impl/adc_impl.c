@@ -31,9 +31,6 @@
 #define ADS1115_CFG_H 0b11000000
 // bits 7-0  0x85 128SPS, Disable comparator
 #define ADS1115_CFG_L 0b10000011
-// volts per step
-const float VPS = 6.144 / 32768.0; // todo: is this correct for a 2v ref?
-
 
 // we capture the ADC values in a round robin array of two positions
 // read will always happen from the one that's not written to
@@ -43,14 +40,22 @@ const float VPS = 6.144 / 32768.0; // todo: is this correct for a 2v ref?
 
 typedef struct ADCValues {
     uint16_t value[4];
+//    float voltage[4];
 } ADCValues;
 
 volatile ADCValues adcRoundRobin[2];
 volatile uint32_t adcRoundRobinIndex = 0;
 
+// volts per step
+const float VPS = 6.144 / 32768.0; // todo: is this correct for a 2v ref?
+
 uint8_t         a_txBuffer[3];
 uint8_t         a_rxBuffer[2];
 I2C_Transaction a_i2cTransaction;
+
+
+
+uint16_t sampleADC(uint32_t uModule);
 
 /*
  *  ======== fnTaskADC ========
@@ -100,7 +105,16 @@ Void fnTaskADC(UArg arg0, UArg arg1)
             // we write value to the inactive robin
             // store value of ADC0
             adcRoundRobin[adcRoundRobinIndex ? 0 : 1].value[0] = ADCValue;
-            // todo: values of ADC 1 - 3
+//            adcRoundRobin[adcRoundRobinIndex ? 0 : 1].value[0] = ADCVoltage;
+             // todo: values of ADC 1 - 3
+
+            // debug for Peter: oxFFFF for not implemented channels
+            adcRoundRobin[adcRoundRobinIndex ? 0 : 1].value[1] = 0xFFFF;
+            adcRoundRobin[adcRoundRobinIndex ? 0 : 1].value[2] = 0xFFFF;
+            adcRoundRobin[adcRoundRobinIndex ? 0 : 1].value[3] = 0xFFFF;
+//            adcRoundRobin[adcRoundRobinIndex ? 0 : 1].voltage[1] = 0xFFFF;
+//            adcRoundRobin[adcRoundRobinIndex ? 0 : 1].voltage[2] = 0xFFFF;
+//            adcRoundRobin[adcRoundRobinIndex ? 0 : 1].voltage[3] = 0xFFFF;
 
             // after value(s) written, we activate the inactive robin
             adcRoundRobinIndex = adcRoundRobinIndex ? 0 : 1;
@@ -123,4 +137,12 @@ uint16_t adcImplGetAdc(uint32_t uModule) {
     return adcRoundRobin[adcRoundRobinIndex].value[uModule];
 }
 
+//float adcImplGetAdcVoltage(uint32_t uModule) {
+//    return adcRoundRobin[adcRoundRobinIndex].voltage[uModule];
+//}
+
+uint16_t sampleADC(uint32_t uModule) {
+    uint16_t retval = 0u;
+    // todo : for 4 ADC ports
+}
 
