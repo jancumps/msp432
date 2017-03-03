@@ -39,8 +39,7 @@
 // if you use getAdc() to retrieve values, this is sorted out for you
 
 typedef struct ADCValues {
-    uint16_t value[4];
-//    float voltage[4];
+    uint16_t raw[4];
 } ADCValues;
 
 volatile ADCValues adcRoundRobin[2];
@@ -63,9 +62,6 @@ uint16_t sampleADC(uint32_t uModule);
  */
 Void fnTaskADC(UArg arg0, UArg arg1)
 {
-    uint16_t        ADCValue;
-    float           ADCVoltage;
-    bool            ValNegative = false;
 
     a_i2cTransaction.writeBuf = a_txBuffer;
     a_i2cTransaction.readBuf = a_rxBuffer;
@@ -97,31 +93,26 @@ Void fnTaskADC(UArg arg0, UArg arg1)
         /* Read ADC */
         if (I2C_transfer(i2c_implGetHandle(), &a_i2cTransaction)) {
             /* Extract degrees C from the received data; see TMP102 datasheet */
-            ADCValue = (a_rxBuffer[0] << 8) | a_rxBuffer[1];
-            ValNegative = (0x8000&ADCValue ? true : false);
-            ADCValue = (ValNegative ? 0x8000 - (int)(0x7FFF&ADCValue) : ADCValue) ;
-            ADCVoltage = (ValNegative ? (ADCValue * VPS) *-1: ADCValue * VPS ) ;
 
             // we write value to the inactive robin
             // store value of ADC0
-            adcRoundRobin[adcRoundRobinIndex ? 0 : 1].value[0] = ADCValue;
-//            adcRoundRobin[adcRoundRobinIndex ? 0 : 1].value[0] = ADCVoltage;
+            adcRoundRobin[adcRoundRobinIndex ? 0 : 1].raw[0] = ((a_rxBuffer[0] << 8) | a_rxBuffer[1]);
              // todo: values of ADC 1 - 3
 
             // debug for Peter: oxFFFF for not implemented channels
-            adcRoundRobin[adcRoundRobinIndex ? 0 : 1].value[1] = 0xFFFF;
-            adcRoundRobin[adcRoundRobinIndex ? 0 : 1].value[2] = 0xFFFF;
-            adcRoundRobin[adcRoundRobinIndex ? 0 : 1].value[3] = 0xFFFF;
-//            adcRoundRobin[adcRoundRobinIndex ? 0 : 1].voltage[1] = 0xFFFF;
-//            adcRoundRobin[adcRoundRobinIndex ? 0 : 1].voltage[2] = 0xFFFF;
-//            adcRoundRobin[adcRoundRobinIndex ? 0 : 1].voltage[3] = 0xFFFF;
+            adcRoundRobin[adcRoundRobinIndex ? 0 : 1].raw[1] = 0xFFFF;
+            adcRoundRobin[adcRoundRobinIndex ? 0 : 1].raw[2] = 0xFFFF;
+            adcRoundRobin[adcRoundRobinIndex ? 0 : 1].raw[3] = 0xFFFF;
+
 
             // after value(s) written, we activate the inactive robin
             adcRoundRobinIndex = adcRoundRobinIndex ? 0 : 1;
 
 
-            System_printf("ADCValue= %d, ADCVolts= %f \n", ADCValue, ADCVoltage );
-            System_flush();
+//            System_printf("ADCValue= %d, ADCVolts= %f \n",
+//                          adcImplToValue(adcRoundRobin[adcRoundRobinIndex ? 0 : 1].raw[0]),
+//                          adcImplToFloat(adcRoundRobin[adcRoundRobinIndex ? 0 : 1].raw[0]) );
+//            System_flush();
         }
         else {
             System_printf("ADC Read I2C Bus fault\n");
@@ -134,12 +125,35 @@ Void fnTaskADC(UArg arg0, UArg arg1)
 }
 
 uint16_t adcImplGetAdc(uint32_t uModule) {
-    return adcRoundRobin[adcRoundRobinIndex].value[uModule];
+    return adcRoundRobin[adcRoundRobinIndex].raw[uModule];
 }
 
-//float adcImplGetAdcVoltage(uint32_t uModule) {
-//    return adcRoundRobin[adcRoundRobinIndex].voltage[uModule];
-//}
+uint16_t adcImplToValue(uint16_t uRaw){
+    // todo: remove - this is for peter Oakes' testbed
+    if (uRaw == 0xFFFF) {
+        return 0xFFFF;
+    }
+
+
+    uint16_t        ADCValue;
+    bool            ValNegative = false;
+    ADCValue = uRaw;
+    ValNegative = (0x8000&ADCValue ? true : false);
+    ADCValue = (ValNegative ? 0x8000 - (int)(0x7FFF&ADCValue) : ADCValue) ;
+    return ADCValue;
+}
+
+float adcImplToFloat(uint16_t uRaw) {
+    uint16_t        ADCValue;
+    float           ADCVoltage;
+    bool            ValNegative = false;
+    ADCValue = uRaw;
+    ValNegative = (0x8000&ADCValue ? true : false);
+    ADCValue = (ValNegative ? 0x8000 - (int)(0x7FFF&ADCValue) : ADCValue) ;
+    ADCVoltage = (ValNegative ? (ADCValue * VPS) *-1: ADCValue * VPS ) ;
+    return ADCVoltage;
+}
+
 
 uint16_t sampleADC(uint32_t uModule) {
     uint16_t retval = 0u;

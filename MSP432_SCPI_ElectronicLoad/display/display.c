@@ -33,7 +33,7 @@ Graphics_Context g_sContext;
 Void fnTaskDisplay(UArg arg0, UArg arg1)
 {
     uint32_t i;
-    int8_t formatString[20];
+    char formatString[12];
 
 
     Sharp96x96_LCDInit();
@@ -65,11 +65,11 @@ Void fnTaskDisplay(UArg arg0, UArg arg1)
             break;
          }
 
-//        for (i = 0; i < 4; i++) {
-//            // for demo purpose, show ADC voltages
-//            sprintf(formatString, "ADC%i: %06.3f\0", i + 1, adcImplGetAdcVoltage(i));
-//            GrStringDraw(&g_sContext, formatString, -1, 4, (15 + 12*i), 0);
-//        }
+        for (i = 0; i < 4; i++) {
+            // for demo purpose, show ADC voltages
+            sprintf(formatString, "ADC%i: %02.4f\0", i + 1, adcImplToFloat(adcImplGetAdc(i)));
+            GrStringDraw(&g_sContext, (int8_t *)formatString, -1, 4, (15 + 12*i), 0);
+        }
         GrFlush(&g_sContext);
 
     }
