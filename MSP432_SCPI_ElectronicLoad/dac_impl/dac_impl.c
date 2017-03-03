@@ -31,8 +31,9 @@
 uint8_t         d_txBuffer[3];
 uint8_t         d_rxBuffer[1]; // DAC doesn't read
 I2C_Transaction d_i2cTransaction;
-MsgDAC msg;
+MsgDAC d_msg;
 
+uint8_t getAddressFromModule(uint8_t module);
 
 /*
  *  ======== fnTaskDAC ========
@@ -45,21 +46,38 @@ Void fnTaskDAC(UArg arg0, UArg arg1)
     d_i2cTransaction.slaveAddress = DAC_I2C_ADDR;
     d_i2cTransaction.writeCount = 3;
     d_i2cTransaction.readCount = 0;
-    d_txBuffer[0] = 0x10; // set value direct
 
     while (1) {
 
         /* wait for mailbox to be posted by writer() */
-        if (Mailbox_pend(mbDAC, &msg, BIOS_WAIT_FOREVER)) {
-
-            d_txBuffer[1] = msg.value >> 8; // MSB
-            d_txBuffer[2] = msg.value; // LSB
+        if (Mailbox_pend(mbDAC, &d_msg, BIOS_WAIT_FOREVER)) {
+            d_txBuffer[0] = getAddressFromModule(d_msg.module); // set value direct
+            d_txBuffer[1] = d_msg.value >> 8; // MSB
+            d_txBuffer[2] = d_msg.value; // LSB
             if (! I2C_transfer(i2c_implGetHandle(), &d_i2cTransaction)) {
                 System_printf("I2C Bus fault\n");
                 System_flush();
             }
         }
-
     }
+}
+
+
+/**
+ * get the hex address for the requested DAC module
+ */
+uint8_t getAddressFromModule(uint8_t module) {
+    uint8_t uRetval = 0u;
+    switch (module) {
+    case 0:
+        uRetval = 0x10;
+        break;
+        // todo: add addresses for the others
+
+    default:
+        System_printf("DAC channel not implemented\n");
+        System_flush();
+    }
+    return uRetval;
 
 }

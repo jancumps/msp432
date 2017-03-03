@@ -62,7 +62,8 @@ void eLoadDevelopSetDac(uint32_t uModule, uint32_t value) {
     MsgDAC      pMsg;
 
     // value has to be validated before it arrives here. We assume it's valid
-    pMsg.value = (uint16_t)value; // todo - for a multi DAC solution, this needs to be extended
+    pMsg.value = (uint16_t)value;
+    pMsg.module = (uint8_t)uModule;
     /* enqueue message */
     Mailbox_post(mbDAC, &pMsg, BIOS_WAIT_FOREVER);
 

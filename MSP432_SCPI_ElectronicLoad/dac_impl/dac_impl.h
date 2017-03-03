@@ -10,7 +10,9 @@
 
 #include <stdint.h>
 
+// for TI-RTOS message size, count the bytes. Currently: 3
 typedef struct MsgDAC {
+    uint8_t module;
     uint16_t value;
 } MsgDAC;
 
