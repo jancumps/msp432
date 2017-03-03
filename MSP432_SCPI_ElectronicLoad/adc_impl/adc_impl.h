@@ -8,6 +8,6 @@
 #ifndef ADC_IMPL_ADC_IMPL_H_
 #define ADC_IMPL_ADC_IMPL_H_
 
-uint16_t getAdc(uint32_t uModule);
+uint16_t adcImplGetAdc(uint32_t uModule);
 
 #endif /* ADC_IMPL_ADC_IMPL_H_ */

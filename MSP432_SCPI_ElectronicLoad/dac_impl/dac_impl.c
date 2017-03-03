@@ -31,7 +31,6 @@
 uint8_t         d_txBuffer[3];
 uint8_t         d_rxBuffer[1]; // DAC doesn't read
 I2C_Transaction d_i2cTransaction;
-MsgDAC d_msg;
 
 uint8_t getAddressFromModule(uint8_t module);
 
@@ -41,7 +40,8 @@ uint8_t getAddressFromModule(uint8_t module);
  */
 Void fnTaskDAC(UArg arg0, UArg arg1)
 {
-    d_i2cTransaction.writeBuf = d_txBuffer;
+    MsgDAC d_msg;
+   d_i2cTransaction.writeBuf = d_txBuffer;
     d_i2cTransaction.readBuf = d_rxBuffer;
     d_i2cTransaction.slaveAddress = DAC_I2C_ADDR;
     d_i2cTransaction.writeCount = 3;

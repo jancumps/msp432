@@ -119,7 +119,7 @@ Void fnTaskADC(UArg arg0, UArg arg1)
 
 }
 
-uint16_t getAdc(uint32_t uModule) {
+uint16_t adcImplGetAdc(uint32_t uModule) {
     return adcRoundRobin[adcRoundRobinIndex].value[uModule];
 }
 

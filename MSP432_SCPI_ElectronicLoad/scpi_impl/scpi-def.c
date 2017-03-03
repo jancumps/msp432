@@ -1,7 +1,7 @@
 /*
  * Jan Cumps
  * 20161222
- * MSP432 SCPI implementation based on the SCPI parser test example of Jan Breur
+ * MSP432 SCPI implementation based on the SCPI parser test example of Jan Breuer
  *
  *
  */

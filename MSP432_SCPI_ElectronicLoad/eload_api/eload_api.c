@@ -53,8 +53,9 @@ void eLoadTest() {
     MsgDAC      pMsg;
 
     pMsg.value = 0x4000;
+    pMsg.module = 0u;
     /* enqueue message */
-    Mailbox_post(mbDAC, &pMsg, 10);
+    Mailbox_post(mbDAC, &pMsg, BIOS_WAIT_FOREVER);
 
 }
 
@@ -71,5 +72,5 @@ void eLoadDevelopSetDac(uint32_t uModule, uint32_t value) {
 
 uint32_t eLoadDevelopGetAdc(uint32_t uModule) {
 
-    return getAdc(uModule);
+    return adcImplGetAdc(uModule);
 }
