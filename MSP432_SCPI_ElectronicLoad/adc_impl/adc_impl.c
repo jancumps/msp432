@@ -28,7 +28,14 @@
 #define ADC_I2C_ADDR (0x48)
 
 // bits 15-8, 0xC2 Continuous conversion mode, AIN0, +- 6.144V
-#define ADS1115_CFG_H 0b11000000
+#define ADS1115_CFG_H0 0b11000000
+#define ADS1115_CFG_H1 0b11010000
+#define ADS1115_CFG_H2 0b11100000
+#define ADS1115_CFG_H3 0b11110000
+
+
+
+
 // bits 7-0  0x85 128SPS, Disable comparator
 #define ADS1115_CFG_L 0b10000011
 
@@ -51,6 +58,8 @@ const float VPS = 6.144 / 32768.0; // todo: is this correct for a 2v ref?
 uint8_t         a_txBuffer[3];
 uint8_t         a_rxBuffer[2];
 I2C_Transaction a_i2cTransaction;
+
+static const uint8_t array_ADS1115_CFG_H[4] = {ADS1115_CFG_H0, ADS1115_CFG_H1, ADS1115_CFG_H2, ADS1115_CFG_H3};
 
 
 
@@ -136,7 +145,7 @@ uint16_t sampleADC(uint32_t uModule) {
     a_i2cTransaction.writeCount = 3;
     a_i2cTransaction.readCount = 0;
     a_txBuffer[0] = 0x01;
-    a_txBuffer[1] = ADS1115_CFG_H;
+    a_txBuffer[1] = array_ADS1115_CFG_H[uModule];
     a_txBuffer[2] = ADS1115_CFG_L;
 
 
