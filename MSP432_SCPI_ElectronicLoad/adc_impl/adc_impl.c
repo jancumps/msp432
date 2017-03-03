@@ -63,7 +63,7 @@ static const uint8_t array_ADS1115_CFG_H[4] = {ADS1115_CFG_H0, ADS1115_CFG_H1, A
 
 
 
-uint16_t sampleADC(uint32_t uModule);
+uint16_t sampleADC(uint32_t uModule, UInt uSleep);
 
 /*
  *  ======== fnTaskADC ========
@@ -80,7 +80,9 @@ Void fnTaskADC(UArg arg0, UArg arg1)
     while (1)
     {
         for (i =0; i< 3; i++) {
-            adcRoundRobin[adcRoundRobinIndex ? 0 : 1].raw[i] = sampleADC(i);
+            adcRoundRobin[adcRoundRobinIndex ? 0 : 1].raw[i] = sampleADC(i, (UInt)arg0/4);
+//            Task_sleep((UInt)arg0/4); // sleep one/4th each sample
+//            Task_sleep(500);
         }
 
 
@@ -95,7 +97,7 @@ Void fnTaskADC(UArg arg0, UArg arg1)
         //                          adcImplToFloat(adcRoundRobin[adcRoundRobinIndex ? 0 : 1].raw[0]) );
         //            System_flush();
 
-        Task_sleep((UInt)arg0);
+//        Task_sleep((UInt)arg0);
 
     }
 
@@ -132,9 +134,9 @@ float adcImplToFloat(uint16_t uRaw) {
 }
 
 
-uint16_t sampleADC(uint32_t uModule) {
+uint16_t sampleADC(uint32_t uModule, UInt uSleep) {
     // todo: remove - this is for peter Oakes' testbed
-    if (uModule > 0) {
+    if (uModule > 1) {
         return 0xFFFF;
     }
 
@@ -155,6 +157,7 @@ uint16_t sampleADC(uint32_t uModule) {
         System_printf("Sampling Start Failed \n");
     }
 
+    Task_sleep(uSleep);
 
     a_txBuffer[0] = 0x00;
     a_i2cTransaction.writeCount = 1;
