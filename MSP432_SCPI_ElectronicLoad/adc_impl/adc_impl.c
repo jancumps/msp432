@@ -77,6 +77,11 @@ Void fnTaskADC(UArg arg0, UArg arg1)
     a_i2cTransaction.readBuf = a_rxBuffer;
     a_i2cTransaction.slaveAddress = ADC_I2C_ADDR;
 
+    // this buffer value never changes. Let's set it at the start.
+    // If for some reason this becomes a variable value,
+    // move to sampleADC()
+    a_txBuffer[2] = ADS1115_CFG_L;
+
     while (1)
     {
         for (i =0; i< 4; i++) {
@@ -107,12 +112,6 @@ uint16_t adcImplGetAdc(uint32_t uModule) {
 }
 
 uint16_t adcImplToValue(uint16_t uRaw){
-    // todo: remove - this is for peter Oakes' testbed
-    if (uRaw == 0xFFFF) {
-        return 0xFFFF;
-    }
-
-
     uint16_t        ADCValue;
     bool            ValNegative = false;
     ADCValue = uRaw;
@@ -134,20 +133,13 @@ float adcImplToFloat(uint16_t uRaw) {
 
 
 uint16_t sampleADC(uint32_t uModule, UInt uSleep) {
-//    // todo: remove - this is for peter Oakes' testbed
-//    if (uModule > 1) {
-//        return 0xFFFF;
-//    }
-
     uint16_t uRetval = 0u;
 
-    /* Point to the ADC ASD1115 and read input 0 */
-    // ANC1 and GND, 4.096v, 128s/s
+    /* Point to the ADC ASD1115 and read input uModule */
     a_i2cTransaction.writeCount = 3;
     a_i2cTransaction.readCount = 0;
     a_txBuffer[0] = 0x01;
     a_txBuffer[1] = array_ADS1115_CFG_H[uModule];
-    a_txBuffer[2] = ADS1115_CFG_L;
 
 
 
@@ -163,10 +155,7 @@ uint16_t sampleADC(uint32_t uModule, UInt uSleep) {
     a_i2cTransaction.readCount = 2;
     /* Read ADC */
     if (I2C_transfer(i2c_implGetHandle(), &a_i2cTransaction)) {
-        /* Extract degrees C from the received data; see TMP102 datasheet */
-
         uRetval = ((a_rxBuffer[0] << 8) | a_rxBuffer[1]);
-
     }
     else {
         System_printf("ADC Read I2C Bus fault\n");

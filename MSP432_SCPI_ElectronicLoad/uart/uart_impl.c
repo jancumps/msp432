@@ -49,8 +49,6 @@ Void fnTaskUART(UArg arg0, UArg arg1)
     Error_Block eb;
     Semaphore_Params sem_params;
 
-    // initialise the SCPI interpreter
-    scpi_instrument_init(); // todo: check if it's the UART duty to initialise SCPI. What if also ethernet?
 
 
 

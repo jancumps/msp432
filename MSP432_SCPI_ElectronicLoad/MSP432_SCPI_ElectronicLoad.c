@@ -51,6 +51,7 @@
 #include <stdint.h>
 
 #include "uart_impl.h"
+#include"scpi-def.h"
 
 /*
  *  ======== fnTaskHeartbeat ========
@@ -75,8 +76,12 @@ int main(void)
     /* Call board init functions */
     Board_initGeneral();
     Board_initGPIO();
+    // initialise the SCPI interpreter
+    scpi_instrument_init();
+
     Board_initUART();
     Board_initI2C();
+
 
 
     /* Construct BIOS objects */
