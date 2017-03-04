@@ -56,6 +56,7 @@ Void fnTaskDisplay(UArg arg0, UArg arg1)
     while (1) {
         Task_sleep((UInt)arg0);
         GrClearDisplay(&g_sContext);
+        GrContextFontSet(&g_sContext, &g_sFontCmss12);
         switch (eloadGetMode()) {
         case ELOAD_MODE_CURRENT:
             GrStringDraw(&g_sContext, "mode: I", -1, 5, 0, 0);
@@ -68,6 +69,7 @@ Void fnTaskDisplay(UArg arg0, UArg arg1)
         for (i = 0; i < 4; i++) {
             // for demo purpose, show ADC voltages
             sprintf(formatString, "ADC%i: %02.4f\0", i + 1, adcImplToFloat(adcImplGetAdc(i)));
+            GrContextFontSet(&g_sContext, &g_sFontFixed6x8);
             GrStringDraw(&g_sContext, (int8_t *)formatString, -1, 4, (15 + 12*i), 0);
         }
         GrFlush(&g_sContext);

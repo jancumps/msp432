@@ -90,7 +90,7 @@ static scpi_result_t DACGetModule(scpi_t *context, uint32_t *uModule) {
     // retrieve the DAC channel. Can be 1 - 4
     SCPI_CommandNumbers(context, numbers, 1, 1);
     if (! ((numbers[0] > 0) && (numbers[0] < 5) )) {
-        // todo push error on stack if the DAC CHANNEL not between 1 and 4
+        SCPI_ErrorPush(context, SCPI_ERROR_INVALID_SUFFIX);
         return SCPI_RES_ERR;
     } else {
         *uModule = numbers[0];
@@ -104,7 +104,7 @@ static scpi_result_t ADCGetModule(scpi_t *context, uint32_t *uModule) {
     // retrieve the ADC channel. Can be 1 - 4
     SCPI_CommandNumbers(context, numbers, 1, 1);
     if (! ((numbers[0] > 0) && (numbers[0] < 5) )) {
-        // todo push error on stack if the ADC CHANNEL not between 1 and 4
+        SCPI_ErrorPush(context, SCPI_ERROR_INVALID_SUFFIX);
         return SCPI_RES_ERR;
     } else {
         *uModule = numbers[0];
@@ -136,11 +136,10 @@ static scpi_result_t SCPI_DevelopSetDac(scpi_t * context) {
 
      /* read first parameter if present */
      if (!SCPI_ParamUInt32(context, &param1, TRUE)) {
-         // todo push error on stack if value missing
          return SCPI_RES_ERR;
      }
      if (param1 > UINT16_MAX) {
-         // todo push error on stack if larger than 16 bits
+         SCPI_ErrorPush(context, SCPI_ERROR_ILLEGAL_PARAMETER_VALUE);
          return SCPI_RES_ERR;
      } else {
          eLoadDevelopSetDac(uModule - 1, param1);
