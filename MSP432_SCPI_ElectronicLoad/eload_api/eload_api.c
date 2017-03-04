@@ -74,3 +74,13 @@ uint32_t eLoadDevelopGetAdc(uint32_t uModule) {
 
     return adcImplToValue(adcImplGetAdc(uModule));
 }
+
+uint32_t eLoadDevelopGetAdcRaw(uint32_t uModule) {
+
+    return adcImplGetAdc(uModule);
+}
+
+float eLoadDevelopGetAdcVolt(uint32_t uModule) {
+
+    return adcImplToFloat(adcImplGetAdc(uModule));
+}

@@ -162,6 +162,30 @@ static scpi_result_t SCPI_DevelopGetAdc(scpi_t * context) {
     return SCPI_RES_OK;
 }
 
+static scpi_result_t SCPI_DevelopGetAdcRaw(scpi_t * context) {
+
+    uint32_t uModule;
+
+    if (ADCGetModule(context, &uModule) == SCPI_RES_ERR) {
+        return SCPI_RES_ERR;
+    }
+    SCPI_ResultUInt32(context, eLoadDevelopGetAdcRaw(uModule - 1));
+
+    return SCPI_RES_OK;
+}
+
+static scpi_result_t SCPI_DevelopGetAdcVolt(scpi_t * context) {
+
+    uint32_t uModule;
+
+    if (ADCGetModule(context, &uModule) == SCPI_RES_ERR) {
+        return SCPI_RES_ERR;
+    }
+    SCPI_ResultFloat(context, eLoadDevelopGetAdcVolt(uModule - 1));
+
+    return SCPI_RES_OK;
+}
+
 
 
 
@@ -202,6 +226,8 @@ const scpi_command_t scpi_commands[] = {
     /* LOW LEVEL for DEVELOP only */
     {.pattern = "DEVElop:DAC#", .callback = SCPI_DevelopSetDac,},
     {.pattern = "DEVElop:ADC#?", .callback = SCPI_DevelopGetAdc,},
+    {.pattern = "DEVElop:ADC#:RAW?", .callback = SCPI_DevelopGetAdcRaw,},
+    {.pattern = "DEVElop:ADC#:VOLTage?", .callback = SCPI_DevelopGetAdcVolt,},
 
 
     SCPI_CMD_LIST_END

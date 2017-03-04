@@ -61,7 +61,17 @@ Void fnTaskUART(UArg arg0, UArg arg1)
     uartParams.baudRate = 9600;
     uartParams.readMode = UART_MODE_CALLBACK; // the uart uses a read interrupt
     uartParams.readCallback = &UART00_IRQHandler; // function called when the uart interrupt fires
+
+#ifdef SCPI_UART_0
     uart = UART_open(Board_UART0, &uartParams);
+#else
+#ifdef SCPI_UART_1
+    uart = UART_open(Board_UART1, &uartParams);
+#else
+#error "define a valid UART"
+#endif
+#endif
+
 
     if (uart == NULL) {
         System_abort("Error opening the UART");

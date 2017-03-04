@@ -86,7 +86,13 @@ Void fnTaskADC(UArg arg0, UArg arg1)
     {
         for (i =0; i< 4; i++) {
             // we write value to the inactive robin
-            // store value of ADC[1]
+            // store value of ADC[i]
+            // the ADC needs time between channel selection and sampling
+            // we assign 1/4 of the task sleep time to
+            // each of the 4 samples
+            // this puts more burden on the RTOS switcher - a compromise
+            // - but certainly preferable to a loop
+            // (except when later on we find out that the wait is only a few cpu cycles)
             adcRoundRobin[adcRoundRobinIndex ? 0 : 1].raw[i] = sampleADC(i, (UInt)arg0/4);
         }
 
@@ -148,6 +154,8 @@ uint16_t sampleADC(uint32_t uModule, UInt uSleep) {
         System_printf("Sampling Start Failed \n");
     }
 
+    // there's a pause required between channel selection and data retrieval
+    // we consume that part of the task sleep time that's assigned to us by the task.
     Task_sleep(uSleep);
 
     a_txBuffer[0] = 0x00;
