@@ -61,10 +61,13 @@
 Void fnTaskHeartbeat(UArg arg0, UArg arg1)
 {
     /* Turn on user LED */
+    UInt onTime = (UInt)(arg0 / 95); // blink 5% of the schedule
     GPIO_write(Board_LED0, Board_LED_ON); // will heartbeat when RTOS runs
     while (1) {
-        Task_sleep((UInt)arg0);
-        GPIO_toggle(Board_LED0);
+        Task_sleep(arg0 - onTime);
+        GPIO_write(Board_LED0, Board_LED_ON);
+        Task_sleep(onTime);
+        GPIO_write(Board_LED0, Board_LED_OFF);
     }
 }
 
