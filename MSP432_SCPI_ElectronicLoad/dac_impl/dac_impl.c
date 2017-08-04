@@ -41,7 +41,7 @@ uint8_t getAddressFromModule(uint8_t module);
 Void fnTaskDAC(UArg arg0, UArg arg1)
 {
     MsgDAC d_msg;
-   d_i2cTransaction.writeBuf = d_txBuffer;
+    d_i2cTransaction.writeBuf = d_txBuffer;
     d_i2cTransaction.readBuf = d_rxBuffer;
     d_i2cTransaction.slaveAddress = DAC_I2C_ADDR;
     d_i2cTransaction.writeCount = 3;
@@ -72,7 +72,15 @@ uint8_t getAddressFromModule(uint8_t module) {
     case 0:
         uRetval = 0x10;
         break;
-        // todo: add addresses for the others
+    case 1:
+        uRetval = 0x12;
+        break;
+    case 2:
+        uRetval = 0x14;
+        break;
+    case 3:
+        uRetval = 0x16;
+        break;
 
     default:
         System_printf("DAC channel not implemented\n");
