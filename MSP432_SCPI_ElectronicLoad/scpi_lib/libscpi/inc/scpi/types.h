@@ -43,17 +43,17 @@
 #include <stdint.h>
 #include "scpi/config.h"
 
-//#if HAVE_STDBOOL
+#if HAVE_STDBOOL
 #include <stdbool.h>
-//#endif
+#endif
 
 #ifdef  __cplusplus
 extern "C" {
 #endif
 
-//#if !HAVE_STDBOOL
-//    typedef unsigned char bool;
-//#endif
+#if !HAVE_STDBOOL
+    typedef unsigned char bool;
+#endif
 
 #ifndef FALSE
 #define FALSE 0
@@ -113,7 +113,12 @@ extern "C" {
 
     typedef struct _scpi_command_t scpi_command_t;
 
-#define SCPI_CMD_LIST_END       {NULL, NULL, 0}
+#if USE_COMMAND_TAGS
+	#define SCPI_CMD_LIST_END       {NULL, NULL, 0}
+#else
+	#define SCPI_CMD_LIST_END       {NULL, NULL}
+#endif
+
 
     /* scpi interface */
     typedef struct _scpi_t scpi_t;
@@ -276,7 +281,7 @@ extern "C" {
         SCPI_UNIT_BAR,
         SCPI_UNIT_DECIBEL,
         SCPI_UNIT_UNITLESS,
-        SCPI_UNIT_FAGRENHEIT,
+        SCPI_UNIT_FAHRENHEIT,
         SCPI_UNIT_KELVIN,
         SCPI_UNIT_DAY,
         SCPI_UNIT_YEAR,
@@ -328,7 +333,7 @@ extern "C" {
         union {
             double value;
             int32_t tag;
-        };
+        } content;
         scpi_unit_t unit;
         int8_t base;
     };

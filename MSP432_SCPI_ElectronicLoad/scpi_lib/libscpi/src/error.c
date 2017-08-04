@@ -45,7 +45,7 @@
 #if USE_DEVICE_DEPENDENT_ERROR_INFORMATION
 #define SCPI_ERROR_SETVAL(e, c, i) do { (e)->error_code = (c); (e)->device_dependent_info = (i); } while(0)
 #else
-#define SCPI_ERROR_SETVAL(e, c, i) do { (e)->error_code = (c); } while(0)
+#define SCPI_ERROR_SETVAL(e, c, i) do { (e)->error_code = (c); (void)(i);} while(0)
 #endif
 
 /**
@@ -130,9 +130,7 @@ int32_t SCPI_ErrorCount(scpi_t * context) {
 
 static scpi_bool_t SCPI_ErrorAddInternal(scpi_t * context, int16_t err, char * info, size_t info_len) {
     scpi_error_t error_value;
-#pragma diag_suppress 145, 179  // todo: check if we can submit patch instead of surpressing warnings in this library
     char * info_ptr = info ? SCPIDEFINE_strndup(&context->error_info_heap, info, info_len) : NULL;
-#pragma diag_warning 145, 179
     SCPI_ERROR_SETVAL(&error_value, err, info_ptr);
     if (!fifo_add(&context->error_queue, &error_value)) {
         SCPIDEFINE_free(&context->error_info_heap, error_value.device_dependent_info, true);
