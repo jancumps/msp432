@@ -4,7 +4,7 @@
  *  Created on: 6 aug. 2017
  *      Author: jancu
  *
- *      se http://www.adampetersen.se/Patterns%20in%20C%203,%20STRATEGY.pdf
+ *      see http://www.adampetersen.se/Patterns%20in%20C%203,%20STRATEGY.pdf
  */
 
 #ifndef CONTROL_IMPL_CONTROL_STRATEGY_INTERFACE_H_
