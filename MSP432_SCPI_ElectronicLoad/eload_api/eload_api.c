@@ -20,7 +20,9 @@
 #include "dac_impl.h"
 #include "adc_impl.h"
 
-eload_mode eloadMode = ELOAD_MODE_CURRENT;
+#include "control_strategy_interface.h"
+#include "control_strategy_constantcurrent.h"
+
 
 double eloadGetVoltageDC() {
     return (double)3.141592653589793; // todo: get input voltage from the sampled value
@@ -28,12 +30,19 @@ double eloadGetVoltageDC() {
 
 
 void eloadSetMode(eload_mode mode){
-    // todo: stop PID engine and reinitialise strategy
-    eloadMode = mode;
+    switch (mode) {
+    case ELOAD_MODE_CURRENT:
+        setConstantCurrentStrategy();
+        break;
+    default:
+
+
+    }
+
 }
 
 eload_mode eloadGetMode() {
-    return eloadMode;
+    return getControlStrategy()->getMode();
 }
 
 uint32_t eLoadGetCurrentRangeMax() {

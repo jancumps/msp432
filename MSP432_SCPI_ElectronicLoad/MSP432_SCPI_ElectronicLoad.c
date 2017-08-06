@@ -52,6 +52,7 @@
 
 #include "uart_impl.h"
 #include"scpi-def.h"
+#include "eload_api.h"
 
 /*
  *  ======== fnTaskHeartbeat ========
@@ -81,6 +82,9 @@ int main(void)
     Board_initGPIO();
     // initialise the SCPI interpreter
     scpi_instrument_init();
+
+    // initialise instrument in constant current mode
+    eloadSetMode(ELOAD_MODE_CURRENT);
 
     Board_initUART();
     Board_initI2C();
