@@ -16,9 +16,9 @@ ControlStrategy *getControlStrategy() {
 }
 
 
-void __setControlStrategy(ControlStrategyControlFunction f, ControlStrategyGetMode m) {
+void __setControlStrategy(ControlStrategyControlFunction f, ControlStrategyGetMode m, ControlStrategyGetChar c) {
 
     cs.controlFunction = f;
     cs.getMode = m;
-
+    cs.getChar = c;
 }

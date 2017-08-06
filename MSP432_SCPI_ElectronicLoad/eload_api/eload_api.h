@@ -32,6 +32,7 @@ double eloadGetVoltageDC();
 
 void eloadSetMode(eload_mode mode);
 eload_mode eloadGetMode();
+int8_t eloadGetChar();
 
 
 uint32_t eLoadGetCurrentRangeMax();

@@ -12,9 +12,6 @@
 #include "control_strategy_interface.h"
 
 
-uint32_t ConstantCurrentStrategyControlFunction (uint32_t uTarget);
-eload_mode ConstantCurrentStrategyGetMode ();
-
 void setConstantCurrentStrategy();
 
 

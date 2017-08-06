@@ -15,19 +15,20 @@
 
 
 typedef uint32_t (*ControlStrategyControlFunction) (uint32_t uTarget);
-
 typedef eload_mode (*ControlStrategyGetMode) ();
+typedef int8_t (*ControlStrategyGetChar) ();
 
 typedef struct ControlStrategy {
     ControlStrategyControlFunction controlFunction;
     ControlStrategyGetMode getMode;
+    ControlStrategyGetChar getChar;
 } ControlStrategy;
 
 
 ControlStrategy *getControlStrategy();
 
 // this is supposed to be used by the implementation classes only, not public
-void __setControlStrategy(ControlStrategyControlFunction f, ControlStrategyGetMode m);
+void __setControlStrategy(ControlStrategyControlFunction f, ControlStrategyGetMode m, ControlStrategyGetChar c);
 
 
 #endif /* CONTROL_IMPL_CONTROL_STRATEGY_INTERFACE_H_ */

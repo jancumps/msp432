@@ -35,8 +35,8 @@ void eloadSetMode(eload_mode mode){
         setConstantCurrentStrategy();
         break;
     default:
-
-
+        // don't change when an unknown mode is selected
+        System_printf("Unknown or unsupported mode, ignore\n");
     }
 
 }
@@ -44,6 +44,11 @@ void eloadSetMode(eload_mode mode){
 eload_mode eloadGetMode() {
     return getControlStrategy()->getMode();
 }
+
+int8_t eloadGetChar() {
+    return getControlStrategy()->getChar();
+}
+
 
 uint32_t eLoadGetCurrentRangeMax() {
     return 0b1111111111111111; // 16 bit ADC

@@ -17,6 +17,12 @@ eload_mode ConstantCurrentStrategyGetMode () {
     return ELOAD_MODE_CURRENT;
 }
 
-void setConstantCurrentStrategy() {
-    __setControlStrategy(ConstantCurrentStrategyControlFunction, ConstantCurrentStrategyGetMode);
+int8_t ConstantCurrentStrategyGetChar() {
+    return 'I';
 }
+
+void setConstantCurrentStrategy() {
+    __setControlStrategy(ConstantCurrentStrategyControlFunction, ConstantCurrentStrategyGetMode, ConstantCurrentStrategyGetChar);
+}
+
+
