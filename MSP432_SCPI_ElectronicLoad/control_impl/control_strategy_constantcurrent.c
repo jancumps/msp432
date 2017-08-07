@@ -9,7 +9,7 @@
 
 
 uint32_t ConstantCurrentStrategyControlFunction (uint32_t uTarget) {
-    // set the target current.
+    // todo: set the target current via DAC.
     return uTarget;
 }
 
