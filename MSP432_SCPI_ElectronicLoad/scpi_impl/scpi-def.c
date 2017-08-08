@@ -268,13 +268,8 @@ const scpi_command_t scpi_commands[] = {
 
 
     /* ELECTRONIC LOAD COMMANDS */
-    // todo: optional parameters before a mandatory one don't seem to be supported.
-    // [SOURce:]VOLTage[:LEVel][:IMMediate] does not work
-    // VOLTage[:LEVel][:IMMediate]
-    {.pattern = "CURRent[:LEVel][:IMMediate]", .callback = ELOAD_SetCurrentImmediate,},
-    {.pattern = "VOLTage[:LEVel][:IMMediate]", .callback = ELOAD_SetVoltageImmediate,},
-
-
+    {.pattern = "[:SOURce]:CURRent[:LEVel][:IMMediate]", .callback = ELOAD_SetCurrentImmediate,},
+    {.pattern = "[:SOURce]:VOLTage[:LEVel][:IMMediate]", .callback = ELOAD_SetVoltageImmediate,},
 
     SCPI_CMD_LIST_END
 };
