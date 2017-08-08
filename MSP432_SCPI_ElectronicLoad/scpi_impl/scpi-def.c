@@ -142,7 +142,7 @@ static scpi_result_t SCPI_DevelopSetDac(scpi_t * context) {
          SCPI_ErrorPush(context, SCPI_ERROR_ILLEGAL_PARAMETER_VALUE);
          return SCPI_RES_ERR;
      } else {
-         eLoadDevelopSetDac(uModule - 1, param1);
+         eLoadRawSetDac(uModule - 1, param1);
      }
 
 

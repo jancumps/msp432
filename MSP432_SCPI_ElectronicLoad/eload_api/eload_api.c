@@ -92,7 +92,7 @@ void eLoadTest() {
 
 }
 
-void eLoadDevelopSetDac(uint32_t uModule, uint32_t value) {
+void eLoadRawSetDac(uint32_t uModule, uint32_t value) {
     MsgDAC      pMsg;
 
     // value has to be validated before it arrives here. We assume it's valid

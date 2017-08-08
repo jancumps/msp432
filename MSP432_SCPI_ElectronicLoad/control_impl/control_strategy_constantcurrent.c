@@ -6,10 +6,11 @@
  */
 
 #include "control_strategy_constantcurrent.h"
+#include "eload_api.h"
 #include <stddef.h>
 
 uint32_t ConstantCurrentStrategyControlFunction (uint32_t uTarget) {
-    // todo: set the target current via DAC.
+    // todo: implement control mechanism - if needed for constant current
     return uTarget;
 }
 
@@ -22,8 +23,10 @@ int8_t ConstantCurrentStrategyGetChar() {
 }
 
 void ConstantCurrentSetCurrent(uint32_t uValue) {
-    // todo: implement
-
+    // todo: set the target current via DAC.
+    // todo : convert volt/DAC settings
+    // todo: float?
+    eLoadRawSetDac(0, uValue);
 }
 
 void setConstantCurrentStrategy() {
