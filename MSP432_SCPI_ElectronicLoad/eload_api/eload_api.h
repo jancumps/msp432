@@ -9,6 +9,7 @@
 #define ELOAD_API_ELOAD_API_H_
 
 #include <stdint.h>
+#include <stdbool.h>
 
 typedef enum eload_mode {
     ELOAD_MODE_CURRENT = 0,
@@ -34,6 +35,9 @@ void eloadSetMode(eload_mode mode);
 eload_mode eloadGetMode();
 int8_t eloadGetChar();
 
+// instrument operations
+bool eloadSetConstantCurrent(uint32_t value);
+bool eloadSetConstantVoltage(uint32_t value);
 
 uint32_t eLoadGetCurrentRangeMax();
 uint32_t eLoadGetVoltageRangeMax();

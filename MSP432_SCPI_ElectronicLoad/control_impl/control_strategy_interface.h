@@ -17,18 +17,27 @@
 typedef uint32_t (*ControlStrategyControlFunction) (uint32_t uTarget);
 typedef eload_mode (*ControlStrategyGetMode) ();
 typedef int8_t (*ControlStrategyGetChar) ();
+typedef void (*ControlStrategySetCurrent) (uint32_t uValue);
+typedef void (*ControlStrategySetVoltage) (uint32_t uValue);
+
 
 typedef struct ControlStrategy {
     ControlStrategyControlFunction controlFunction;
     ControlStrategyGetMode getMode;
     ControlStrategyGetChar getChar;
+    ControlStrategySetCurrent setCurrent;
+    ControlStrategySetCurrent setVoltage;
 } ControlStrategy;
 
 
 ControlStrategy *getControlStrategy();
 
 // this is supposed to be used by the implementation classes only, not public
-void __setControlStrategy(ControlStrategyControlFunction f, ControlStrategyGetMode m, ControlStrategyGetChar c);
+void __setControlStrategy(ControlStrategyControlFunction f,
+                          ControlStrategyGetMode m,
+                          ControlStrategyGetChar c,
+                          ControlStrategySetCurrent sc,
+                          ControlStrategySetVoltage sv);
 
 
 #endif /* CONTROL_IMPL_CONTROL_STRATEGY_INTERFACE_H_ */

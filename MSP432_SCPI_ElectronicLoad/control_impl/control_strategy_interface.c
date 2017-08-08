@@ -16,9 +16,15 @@ ControlStrategy *getControlStrategy() {
 }
 
 
-void __setControlStrategy(ControlStrategyControlFunction f, ControlStrategyGetMode m, ControlStrategyGetChar c) {
+void __setControlStrategy(ControlStrategyControlFunction f,
+                          ControlStrategyGetMode m,
+                          ControlStrategyGetChar c,
+                          ControlStrategySetCurrent sc,
+                          ControlStrategySetVoltage sv) {
 
     cs.controlFunction = f;
     cs.getMode = m;
     cs.getChar = c;
+    cs.setCurrent = sc;
+    cs.setVoltage = sv;
 }

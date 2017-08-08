@@ -5,8 +5,8 @@
  *      Author: jancu
  */
 
-#include <control_strategy_constantcurrent.h>
-
+#include "control_strategy_constantcurrent.h"
+#include <stddef.h>
 
 uint32_t ConstantCurrentStrategyControlFunction (uint32_t uTarget) {
     // todo: set the target current via DAC.
@@ -21,8 +21,17 @@ int8_t ConstantCurrentStrategyGetChar() {
     return 'I';
 }
 
+void ConstantCurrentSetCurrent(uint32_t uValue) {
+    // todo: implement
+
+}
+
 void setConstantCurrentStrategy() {
-    __setControlStrategy(ConstantCurrentStrategyControlFunction, ConstantCurrentStrategyGetMode, ConstantCurrentStrategyGetChar);
+    __setControlStrategy(ConstantCurrentStrategyControlFunction,
+                         ConstantCurrentStrategyGetMode,
+                         ConstantCurrentStrategyGetChar,
+                         ConstantCurrentSetCurrent,
+                         NULL);
 }
 
 

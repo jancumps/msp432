@@ -49,6 +49,25 @@ int8_t eloadGetChar() {
     return getControlStrategy()->getChar();
 }
 
+bool eloadSetConstantCurrent(uint32_t value) {
+    bool bRet = false;
+    if (getControlStrategy()->setCurrent) { // does strategy support the operation?
+        getControlStrategy()->setCurrent(value);
+        bRet = true;
+    }
+    return bRet;
+}
+
+
+bool eloadSetConstantVoltage(uint32_t value) {
+    bool bRet = false;
+    if (getControlStrategy()->setVoltage) { // does strategy support the operation?
+        getControlStrategy()->setVoltage(value);
+        bRet = true;
+    }
+    return bRet;
+}
+
 
 uint32_t eLoadGetCurrentRangeMax() {
     return 0b1111111111111111; // 16 bit ADC

@@ -185,7 +185,45 @@ static scpi_result_t SCPI_DevelopGetAdcVolt(scpi_t * context) {
     return SCPI_RES_OK;
 }
 
+static scpi_result_t ELOAD_SetCurrentImmediate(scpi_t * context) {
+    uint32_t param1;
 
+        /* read first parameter if present */
+    if (!SCPI_ParamUInt32(context, &param1, TRUE)) {
+        return SCPI_RES_ERR;
+    }
+    if (param1 > UINT16_MAX) {
+        SCPI_ErrorPush(context, SCPI_ERROR_ILLEGAL_PARAMETER_VALUE);
+        return SCPI_RES_ERR;
+    }
+    if (!eloadSetConstantCurrent(param1) ){
+        SCPI_ErrorPush(context, SCPI_ERROR_EXECUTION_ERROR); // fail if function not supported by current operation mode
+        return SCPI_RES_ERR;
+    }
+
+
+    return SCPI_RES_OK;
+}
+
+static scpi_result_t ELOAD_SetVoltageImmediate(scpi_t * context) {
+    uint32_t param1;
+
+        /* read first parameter if present */
+    if (!SCPI_ParamUInt32(context, &param1, TRUE)) {
+        return SCPI_RES_ERR;
+    }
+    if (param1 > UINT16_MAX) {
+        SCPI_ErrorPush(context, SCPI_ERROR_ILLEGAL_PARAMETER_VALUE);
+        return SCPI_RES_ERR;
+    }
+    if (!eloadSetConstantVoltage(param1) ){
+        SCPI_ErrorPush(context, SCPI_ERROR_EXECUTION_ERROR); // fail if function not supported by current operation mode
+        return SCPI_RES_ERR;
+    }
+
+
+    return SCPI_RES_OK;
+}
 
 
 const scpi_command_t scpi_commands[] = {
@@ -227,6 +265,16 @@ const scpi_command_t scpi_commands[] = {
     {.pattern = "DEVElop:ADC#?", .callback = SCPI_DevelopGetAdc,},
     {.pattern = "DEVElop:ADC#:RAW?", .callback = SCPI_DevelopGetAdcRaw,},
     {.pattern = "DEVElop:ADC#:VOLTage?", .callback = SCPI_DevelopGetAdcVolt,},
+
+
+    /* ELECTRONIC LOAD COMMANDS */
+    // todo: [SOURce:]FUNCtion
+/* todo: Seems I can't get the optional sections to work..
+    {.pattern = "[SOURce:]CURRent[:LEVel][:IMMediate]", .callback = ELOAD_SetCurrentImmediate,},
+    {.pattern = "[SOURce:]VOLTage[:LEVel][:IMMediate]", .callback = ELOAD_SetVoltageImmediate,},
+*/
+    {.pattern = "CURRent", .callback = ELOAD_SetCurrentImmediate,},
+    {.pattern = "VOLTage", .callback = ELOAD_SetVoltageImmediate,},
 
 
     SCPI_CMD_LIST_END
