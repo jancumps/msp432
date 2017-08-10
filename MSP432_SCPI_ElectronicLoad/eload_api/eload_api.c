@@ -82,13 +82,8 @@ uint32_t eLoadGetOutputRangeMax() {
 }
 
 void eLoadTest() {
-    // todo: make this a system test, currently uset to test different things
-    MsgDAC      pMsg;
+    // todo: make this a system test, currently used to test different new things
 
-    pMsg.value = 0x4000;
-    pMsg.module = 0u;
-    /* enqueue message */
-    Mailbox_post(mbDAC, &pMsg, BIOS_WAIT_FOREVER);
 
 }
 

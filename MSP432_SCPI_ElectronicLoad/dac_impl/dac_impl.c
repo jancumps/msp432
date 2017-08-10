@@ -27,10 +27,19 @@
 
 #define DAC_I2C_ADDR           (0x4C)
 
+// address 7 - 6: 0, load mode 5 - 4: 01 direct from i2c, 3: reserved 0, 2 - 1: channel select, 0: pwr down 0
+#define DAC857X_CFG_H0 0x10
+#define DAC857X_CFG_H1 0x12
+#define DAC857X_CFG_H2 0x14
+#define DAC857X_CFG_H3 0x16
+
 
 uint8_t         d_txBuffer[3];
 uint8_t         d_rxBuffer[1]; // DAC doesn't read
 I2C_Transaction d_i2cTransaction;
+
+static const uint8_t array_DAC857X_CFG_H[4] = {DAC857X_CFG_H0, DAC857X_CFG_H1, DAC857X_CFG_H2, DAC857X_CFG_H3};
+
 
 uint8_t getAddressFromModule(uint8_t module);
 
@@ -67,25 +76,5 @@ Void fnTaskDAC(UArg arg0, UArg arg1)
  * get the hex address for the requested DAC module
  */
 uint8_t getAddressFromModule(uint8_t module) {
-    uint8_t uRetval = 0u;
-    switch (module) {
-    case 0:
-        uRetval = 0x10;
-        break;
-    case 1:
-        uRetval = 0x12;
-        break;
-    case 2:
-        uRetval = 0x14;
-        break;
-    case 3:
-        uRetval = 0x16;
-        break;
-
-    default:
-        System_printf("DAC channel not implemented\n");
-        System_flush();
-    }
-    return uRetval;
-
+    return array_DAC857X_CFG_H[module];
 }
