@@ -14,7 +14,8 @@
 #include "eload_api.h"
 
 
-typedef uint32_t (*ControlStrategyControlFunction) (uint32_t uTarget);
+typedef void (*ControlStrategyControlFunction) ();
+typedef uint32_t (*ControlStrategyGetSchedule) ();
 typedef eload_mode (*ControlStrategyGetMode) ();
 typedef int8_t (*ControlStrategyGetChar) ();
 typedef void (*ControlStrategySetCurrent) (uint32_t uValue);
@@ -22,18 +23,21 @@ typedef void (*ControlStrategySetVoltage) (uint32_t uValue);
 
 
 typedef struct ControlStrategy {
-    ControlStrategyControlFunction controlFunction;
-    ControlStrategyGetMode getMode;
-    ControlStrategyGetChar getChar;
-    ControlStrategySetCurrent setCurrent;
-    ControlStrategySetCurrent setVoltage;
+    ControlStrategyControlFunction controlFunction; // control loop implementation
+    ControlStrategyGetSchedule getSchedule;         // number of rtos ticks to sleep until next execution
+    ControlStrategyGetMode getMode;                 // what strategy is this, e.g.: ELOAD_MODE_CURRENT
+    ControlStrategyGetChar getChar;                 // one char representation of the strategy. e.g.: 'I' for constant current
+    ControlStrategySetCurrent setCurrent;           // set current for those strategies that support it (e.g.: constant current)
+    ControlStrategySetCurrent setVoltage;           // set voltage for those strategies that support it (e.g.: constant voltage)
 } ControlStrategy;
 
 
 ControlStrategy *getControlStrategy();
 
 // this is supposed to be used by the implementation classes only, not public
+// additionally, the strategy should init itself before calling this function
 void __setControlStrategy(ControlStrategyControlFunction f,
+                          ControlStrategyGetSchedule s,
                           ControlStrategyGetMode m,
                           ControlStrategyGetChar c,
                           ControlStrategySetCurrent sc,

@@ -16,7 +16,7 @@
 #include <ti/sysbios/knl/Task.h>
 #include <ti/sysbios/knl/Clock.h>
 
-
+#include "eload_api.h"
 
 /*
  *  ======== fnTaskControl ========
@@ -32,8 +32,10 @@ Void fnTaskControl(UArg arg0, UArg arg1)
 
 
     while (1) {
-        // todo: ask strategy how often it should refresh
-        // todo: call strategy's control implementation
-        Task_sleep(uDefaultWait);
+        uint32_t uWait = eloadControlLoopGetSchedule();
+        eloadControlLoop();
+
+        Task_sleep(uWait ?  uWait : uDefaultWait);
+
     }
 }

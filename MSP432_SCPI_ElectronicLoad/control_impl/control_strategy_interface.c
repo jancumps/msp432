@@ -17,12 +17,14 @@ ControlStrategy *getControlStrategy() {
 
 
 void __setControlStrategy(ControlStrategyControlFunction f,
+                          ControlStrategyGetSchedule s,
                           ControlStrategyGetMode m,
                           ControlStrategyGetChar c,
                           ControlStrategySetCurrent sc,
                           ControlStrategySetVoltage sv) {
 
     cs.controlFunction = f;
+    cs.getSchedule = s;
     cs.getMode = m;
     cs.getChar = c;
     cs.setCurrent = sc;

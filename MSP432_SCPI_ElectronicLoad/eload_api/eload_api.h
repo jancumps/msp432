@@ -34,6 +34,8 @@ double eloadGetVoltageDC();
 void eloadSetMode(eload_mode mode);
 eload_mode eloadGetMode();
 int8_t eloadGetChar();
+void eloadControlLoop();
+uint32_t eloadControlLoopGetSchedule();
 
 // instrument operations
 bool eloadSetConstantCurrent(uint32_t value);

@@ -8,10 +8,21 @@
 #include "control_strategy_constantcurrent.h"
 #include "eload_api.h"
 #include <stddef.h>
+#include <stdbool.h>
 
-uint32_t ConstantCurrentStrategyControlFunction (uint32_t uTarget) {
-    // todo: implement control mechanism - if needed for constant current
-    return uTarget;
+uint32_t uConstantCurrent;
+bool bConstantCurrentChanged;
+
+void ConstantCurrentStrategyControlFunction () {
+    if (bConstantCurrentChanged) {
+        eLoadRawSetDac(0, uConstantCurrent);
+        bConstantCurrentChanged = false;
+    }
+    return;
+}
+
+uint32_t ConstantCurrentGStrategyGetSchedule() {
+    return  500U;
 }
 
 eload_mode ConstantCurrentStrategyGetMode () {
@@ -22,19 +33,25 @@ int8_t ConstantCurrentStrategyGetChar() {
     return 'I';
 }
 
-void ConstantCurrentSetCurrent(uint32_t uValue) {
+void ConstantCurrentStrategySetCurrent(uint32_t uValue) {
     // todo: set the target current via DAC.
     // todo : convert volt/DAC settings
     // todo: float?
-    eLoadRawSetDac(0, uValue);
+    uConstantCurrent = uValue;
+    bConstantCurrentChanged = true;
+
 }
 
 void setConstantCurrentStrategy() {
+    uConstantCurrent = 0U;
+    bConstantCurrentChanged = true;
     __setControlStrategy(ConstantCurrentStrategyControlFunction,
+                         ConstantCurrentGStrategyGetSchedule,
                          ConstantCurrentStrategyGetMode,
                          ConstantCurrentStrategyGetChar,
-                         ConstantCurrentSetCurrent,
+                         ConstantCurrentStrategySetCurrent,
                          NULL);
+
 }
 
 

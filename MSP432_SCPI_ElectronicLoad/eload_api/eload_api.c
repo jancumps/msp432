@@ -49,6 +49,14 @@ int8_t eloadGetChar() {
     return getControlStrategy()->getChar();
 }
 
+void eloadControlLoop() {
+    getControlStrategy()->controlFunction();
+}
+
+uint32_t eloadControlLoopGetSchedule() {
+    return getControlStrategy()->getSchedule();
+}
+
 bool eloadSetConstantCurrent(uint32_t value) {
     bool bRet = false;
     if (getControlStrategy()->setCurrent) { // does strategy support the operation?
