@@ -28,10 +28,10 @@
 #define DAC_I2C_ADDR           (0x4C)
 
 // address 7 - 6: 0, load mode 5 - 4: 01 direct from i2c, 3: reserved 0, 2 - 1: channel select, 0: pwr down 0
-#define DAC857X_CFG_H0 0x10
-#define DAC857X_CFG_H1 0x12
-#define DAC857X_CFG_H2 0x14
-#define DAC857X_CFG_H3 0x16
+#define DAC857X_CFG_H0 0b00010000
+#define DAC857X_CFG_H1 0b00010010
+#define DAC857X_CFG_H2 0b00010100
+#define DAC857X_CFG_H3 0b00010110
 
 
 uint8_t         d_txBuffer[3];

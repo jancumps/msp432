@@ -37,6 +37,7 @@
 
 
 // bits 7-0  0x85 128SPS, Disable comparator
+// todo: check this, because this is 0x83. What's the best setting for ADC?
 #define ADS1115_CFG_L 0b10000011
 
 // we capture the ADC values in a round robin array of two positions
