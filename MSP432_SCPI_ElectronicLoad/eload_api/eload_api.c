@@ -19,6 +19,7 @@
 #include "eload_api.h"
 #include "dac_impl.h"
 #include "adc_impl.h"
+#include "inputenable_impl.h"
 
 #include "control_strategy_interface.h"
 #include "control_strategy_constantcurrent.h"
@@ -88,6 +89,25 @@ uint32_t eLoadGetVoltageRangeMax() {
 uint32_t eLoadGetOutputRangeMax() {
     return 0b1111111111111111; // 16 bit DAC
 }
+
+// these functions don't need to call the strategy because they are valid for any implementation
+
+void eloadInputEnable(bool bEnable) {
+    MsgInputEnable pMsg;
+
+    // value has to be validated before it arrives here. We assume it's valid
+    pMsg.value = bEnable;
+    /* enqueue message */
+    Mailbox_post(mbInputEnable, &pMsg, BIOS_WAIT_FOREVER);
+
+}
+
+bool eloadInputEnabled() {
+    return inputenableImplGetInputEnable();
+}
+
+
+
 
 void eLoadTest() {
     // todo: make this a system test, currently used to test different new things

@@ -225,6 +225,26 @@ static scpi_result_t ELOAD_SetVoltageImmediate(scpi_t * context) {
     return SCPI_RES_OK;
 }
 
+static scpi_result_t ELOAD_SetInputState(scpi_t * context) {
+    scpi_bool_t param1;
+
+        /* read first parameter if present */
+    if (!SCPI_ParamBool(context, &param1, TRUE)) {
+        return SCPI_RES_ERR;
+    }
+    eloadInputEnable(param1);
+
+
+    return SCPI_RES_OK;
+}
+
+static scpi_result_t ELOAD_GetInputState(scpi_t * context) {
+    SCPI_ResultBool(context, eloadInputEnabled());
+
+    return SCPI_RES_OK;
+}
+
+
 
 const scpi_command_t scpi_commands[] = {
     /* IEEE Mandated Commands (SCPI std V1999.0 4.1.1) */
@@ -270,6 +290,8 @@ const scpi_command_t scpi_commands[] = {
     /* ELECTRONIC LOAD COMMANDS */
     {.pattern = "[:SOURce]:CURRent[:LEVel][:IMMediate]", .callback = ELOAD_SetCurrentImmediate,},
     {.pattern = "[:SOURce]:VOLTage[:LEVel][:IMMediate]", .callback = ELOAD_SetVoltageImmediate,},
+    {.pattern = "[:SOURce]:INPut[:STATe]", .callback = ELOAD_SetInputState,},
+    {.pattern = "[:SOURce]:INPut[:STATe]?", .callback = ELOAD_GetInputState,},
 
     SCPI_CMD_LIST_END
 };

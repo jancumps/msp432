@@ -45,6 +45,9 @@ uint32_t eLoadGetCurrentRangeMax();
 uint32_t eLoadGetVoltageRangeMax();
 uint32_t eLoadGetOutputRangeMax();
 
+void eloadInputEnable(bool bEnable);
+bool eloadInputEnabled();
+
 
 void eLoadTest();
 void eLoadRawSetDac(uint32_t uModule, uint32_t value);
