@@ -28,7 +28,7 @@
 // storage for the state
 volatile bool bInputEnable_State = false;
 
-uint8_t         d_txBuffer[3];
+uint8_t         d_txBuffer[2];
 uint8_t         d_rxBuffer[1]; // DAC doesn't read
 I2C_Transaction d_i2cTransaction;
 
@@ -42,28 +42,46 @@ Void fnTaskInputEnable(UArg arg0, UArg arg1)
     d_i2cTransaction.writeBuf = d_txBuffer;
     d_i2cTransaction.readBuf = d_rxBuffer;
     d_i2cTransaction.slaveAddress = PORTEXTENDER_I2C_ADDR;
-    d_i2cTransaction.writeCount = 3;
+    d_i2cTransaction.writeCount = 2;
     d_i2cTransaction.readCount = 0;
 
     // initialise and set output to off
-    // todo
+
+    // first set all outputs to high
+
+    d_txBuffer[0] = 0x01; // control register: select output port register
+    d_txBuffer[1] = 0xFF; // set each bit high in the output register
+    if (! I2C_transfer(i2c_implGetHandle(), &d_i2cTransaction)) {
+        System_printf("I2C Bus fault\n");
+        System_flush();
+    }
+
+    d_txBuffer[0] = 0x03; // control register: select configuration register
+    d_txBuffer[1] = 0x00; // set each bit low so that all 8 pins are outputs (recommended state for unused pins)
+    if (! I2C_transfer(i2c_implGetHandle(), &d_i2cTransaction)) {
+        System_printf("I2C Bus fault\n");
+        System_flush();
+    }
 
 
+    // from now on we only write to the output port register.
+    // Value d_txBuffer[0] can be fixed outside the loop
+
+    d_txBuffer[0] = 0x01; // control register: select output port register
 
     while (1) {
 
         /* wait for mailbox to be posted by writer() */
         if (Mailbox_pend(mbInputEnable, &d_msg, BIOS_WAIT_FOREVER)) {
-//            d_txBuffer[0] = // todo
-//            d_txBuffer[1] = // todo >> 8; // MSB
-//            d_txBuffer[2] = // todo; // LSB
-//            if (! I2C_transfer(i2c_implGetHandle(), &d_i2cTransaction)) {
-//                System_printf("I2C Bus fault\n");
-//                System_flush();
-//            } else {
-        //}
-            // bInputEnable_State = todo ;
-            bInputEnable_State = d_msg.value;
+
+            d_txBuffer[1] = d_msg.value ? 0x3F : 0xFF; // bit 7 low is output enable.
+            if (! I2C_transfer(i2c_implGetHandle(), &d_i2cTransaction)) {
+                System_printf("I2C Bus fault\n");
+                System_flush();
+            } else {
+                bInputEnable_State = d_msg.value;
+            }
+
         }
     }
 }
