@@ -1,5 +1,5 @@
 /*
- * outputenable_impl.c
+ * inputenable_impl.c
  *
  *  Created on: 3 dec. 2017
  *      Author: jancu
