@@ -19,4 +19,6 @@ typedef struct CalibrationData {
 
 #define CALIBRATION_DATA_SIZE (sizeof(CalibrationData))
 
+void calibrationRead();
+
 #endif /* CALIBRATION_IMPL_CALIBRATION_IMPL_H_ */

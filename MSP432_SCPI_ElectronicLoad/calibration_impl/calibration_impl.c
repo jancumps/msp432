@@ -13,20 +13,14 @@
 
 #define CALIBRATION_START 0x0003F000
 
-void CalibrationRead() {
-    CalibrationData c;
+CalibrationData c;
 
+void calibrationRead() {
     memcpy(&c, (const void *)CALIBRATION_START, CALIBRATION_DATA_SIZE);
-
-
-
 }
 
-void CalibrationWrite() {
+void calibrationWrite() {
 
-    // todo: this is demo, remove it later
-
-    CalibrationData c;
     c.version = CALIBRATION_DATA_VERSION;
     c.temperature_thresholds[0] = 1;
     c.temperature_thresholds[1] = 2;
@@ -51,8 +45,4 @@ void CalibrationWrite() {
 
     /* Setting the sector back to protected  */
     MAP_FlashCtl_protectSector(FLASH_MAIN_MEMORY_SPACE_BANK1,FLASH_SECTOR31);
-
-
-
-
 }
