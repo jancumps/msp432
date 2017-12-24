@@ -54,6 +54,8 @@
 #include"scpi-def.h"
 #include "eload_api.h"
 
+#include "calibration_impl.h"
+
 /*
  *  ======== fnTaskHeartbeat ========
  *  Toggle the Board_LED0. The Task_sleep is determined by arg0 which
@@ -89,7 +91,7 @@ int main(void)
     Board_initUART();
     Board_initI2C();
 
-
+    CalibrationRead();
 
     /* Construct BIOS objects */
     // this is done in the TI-RTOS configuration file
