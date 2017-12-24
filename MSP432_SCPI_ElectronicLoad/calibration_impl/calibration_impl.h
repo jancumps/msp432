@@ -10,6 +10,7 @@
 
 #include <stdint.h>
 
+// update the version only when adding new fields
 #define CALIBRATION_DATA_VERSION 1U
 
 typedef struct CalibrationData {

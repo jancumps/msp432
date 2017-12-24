@@ -21,11 +21,8 @@ void calibrationRead() {
 
 void calibrationWrite() {
 
-    c.version = CALIBRATION_DATA_VERSION;
-    c.temperature_thresholds[0] = 1;
-    c.temperature_thresholds[1] = 2;
-    c.temperature_thresholds[2] = 3;
-    c.temperature_thresholds[3] = 4;
+    c.version = CALIBRATION_DATA_VERSION; // writing calibration data will always set the version to the latest
+
 
     /* Unprotecting Info Bank 0, Sector 0  */
     MAP_FlashCtl_unprotectSector(FLASH_MAIN_MEMORY_SPACE_BANK1,FLASH_SECTOR31);
