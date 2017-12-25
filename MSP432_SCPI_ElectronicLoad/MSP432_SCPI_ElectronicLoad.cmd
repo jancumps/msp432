@@ -36,7 +36,8 @@
 
 MEMORY
 {
-    MAIN       (RX) : origin = 0x00000000, length = 0x00040000
+    MAIN       (RX) : origin = 0x00000000, length = 0x0003EFFF
+    CALI       (RX) : origin = 0x0003F000, length = 0x00001000
     INFO       (RX) : origin = 0x00200000, length = 0x00004000
     SRAM_CODE  (RWX): origin = 0x01000000, length = 0x00010000
     SRAM_DATA  (RW) : origin = 0x20000000, length = 0x00010000
@@ -50,6 +51,7 @@ SECTIONS
     .const  :   > MAIN
     .cinit  :   > MAIN
     .pinit  :   > MAIN
+    .cali   :   > CALI
 
 #ifdef __TI_COMPILER_VERSION__
 #if __TI_COMPILER_VERSION__ >= 15009000
