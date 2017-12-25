@@ -13,15 +13,15 @@
 
 #define CALIBRATION_START 0x0003F000
 
-CalibrationData c;
+CalibrationData _CalibrationData;
 
 void calibrationRead() {
-    memcpy(&c, (const void *)CALIBRATION_START, CALIBRATION_DATA_SIZE);
+    memcpy(&_CalibrationData, (const void *)CALIBRATION_START, CALIBRATION_DATA_SIZE);
 }
 
 void calibrationWrite() {
 
-    c.version = CALIBRATION_DATA_VERSION; // writing calibration data will always set the version to the latest
+    _CalibrationData.version = CALIBRATION_DATA_VERSION; // writing calibration data will always set the version to the latest
 
 
     /* Unprotecting Info Bank 0, Sector 0  */
@@ -36,8 +36,8 @@ void calibrationWrite() {
     /* Trying to program the memory. Within this function, the API will
         automatically try to program the maximum number of tries. If it fails,
         trap inside an infinite loop */
-    if(!MAP_FlashCtl_programMemory(&c,
-            CALIBRATION_START, CALIBRATION_DATA_SIZE))
+    if(!MAP_FlashCtl_programMemory(&_CalibrationData,
+            (void *)CALIBRATION_START, CALIBRATION_DATA_SIZE))
                 while(1);
 
     /* Setting the sector back to protected  */
