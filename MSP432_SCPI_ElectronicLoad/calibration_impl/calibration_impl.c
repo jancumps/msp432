@@ -10,6 +10,7 @@
 #include <rom.h>
 #include <rom_map.h>
 #include "flash.h"
+#include "adc_impl.h"
 
 #define CALIBRATION_START 0x0003F000
 
@@ -18,7 +19,7 @@
 
 typedef struct CalibrationData {
     uint32_t version;
-    uint32_t temperature_threshold;
+    float temperature_threshold;  // todo convert to the ADC 16 bit value in stead of float
 } CalibrationData;
 
 #define CALIBRATION_DATA_SIZE (sizeof(CalibrationData))
@@ -26,6 +27,8 @@ typedef struct CalibrationData {
 CalibrationData _CalibrationData;
 
 bool _bCalibrationActive = false;
+
+void calibrationWrite();
 
 bool calibrationActive() {
     return _bCalibrationActive;
@@ -80,8 +83,8 @@ void calibrationWrite() {
  */
 bool calibrationSetTemperatureMaxResistance(uint32_t value) {
     if(_bCalibrationActive) {
-        // Vout formula is Vin*Rt/(R1+Rt)
-        _CalibrationData.temperature_threshold = ((5*value)/(10000+value)); // todo work on the floating points here.
+        // formula: Vout = Vin*Rt/(R1+Rt)
+        _CalibrationData.temperature_threshold = ((5.0*value)/(10000.0+value)); // todo convert to the ADC 16 bit value in stead of float
     }
     return _bCalibrationActive;
 }
@@ -92,11 +95,7 @@ bool calibrationSetTemperatureMaxResistance(uint32_t value) {
  */
 uint32_t calibrationGetTemperatureMaxResistance() {
     uint32_t uRetVal = 0U;
-
-    if(_CalibrationData.temperature_threshold) {
-        // formula: Rt = R1.(1/((Vin/Vout)-1))
-        uRetVal = 10000 * (1/((5/_CalibrationData.temperature_threshold)-1));
-
-    }
+    // formula: Rt = R1.(1/((Vin/Vout)-1))
+    uRetVal = 10000.0 * (1.0/((5.0/_CalibrationData.temperature_threshold)-1.0)); // todo convert to the ADC 16 bit value in stead of float
     return uRetVal;
 }

@@ -152,3 +152,7 @@ bool eloadCalibrationEnd() {
 bool eLoadCalibrateSetTemperatureMaxResistance(uint32_t value) {
     return calibrationSetTemperatureMaxResistance(value);
 }
+
+uint32_t eLoadCalibrateGetTemperatureMaxResistance() {
+    return calibrationGetTemperatureMaxResistance();
+}

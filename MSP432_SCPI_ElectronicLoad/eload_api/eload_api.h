@@ -59,6 +59,7 @@ float eLoadDevelopGetAdcVolt(uint32_t uModule);
 void eloadCalibrationStart();
 bool eloadCalibrationEnd();
 bool eLoadCalibrateSetTemperatureMaxResistance(uint32_t value);
+uint32_t eLoadCalibrateGetTemperatureMaxResistance();
 
 
 
