@@ -126,7 +126,7 @@ void eLoadTest() {
 
 }
 
-void eLoadRawSetDac(uint32_t uModule, uint32_t value) {
+void eLoadRawSetDac(uint32_t uModule, uint32_t value) { // module is 0 based
     MsgDAC      pMsg;
 
     // value has to be validated before it arrives here. We assume it's valid
@@ -137,17 +137,17 @@ void eLoadRawSetDac(uint32_t uModule, uint32_t value) {
 
 }
 
-uint32_t eLoadDevelopGetAdc(uint32_t uModule) {
+uint32_t eLoadDevelopGetAdc(uint32_t uModule) { // module is 0 based
 
     return adcImplToValue(adcImplGetAdc(uModule));
 }
 
-uint32_t eLoadDevelopGetAdcRaw(uint32_t uModule) {
+uint32_t eLoadDevelopGetAdcRaw(uint32_t uModule) { // module is 0 based
 
     return adcImplGetAdc(uModule);
 }
 
-float eLoadDevelopGetAdcVolt(uint32_t uModule) {
+float eLoadDevelopGetAdcVolt(uint32_t uModule) { // module is 0 based
 
     return adcImplToFloat(adcImplGetAdc(uModule));
 }
