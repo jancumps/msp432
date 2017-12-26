@@ -37,11 +37,13 @@ void calibrationStart() {
 }
 
 bool calibrationEnd() {
+    bool bRetVal = false;
     if (_bCalibrationActive) {
         calibrationWrite();
         _bCalibrationActive = false;
+        bRetVal = true;
     }
-    return (! _bCalibrationActive); // success if we cleared the calibration active flag
+    return (bRetVal);
 }
 
 void calibrationRead() {
