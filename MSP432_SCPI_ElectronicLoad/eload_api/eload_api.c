@@ -24,11 +24,11 @@
 #include "control_strategy_interface.h"
 #include "control_strategy_constantcurrent.h"
 
+#include "calibration_impl.h"
 
 double eloadGetVoltageDC() {
     return (double)3.141592653589793; // todo: get input voltage from the sampled value
 }
-
 
 void eloadSetMode(eload_mode mode){
     switch (mode) {
@@ -139,4 +139,16 @@ uint32_t eLoadDevelopGetAdcRaw(uint32_t uModule) {
 float eLoadDevelopGetAdcVolt(uint32_t uModule) {
 
     return adcImplToFloat(adcImplGetAdc(uModule));
+}
+
+void eloadCalibrationStart() {
+    calibrationStart();
+}
+
+bool eloadCalibrationEnd() {
+    return calibrationEnd();
+}
+
+bool eLoadCalibrateSetTemperatureMaxResistance(uint32_t value) {
+    return calibrationSetTemperatureMaxResistance(value);
 }

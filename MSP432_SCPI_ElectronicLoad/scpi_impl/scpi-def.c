@@ -244,6 +244,20 @@ static scpi_result_t ELOAD_GetInputState(scpi_t * context) {
     return SCPI_RES_OK;
 }
 
+/* CALIBRATION AND CONFIGURATION COMMANDS */
+
+static scpi_result_t ELOAD_CalibrationStart(scpi_t * context) {
+    eloadCalibrationStart();
+    return SCPI_RES_OK;
+}
+
+static scpi_result_t ELOAD_CalibrationEnd(scpi_t * context) {
+    if (!eloadCalibrationEnd()){
+        SCPI_ErrorPush(context, SCPI_ERROR_EXECUTION_ERROR);
+        return SCPI_RES_ERR;
+    }
+    return SCPI_RES_OK;
+}
 
 
 const scpi_command_t scpi_commands[] = {
@@ -293,6 +307,10 @@ const scpi_command_t scpi_commands[] = {
     {.pattern = "[:SOURce]:INPut[:STATe]", .callback = ELOAD_SetInputState,},
     {.pattern = "[:SOURce]:INPut[:STATe]?", .callback = ELOAD_GetInputState,},
 
+    /* CALIBRATION AND CONFIGURATION COMMANDS */
+    {.pattern = ":CALibration:Start", .callback = ELOAD_CalibrationStart,},
+    {.pattern = ":CALibration:End", .callback = ELOAD_CalibrationEnd,},
+
     SCPI_CMD_LIST_END
 };
 
@@ -301,7 +319,7 @@ scpi_interface_t scpi_interface = {
     .write = SCPI_Write,
     .control = NULL,        // haven't implemented communication channel control
     .flush = NULL,            // don't need flush for SCI / USB
-    .reset = NULL,            // haven't implemented instrument reset
+    .reset = NULL,            // todo haven't implemented instrument reset
 };
 
 char scpi_input_buffer[SCPI_INPUT_BUFFER_LENGTH];

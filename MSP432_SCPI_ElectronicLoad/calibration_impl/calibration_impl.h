@@ -9,17 +9,14 @@
 #define CALIBRATION_IMPL_CALIBRATION_IMPL_H_
 
 #include <stdint.h>
+#include <stdbool.h>
 
-// update the version only when adding new fields
-#define CALIBRATION_DATA_VERSION 1U
-
-typedef struct CalibrationData {
-    uint32_t version;
-    uint32_t temperature_thresholds[4];
-} CalibrationData;
-
-#define CALIBRATION_DATA_SIZE (sizeof(CalibrationData))
+void calibrationStart();
+bool calibrationEnd();
 
 void calibrationRead();
+
+bool calibrationSetTemperatureMaxResistance(uint32_t value);
+uint32_t calibrationGetTemperatureMaxResistance();
 
 #endif /* CALIBRATION_IMPL_CALIBRATION_IMPL_H_ */

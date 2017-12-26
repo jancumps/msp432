@@ -55,6 +55,12 @@ uint32_t eLoadDevelopGetAdc(uint32_t uModule);
 uint32_t eLoadDevelopGetAdcRaw();
 float eLoadDevelopGetAdcVolt(uint32_t uModule);
 
+// calibration
+void eloadCalibrationStart();
+bool eloadCalibrationEnd();
+bool eLoadCalibrateSetTemperatureMaxResistance(uint32_t value);
+
+
 
 
 #endif /* ELOAD_API_ELOAD_API_H_ */
