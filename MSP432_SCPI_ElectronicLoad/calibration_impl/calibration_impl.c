@@ -77,7 +77,7 @@ void calibrationWrite() {
 }
 
 /**
- * this function expects the resistance of the NTC thyristor at the point where the electronic load is overheated.
+ * this function expects the resistance of the NTC thermistor at the point where the electronic load is overheated.
  * It then calculates, based on the fact that the voltage is 5V and that the NTC is the lower part of a voltage divider
  * where the other resistor is 10K, the voltage that appears on ADC C if the maximum temperature is reached
  */
@@ -98,4 +98,8 @@ uint32_t calibrationGetTemperatureMaxResistance() {
     // formula: Rt = R1.(1/((Vin/Vout)-1))
     uRetVal = 10000.0 * (1.0/((5.0/_CalibrationData.temperature_threshold)-1.0)); // todo convert to the ADC 16 bit value in stead of float
     return uRetVal;
+}
+
+float calibrationGetTemperatureMaxFloat() { // todo: remove when we turned all overload functionality to uint
+    return _CalibrationData.temperature_threshold;
 }

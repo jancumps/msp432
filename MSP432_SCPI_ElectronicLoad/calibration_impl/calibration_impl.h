@@ -19,4 +19,6 @@ void calibrationRead();
 bool calibrationSetTemperatureMaxResistance(uint32_t value);
 uint32_t calibrationGetTemperatureMaxResistance();
 
+float calibrationGetTemperatureMaxFloat();
+
 #endif /* CALIBRATION_IMPL_CALIBRATION_IMPL_H_ */

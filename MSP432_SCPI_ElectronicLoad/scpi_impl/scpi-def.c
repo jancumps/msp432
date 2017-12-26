@@ -266,7 +266,7 @@ static scpi_result_t ELOAD_CalibrationEnd(scpi_t * context) {
     return SCPI_RES_OK;
 }
 
-static scpi_result_t ELOAD_CalibrationSetTemperatureMaxResistance(scpi_t * context) {
+static scpi_result_t ELOAD_CalibrationTemperatureMaxResistance(scpi_t * context) {
     uint32_t param1;
     if (!SCPI_ParamUInt32(context, &param1, TRUE)) {
         return SCPI_RES_ERR;
@@ -278,7 +278,7 @@ static scpi_result_t ELOAD_CalibrationSetTemperatureMaxResistance(scpi_t * conte
     return SCPI_RES_OK;
 }
 
-static scpi_result_t ELOAD_CalibrationGetTemperatureMaxResistance(scpi_t * context) {
+static scpi_result_t ELOAD_CalibrationTemperatureMaxResistanceQ(scpi_t * context) {
     SCPI_ResultUInt32(context, eLoadCalibrateGetTemperatureMaxResistance());
     return SCPI_RES_OK;
 }
@@ -333,8 +333,8 @@ const scpi_command_t scpi_commands[] = {
     /* CALIBRATION AND CONFIGURATION COMMANDS */
     {.pattern = "CALibration:STArt", .callback = ELOAD_CalibrationStart,},
     {.pattern = "CALibration:END", .callback = ELOAD_CalibrationEnd,},
-    {.pattern = "CALibration:TEMPERATUREMaxResistance", .callback = ELOAD_CalibrationSetTemperatureMaxResistance,},
-    {.pattern = "CALibration:TEMPERATUREMaxResistance?", .callback = ELOAD_CalibrationGetTemperatureMaxResistance,},
+    {.pattern = "CALibration:TEMPERATUREMaxResistance", .callback = ELOAD_CalibrationTemperatureMaxResistance,},
+    {.pattern = "CALibration:TEMPERATUREMaxResistance?", .callback = ELOAD_CalibrationTemperatureMaxResistanceQ,},
 
     SCPI_CMD_LIST_END
 };
