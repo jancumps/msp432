@@ -84,6 +84,7 @@ void calibrationWrite() {
 bool calibrationSetTemperatureMaxResistance(uint32_t value) {
     if(_bCalibrationActive) {
         // formula: Vout = Vin*Rt/(R1+Rt)
+        // https://en.wikipedia.org/wiki/Voltage_divider
         _CalibrationData.temperature_threshold = ((5.0*value)/(10000.0+value)); // todo convert to the ADC 16 bit value in stead of float
     }
     return _bCalibrationActive;
@@ -96,6 +97,7 @@ bool calibrationSetTemperatureMaxResistance(uint32_t value) {
 uint32_t calibrationGetTemperatureMaxResistance() {
     uint32_t uRetVal = 0U;
     // formula: Rt = R1.(1/((Vin/Vout)-1))
+    // https://en.wikipedia.org/wiki/Voltage_divider
     uRetVal = 10000.0 * (1.0/((5.0/_CalibrationData.temperature_threshold)-1.0)); // todo convert to the ADC 16 bit value in stead of float
     return uRetVal;
 }
