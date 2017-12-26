@@ -29,6 +29,8 @@ typedef enum eload_mode {
 e.
  */
 
+void eloadReset();
+
 double eloadGetVoltageDC();
 
 void eloadSetMode(eload_mode mode);

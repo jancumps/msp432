@@ -75,6 +75,13 @@ static scpi_result_t My_CoreTstQ(scpi_t * context) {
 
 /* Electronic Load commands */
 
+scpi_result_t SCPI_Reset(scpi_t * context) {
+    (void) context;
+    eloadReset();
+    return SCPI_RES_OK;
+}
+
+
 static scpi_result_t DMM_MeasureVoltageDcQ(scpi_t * context) {
 
     SCPI_ResultDouble(context, eloadGetVoltageDC());
@@ -324,10 +331,10 @@ const scpi_command_t scpi_commands[] = {
     {.pattern = "[:SOURce]:INPut[:STATe]?", .callback = ELOAD_GetInputState,},
 
     /* CALIBRATION AND CONFIGURATION COMMANDS */
-    {.pattern = ":CALibration:Start", .callback = ELOAD_CalibrationStart,},
-    {.pattern = ":CALibration:End", .callback = ELOAD_CalibrationEnd,},
-    {.pattern = ":CALibration:TEMPERATUREMaxResistance", .callback = ELOAD_CalibrationSetTemperatureMaxResistance,},
-    {.pattern = ":CALibration:TEMPERATUREMaxResistance?", .callback = ELOAD_CalibrationGetTemperatureMaxResistance,},
+    {.pattern = "CALibration:STArt", .callback = ELOAD_CalibrationStart,},
+    {.pattern = "CALibration:END", .callback = ELOAD_CalibrationEnd,},
+    {.pattern = "CALibration:TEMPERATUREMaxResistance", .callback = ELOAD_CalibrationSetTemperatureMaxResistance,},
+    {.pattern = "CALibration:TEMPERATUREMaxResistance?", .callback = ELOAD_CalibrationGetTemperatureMaxResistance,},
 
     SCPI_CMD_LIST_END
 };
@@ -337,7 +344,7 @@ scpi_interface_t scpi_interface = {
     .write = SCPI_Write,
     .control = NULL,        // haven't implemented communication channel control
     .flush = NULL,            // don't need flush for SCI / USB
-    .reset = NULL,            // todo haven't implemented instrument reset
+    .reset = SCPI_Reset,
 };
 
 char scpi_input_buffer[SCPI_INPUT_BUFFER_LENGTH];

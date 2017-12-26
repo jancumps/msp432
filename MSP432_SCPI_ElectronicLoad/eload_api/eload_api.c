@@ -26,11 +26,22 @@
 
 #include "calibration_impl.h"
 
+void eloadReset() {
+    // do not re-read calibration data in this function
+    eloadSetMode(ELOAD_MODE_CURRENT);
+}
+
+
+
 double eloadGetVoltageDC() {
     return (double)3.141592653589793; // todo: get input voltage from the sampled value
 }
 
 void eloadSetMode(eload_mode mode){
+    // switch input off
+    if (eloadInputEnabled()) {
+        eloadInputEnable(false);
+    }
     switch (mode) {
     case ELOAD_MODE_CURRENT:
         setConstantCurrentStrategy();
