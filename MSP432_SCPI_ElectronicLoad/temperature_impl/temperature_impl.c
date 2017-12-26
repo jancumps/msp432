@@ -19,6 +19,7 @@
 
 #include "eload_api.h"
 #include "temperature_impl.h"
+#include "calibration_impl.h"
 
 /*
  *  ======== fnTaskTemperatureOverProtection ========
@@ -34,7 +35,7 @@ Void fnTaskTemperatureOverProtection(UArg arg0, UArg arg1)
            }
 
         }
-
+        Task_sleep(arg0);
     }
 
 }
