@@ -33,6 +33,9 @@
 #define ADS1115_CFG_H2 0b11100000
 #define ADS1115_CFG_H3 0b11110000
 
+// adc 4 is not used. Sample 3 channels
+#define ADC_ACTIVE_INPUTS 3
+
 
 
 
@@ -85,7 +88,7 @@ Void fnTaskADC(UArg arg0, UArg arg1)
 
     while (1)
     {
-        for (i =0; i< 4; i++) {
+        for (i =0; i< ADC_ACTIVE_INPUTS; i++) {
             // we write value to the inactive robin
             // store value of ADC[i]
             // the ADC needs time between channel selection and sampling
@@ -94,7 +97,7 @@ Void fnTaskADC(UArg arg0, UArg arg1)
             // this puts more burden on the RTOS switcher - a compromise
             // - but certainly preferable to a loop
             // (except when later on we find out that the wait is only a few cpu cycles)
-            adcRoundRobin[adcRoundRobinIndex ? 0 : 1].raw[i] = sampleADC(i, (UInt)arg0/4);
+            adcRoundRobin[adcRoundRobinIndex ? 0 : 1].raw[i] = sampleADC(i, (UInt)arg0/ADC_ACTIVE_INPUTS);
         }
 
 
