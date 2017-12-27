@@ -27,15 +27,17 @@
  */
 Void fnTaskTemperatureOverProtection(UArg arg0, UArg arg1)
 {
+    float fSample;
     while (1)
     {
         if (calibrationGetTemperatureMaxResistance()) { // if enabled
-           if ( eLoadDevelopGetAdcVolt(2) < calibrationGetTemperatureMaxFloat()) { // todo this should be a uint calculation
-               eloadInputEnable(false);
-           }
-
+            fSample = eLoadDevelopGetAdcVolt(2);
+            if (fSample > 0.0) { // ignore if no samples been taken yet
+                if ( fSample < calibrationGetTemperatureMaxFloat()) { // todo this should be a uint calculation
+                    eloadInputEnable(false);
+                }
+            }
         }
         Task_sleep(arg0);
     }
-
 }
