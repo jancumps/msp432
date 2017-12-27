@@ -82,7 +82,7 @@ void calibrationWrite() {
 /**
  * this function expects the resistance of the NTC thermistor at the point where the electronic load is overheated.
  * It then calculates, based on the fact that the voltage is 5V and that the NTC is the lower part of a voltage divider
- * where the other resistor is 10K, the voltage that appears on ADC C if the maximum temperature is reached
+ * where the other resistor is 10K, the voltage that appears on ADC 3 if the maximum temperature is reached
  */
 bool calibrationSetTemperatureMaxResistance(uint32_t value) {
     if(_bCalibrationActive) {

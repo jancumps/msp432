@@ -34,7 +34,7 @@ void eloadReset() {
 
 
 /**
- * return the voltage on the sense inputs, as sampled by ADC B.
+ * return the voltage on the sense inputs, as sampled by ADC 2.
  * The opamp U3D has a gain of .033.
  * The calibrated multiplier to calculate the voltage at the sense inputs
  * is stored in the calibration structure.
@@ -45,7 +45,7 @@ float eloadGetVoltageDC() {
     if( fRetVal == 0.0) {
         fRetVal = 33.3333;
     }
-    fRetVal = fRetVal * adcImplToFloat(adcImplGetAdc(1)); // thevalue is sampled from ADC B
+    fRetVal = fRetVal * adcImplToFloat(adcImplGetAdc(1)); // thevalue is sampled from ADC 2
 
     return fRetVal;
 
