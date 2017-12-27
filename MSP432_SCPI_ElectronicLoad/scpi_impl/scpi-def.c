@@ -333,8 +333,8 @@ const scpi_command_t scpi_commands[] = {
     /* CALIBRATION AND CONFIGURATION COMMANDS */
     {.pattern = "CALibration:STArt", .callback = ELOAD_CalibrationStart,},
     {.pattern = "CALibration:END", .callback = ELOAD_CalibrationEnd,},
-    {.pattern = "CALibration:TEMPERATUREMaxResistance", .callback = ELOAD_CalibrationTemperatureMaxResistance,},
-    {.pattern = "CALibration:TEMPERATUREMaxResistance?", .callback = ELOAD_CalibrationTemperatureMaxResistanceQ,},
+    {.pattern = "CALibration:TEMPERATUREMAXResistance", .callback = ELOAD_CalibrationTemperatureMaxResistance,},
+    {.pattern = "CALibration:TEMPERATUREMAXResistance?", .callback = ELOAD_CalibrationTemperatureMaxResistanceQ,},
 
     SCPI_CMD_LIST_END
 };
