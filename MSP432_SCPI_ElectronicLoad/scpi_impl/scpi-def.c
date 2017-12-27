@@ -255,7 +255,7 @@ static scpi_result_t ELOAD_CalibrationEnd(scpi_t * context) {
     return SCPI_RES_OK;
 }
 
-static scpi_result_t SCPI_CalibrationAdcVoltQ(scpi_t * context) {
+static scpi_result_t ELOAD_CalibrationAdcVoltQ(scpi_t * context) {
 
     uint32_t uModule;
 
@@ -340,7 +340,7 @@ const scpi_command_t scpi_commands[] = {
     {.pattern = "DEVElop:DAC#", .callback = SCPI_DevelopSetDac,},
     {.pattern = "DEVElop:ADC#?", .callback = SCPI_DevelopGetAdc,},
     {.pattern = "DEVElop:ADC#:RAW?", .callback = SCPI_DevelopGetAdcRaw,},
-    {.pattern = "DEVElop:ADC#:VOLTage?", .callback = SCPI_CalibrationAdcVoltQ,}, // obsolete, replaced by CALibration:ADC#:VOLTage?
+    {.pattern = "DEVElop:ADC#:VOLTage?", .callback = ELOAD_CalibrationAdcVoltQ,}, // obsolete, replaced by CALibration:ADC#:VOLTage?
 
 
     /* ELECTRONIC LOAD COMMANDS */
@@ -352,7 +352,7 @@ const scpi_command_t scpi_commands[] = {
     /* CALIBRATION AND CONFIGURATION COMMANDS */
     {.pattern = "CALibration:STArt", .callback = ELOAD_CalibrationStart,},
     {.pattern = "CALibration:END", .callback = ELOAD_CalibrationEnd,},
-    {.pattern = "CALibration:ADC#:VOLTage?", .callback = SCPI_CalibrationAdcVoltQ,},
+    {.pattern = "CALibration:ADC#:VOLTage?", .callback = ELOAD_CalibrationAdcVoltQ,},
     {.pattern = "CALibration:TEMPERATUREMAXResistance", .callback = ELOAD_CalibrationTemperatureMaxResistance,},
     {.pattern = "CALibration:TEMPERATUREMAXResistance?", .callback = ELOAD_CalibrationTemperatureMaxResistanceQ,},
     {.pattern = "CALibration:SENSEVoltmultiplier", .callback = ELOAD_CalibrationSenseVoltMultiplier,},
