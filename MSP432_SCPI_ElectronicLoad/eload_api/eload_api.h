@@ -57,11 +57,15 @@ uint32_t eLoadDevelopGetAdc(uint32_t uModule);
 uint32_t eLoadDevelopGetAdcRaw();
 float eLoadDevelopGetAdcVolt(uint32_t uModule);
 
+float eLoadGetSenseVoltage();
+
 // calibration
 void eloadCalibrationStart();
 bool eloadCalibrationEnd();
 bool eLoadCalibrateSetTemperatureMaxResistance(uint32_t value);
 uint32_t eLoadCalibrateGetTemperatureMaxResistance();
+bool eLoadCalibrateSetSenseVoltMultiplier(float value);
+float eLoadCalibrateGetSenseVoltMultiplier();
 
 
 

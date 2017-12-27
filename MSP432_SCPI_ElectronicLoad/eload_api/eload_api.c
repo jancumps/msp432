@@ -152,6 +152,25 @@ float eLoadDevelopGetAdcVolt(uint32_t uModule) { // module is 0 based
     return adcImplToFloat(adcImplGetAdc(uModule));
 }
 
+/**
+ * return the voltage on the sense inputs, as sampled by ADC B.
+ * The opamp U3D has a gain of .033.
+ * The calibrated multiplier to calculate the voltage at the sense inputs
+ * is stored in the calibration structure.
+ * We fetch that in this function. If not set yet, we use the theoreticalmultiplier 33.3333
+ */
+float eLoadGetSenseVoltage() {
+    float fRetVal = calibrationGetSenseVoltageMultiplier();
+    if( fRetVal == 0.0) {
+        fRetVal = 33.3333;
+    }
+    fRetVal = fRetVal * adcImplToFloat(adcImplGetAdc(1)); // thevalue is sampled from ADC B
+
+    return fRetVal;
+
+}
+
+
 void eloadCalibrationStart() {
     calibrationStart();
 }
@@ -166,4 +185,12 @@ bool eLoadCalibrateSetTemperatureMaxResistance(uint32_t value) {
 
 uint32_t eLoadCalibrateGetTemperatureMaxResistance() {
     return calibrationGetTemperatureMaxResistance();
+}
+
+bool eLoadCalibrateSetSenseVoltMultiplier(float value) {
+    return calibrationSetSenseVoltageMultiplier(value);
+}
+
+float eLoadCalibrateGetSenseVoltMultiplier() {
+    return calibrationGetSenseVoltageMultiplier();
 }

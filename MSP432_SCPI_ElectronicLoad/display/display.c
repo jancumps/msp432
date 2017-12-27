@@ -62,12 +62,33 @@ Void fnTaskDisplay(UArg arg0, UArg arg1)
         GrStringDraw(&g_sContext, "mode: ", -1, 5, 0, 0);
         GrStringDraw(&g_sContext, &cMode, 1, 40, 0, 0);
 
-        for (i = 0; i < 4; i++) {
-            // for demo purpose, show ADC voltages
-            sprintf(formatString, "ADC%i: %02.4f\0", i + 1, adcImplToFloat(adcImplGetAdc(i)));
-            GrContextFontSet(&g_sContext, &g_sFontFixed6x8);
-            GrStringDraw(&g_sContext, (int8_t *)formatString, -1, 4, (15 + 12*i), 0);
-        }
+        i = 0;
+        sprintf(formatString, "ADC%i: %02.4f\0", i + 1, adcImplToFloat(adcImplGetAdc(i)));
+        GrContextFontSet(&g_sContext, &g_sFontFixed6x8);
+        GrStringDraw(&g_sContext, (int8_t *)formatString, -1, 4, (15 + 12*i), 0);
+
+        i = 1;
+        sprintf(formatString, "V In: %02.4f\0", eLoadGetSenseVoltage() );
+        GrContextFontSet(&g_sContext, &g_sFontFixed6x8);
+        GrStringDraw(&g_sContext, (int8_t *)formatString, -1, 4, (15 + 12*i), 0);
+
+        i = 2;
+        sprintf(formatString, "ADC%i: %02.4f\0", i + 1, adcImplToFloat(adcImplGetAdc(i)));
+        GrContextFontSet(&g_sContext, &g_sFontFixed6x8);
+        GrStringDraw(&g_sContext, (int8_t *)formatString, -1, 4, (15 + 12*i), 0);
+
+        i = 3;
+        sprintf(formatString, "ADC%i: %02.4f\0", i + 1, adcImplToFloat(adcImplGetAdc(i)));
+        GrContextFontSet(&g_sContext, &g_sFontFixed6x8);
+        GrStringDraw(&g_sContext, (int8_t *)formatString, -1, 4, (15 + 12*i), 0);
+
+
+//        for (i = 0; i < 4; i++) {
+//            // for demo purpose, show ADC voltages
+//            sprintf(formatString, "ADC%i: %02.4f\0", i + 1, adcImplToFloat(adcImplGetAdc(i)));
+//            GrContextFontSet(&g_sContext, &g_sFontFixed6x8);
+//            GrStringDraw(&g_sContext, (int8_t *)formatString, -1, 4, (15 + 12*i), 0);
+//        }
         GrFlush(&g_sContext);
 
     }

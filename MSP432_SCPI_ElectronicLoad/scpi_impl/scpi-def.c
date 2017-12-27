@@ -180,17 +180,6 @@ static scpi_result_t SCPI_DevelopGetAdcRaw(scpi_t * context) {
     return SCPI_RES_OK;
 }
 
-static scpi_result_t SCPI_DevelopGetAdcVolt(scpi_t * context) {
-
-    uint32_t uModule;
-
-    if (ADCGetModule(context, &uModule) == SCPI_RES_ERR) {
-        return SCPI_RES_ERR;
-    }
-    SCPI_ResultFloat(context, eLoadDevelopGetAdcVolt(uModule - 1));
-
-    return SCPI_RES_OK;
-}
 
 static scpi_result_t ELOAD_SetCurrentImmediate(scpi_t * context) {
     uint32_t param1;
@@ -266,6 +255,18 @@ static scpi_result_t ELOAD_CalibrationEnd(scpi_t * context) {
     return SCPI_RES_OK;
 }
 
+static scpi_result_t SCPI_CalibrationAdcVoltQ(scpi_t * context) {
+
+    uint32_t uModule;
+
+    if (ADCGetModule(context, &uModule) == SCPI_RES_ERR) {
+        return SCPI_RES_ERR;
+    }
+    SCPI_ResultFloat(context, eLoadDevelopGetAdcVolt(uModule - 1));
+
+    return SCPI_RES_OK;
+}
+
 static scpi_result_t ELOAD_CalibrationTemperatureMaxResistance(scpi_t * context) {
     uint32_t param1;
     if (!SCPI_ParamUInt32(context, &param1, TRUE)) {
@@ -282,6 +283,24 @@ static scpi_result_t ELOAD_CalibrationTemperatureMaxResistanceQ(scpi_t * context
     SCPI_ResultUInt32(context, eLoadCalibrateGetTemperatureMaxResistance());
     return SCPI_RES_OK;
 }
+
+static scpi_result_t ELOAD_CalibrationSenseVoltMultiplier(scpi_t * context) {
+    float param1;
+    if (!SCPI_ParamFloat(context, &param1, TRUE)) {
+        return SCPI_RES_ERR;
+    }
+    if (!eLoadCalibrateSetSenseVoltMultiplier(param1)){
+        SCPI_ErrorPush(context, SCPI_ERROR_EXECUTION_ERROR);
+        return SCPI_RES_ERR;
+    }
+    return SCPI_RES_OK;
+}
+
+static scpi_result_t ELOAD_CalibrationSenseVoltMultiplierQ(scpi_t * context) {
+    SCPI_ResultFloat(context, eLoadCalibrateGetSenseVoltMultiplier());
+    return SCPI_RES_OK;
+}
+
 
 const scpi_command_t scpi_commands[] = {
     /* IEEE Mandated Commands (SCPI std V1999.0 4.1.1) */
@@ -321,7 +340,7 @@ const scpi_command_t scpi_commands[] = {
     {.pattern = "DEVElop:DAC#", .callback = SCPI_DevelopSetDac,},
     {.pattern = "DEVElop:ADC#?", .callback = SCPI_DevelopGetAdc,},
     {.pattern = "DEVElop:ADC#:RAW?", .callback = SCPI_DevelopGetAdcRaw,},
-    {.pattern = "DEVElop:ADC#:VOLTage?", .callback = SCPI_DevelopGetAdcVolt,},
+    {.pattern = "DEVElop:ADC#:VOLTage?", .callback = SCPI_CalibrationAdcVoltQ,}, // obsolete, replaced by CALibration:ADC#:VOLTage?
 
 
     /* ELECTRONIC LOAD COMMANDS */
@@ -333,8 +352,11 @@ const scpi_command_t scpi_commands[] = {
     /* CALIBRATION AND CONFIGURATION COMMANDS */
     {.pattern = "CALibration:STArt", .callback = ELOAD_CalibrationStart,},
     {.pattern = "CALibration:END", .callback = ELOAD_CalibrationEnd,},
+    {.pattern = "CALibration:ADC#:VOLTage?", .callback = SCPI_CalibrationAdcVoltQ,},
     {.pattern = "CALibration:TEMPERATUREMAXResistance", .callback = ELOAD_CalibrationTemperatureMaxResistance,},
     {.pattern = "CALibration:TEMPERATUREMAXResistance?", .callback = ELOAD_CalibrationTemperatureMaxResistanceQ,},
+    {.pattern = "CALibration:SENSEVoltmultiplier", .callback = ELOAD_CalibrationSenseVoltMultiplier,},
+    {.pattern = "CALibration:SENSEVoltmultiplier?", .callback = ELOAD_CalibrationSenseVoltMultiplierQ,},
 
     SCPI_CMD_LIST_END
 };

@@ -9,6 +9,7 @@
 #include "calibration_impl.h"
 #include <rom.h>
 #include <rom_map.h>
+#include <math.h>
 #include "flash.h"
 #include "adc_impl.h"
 
@@ -20,6 +21,7 @@
 typedef struct CalibrationData {
     uint32_t version;
     float temperature_threshold;  // todo convert to the ADC 16 bit value in stead of float
+    float sence_voltage_multiplier;
 } CalibrationData;
 
 #define CALIBRATION_DATA_SIZE (sizeof(CalibrationData))
@@ -29,6 +31,7 @@ CalibrationData _CalibrationData;
 bool _bCalibrationActive = false;
 
 void calibrationWrite();
+
 
 bool calibrationActive() {
     return _bCalibrationActive;
@@ -102,6 +105,18 @@ uint32_t calibrationGetTemperatureMaxResistance() {
     return uRetVal;
 }
 
-float calibrationGetTemperatureMaxFloat() { // todo: remove when we turned all overload functionality to uint
+float calibrationGetTemperatureMaxResistanceFloat() { // todo: remove when we turned all overload functionality to uint
     return _CalibrationData.temperature_threshold;
+}
+
+bool calibrationSetSenseVoltageMultiplier(float value) {
+    if(_bCalibrationActive) {
+        _CalibrationData.sence_voltage_multiplier = value;
+    }
+    return _bCalibrationActive;
+}
+
+
+float calibrationGetSenseVoltageMultiplier() {
+    return isnan(_CalibrationData.sence_voltage_multiplier) ? 0.0 : _CalibrationData.sence_voltage_multiplier;
 }
