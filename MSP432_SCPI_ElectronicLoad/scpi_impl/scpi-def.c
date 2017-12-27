@@ -84,7 +84,7 @@ scpi_result_t SCPI_Reset(scpi_t * context) {
 
 static scpi_result_t DMM_MeasureVoltageDcQ(scpi_t * context) {
 
-    SCPI_ResultDouble(context, eloadGetVoltageDC());
+    SCPI_ResultFloat(context, eloadGetVoltageDC());
 
     return SCPI_RES_OK;
 }

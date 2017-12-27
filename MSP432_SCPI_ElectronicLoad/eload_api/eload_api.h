@@ -31,7 +31,7 @@ e.
 
 void eloadReset();
 
-double eloadGetVoltageDC();
+float eloadGetVoltageDC();
 
 void eloadSetMode(eload_mode mode);
 eload_mode eloadGetMode();
@@ -57,7 +57,6 @@ uint32_t eLoadDevelopGetAdc(uint32_t uModule);
 uint32_t eLoadDevelopGetAdcRaw();
 float eLoadDevelopGetAdcVolt(uint32_t uModule);
 
-float eLoadGetSenseVoltage();
 
 // calibration
 void eloadCalibrationStart();
