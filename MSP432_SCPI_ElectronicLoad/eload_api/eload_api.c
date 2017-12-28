@@ -26,6 +26,14 @@
 
 #include "calibration_impl.h"
 
+
+void eloadInit() {
+    // get the calibration data saved in Flash
+    calibrationRead();
+    // reset the instrument
+    eloadReset();
+}
+
 void eloadReset() {
     // do not re-read calibration data in this function
     eloadSetMode(ELOAD_MODE_CURRENT);
@@ -103,15 +111,15 @@ bool eloadSetConstantVoltage(uint32_t value) {
 }
 
 
-uint32_t eLoadGetCurrentRangeMax() {
+uint32_t eloadGetCurrentRangeMax() {
     return 0b1111111111111111; // 16 bit ADC
 }
 
-uint32_t eLoadGetVoltageRangeMax() {
+uint32_t eloadGetVoltageRangeMax() {
     return 0b1111111111111111; // 16 bit ADC
 }
 
-uint32_t eLoadGetOutputRangeMax() {
+uint32_t eloadGetOutputRangeMax() {
     return 0b1111111111111111; // 16 bit DAC
 }
 
@@ -134,13 +142,13 @@ bool eloadInputEnabled() {
 
 
 
-void eLoadTest() {
+void eloadTest() {
     // todo: make this a system test, currently used to test different new things
 
 
 }
 
-void eLoadRawSetDac(uint32_t uModule, uint32_t value) { // module is 0 based
+void eloadRawSetDac(uint32_t uModule, uint32_t value) { // module is 0 based
     MsgDAC      pMsg;
 
     // value has to be validated before it arrives here. We assume it's valid
@@ -151,22 +159,15 @@ void eLoadRawSetDac(uint32_t uModule, uint32_t value) { // module is 0 based
 
 }
 
-uint32_t eLoadDevelopGetAdc(uint32_t uModule) { // module is 0 based
+uint32_t eloadDevelopGetAdc(uint32_t uModule) { // module is 0 based
 
     return adcImplToValue(adcImplGetAdc(uModule));
 }
 
-uint32_t eLoadDevelopGetAdcRaw(uint32_t uModule) { // module is 0 based
+uint32_t eloadDevelopGetAdcRaw(uint32_t uModule) { // module is 0 based
 
     return adcImplGetAdc(uModule);
 }
-
-float eLoadDevelopGetAdcVolt(uint32_t uModule) { // module is 0 based
-
-    return adcImplToFloat(adcImplGetAdc(uModule));
-}
-
-
 
 
 void eloadCalibrationStart() {
@@ -177,18 +178,24 @@ bool eloadCalibrationEnd() {
     return calibrationEnd();
 }
 
-bool eLoadCalibrateSetTemperatureMaxResistance(uint32_t value) {
+bool eloadCalibrateSetTemperatureMaxResistance(uint32_t value) {
     return calibrationSetTemperatureMaxResistance(value);
 }
 
-uint32_t eLoadCalibrateGetTemperatureMaxResistance() {
+uint32_t eloadCalibrateGetTemperatureMaxResistance() {
     return calibrationGetTemperatureMaxResistance();
 }
 
-bool eLoadCalibrateSetSenseVoltMultiplier(float value) {
+bool eloadCalibrateSetSenseVoltMultiplier(float value) {
     return calibrationSetSenseVoltageMultiplier(value);
 }
 
-float eLoadCalibrateGetSenseVoltMultiplier() {
+float eloadCalibrateGetSenseVoltMultiplier() {
     return calibrationGetSenseVoltageMultiplier();
 }
+
+float eloadCalibrateGetAdcVolt(uint32_t uModule) { // module is 0 based
+
+    return adcImplToFloat(adcImplGetAdc(uModule));
+}
+

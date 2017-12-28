@@ -15,7 +15,7 @@ bool bConstantCurrentChanged;
 
 void ConstantCurrentStrategyControlFunction () {
     if (bConstantCurrentChanged) {
-        eLoadRawSetDac(0, uConstantCurrent);
+        eloadRawSetDac(0, uConstantCurrent);
         bConstantCurrentChanged = false;
     }
     return;

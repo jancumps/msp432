@@ -29,6 +29,7 @@ typedef enum eload_mode {
 e.
  */
 
+void eloadInit();
 void eloadReset();
 
 float eloadGetVoltageDC();
@@ -43,28 +44,28 @@ uint32_t eloadControlLoopGetSchedule();
 bool eloadSetConstantCurrent(uint32_t value);
 bool eloadSetConstantVoltage(uint32_t value);
 
-uint32_t eLoadGetCurrentRangeMax();
-uint32_t eLoadGetVoltageRangeMax();
-uint32_t eLoadGetOutputRangeMax();
+uint32_t eloadGetCurrentRangeMax();
+uint32_t eloadGetVoltageRangeMax();
+uint32_t eloadGetOutputRangeMax();
 
 void eloadInputEnable(bool bEnable);
 bool eloadInputEnabled();
 
 
-void eLoadTest();
-void eLoadRawSetDac(uint32_t uModule, uint32_t value);
-uint32_t eLoadDevelopGetAdc(uint32_t uModule);
-uint32_t eLoadDevelopGetAdcRaw();
-float eLoadDevelopGetAdcVolt(uint32_t uModule);
+void eloadTest();
+void eloadRawSetDac(uint32_t uModule, uint32_t value);
+uint32_t eloadDevelopGetAdc(uint32_t uModule);
+uint32_t eloadDevelopGetAdcRaw();
 
 
 // calibration
 void eloadCalibrationStart();
 bool eloadCalibrationEnd();
-bool eLoadCalibrateSetTemperatureMaxResistance(uint32_t value);
-uint32_t eLoadCalibrateGetTemperatureMaxResistance();
-bool eLoadCalibrateSetSenseVoltMultiplier(float value);
-float eLoadCalibrateGetSenseVoltMultiplier();
+bool eloadCalibrateSetTemperatureMaxResistance(uint32_t value);
+uint32_t eloadCalibrateGetTemperatureMaxResistance();
+bool eloadCalibrateSetSenseVoltMultiplier(float value);
+float eloadCalibrateGetSenseVoltMultiplier();
+float eloadCalibrateGetAdcVolt(uint32_t uModule);
 
 
 

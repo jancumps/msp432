@@ -85,12 +85,8 @@ int main(void)
     // initialise the SCPI interpreter
     scpi_instrument_init();
 
-    // get the calibration data saved in Flash
-    calibrationRead();
+    eloadInit();
 
-
-    // initialise instrument in constant current mode
-    eloadSetMode(ELOAD_MODE_CURRENT);
 
     Board_initUART();
     Board_initI2C();

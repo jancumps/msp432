@@ -66,7 +66,7 @@
  */
 static scpi_result_t My_CoreTstQ(scpi_t * context) {
 
-    eLoadTest();
+    eloadTest();
 
     SCPI_ResultInt32(context, 0);
 
@@ -149,7 +149,7 @@ static scpi_result_t SCPI_DevelopSetDac(scpi_t * context) {
          SCPI_ErrorPush(context, SCPI_ERROR_ILLEGAL_PARAMETER_VALUE);
          return SCPI_RES_ERR;
      } else {
-         eLoadRawSetDac(uModule - 1, param1);
+         eloadRawSetDac(uModule - 1, param1);
      }
 
 
@@ -163,7 +163,7 @@ static scpi_result_t SCPI_DevelopGetAdc(scpi_t * context) {
     if (ADCGetModule(context, &uModule) == SCPI_RES_ERR) {
         return SCPI_RES_ERR;
     }
-    SCPI_ResultUInt32(context, eLoadDevelopGetAdc(uModule - 1));
+    SCPI_ResultUInt32(context, eloadDevelopGetAdc(uModule - 1));
 
     return SCPI_RES_OK;
 }
@@ -175,7 +175,7 @@ static scpi_result_t SCPI_DevelopGetAdcRaw(scpi_t * context) {
     if (ADCGetModule(context, &uModule) == SCPI_RES_ERR) {
         return SCPI_RES_ERR;
     }
-    SCPI_ResultUInt32(context, eLoadDevelopGetAdcRaw(uModule - 1));
+    SCPI_ResultUInt32(context, eloadDevelopGetAdcRaw(uModule - 1));
 
     return SCPI_RES_OK;
 }
@@ -262,7 +262,7 @@ static scpi_result_t ELOAD_CalibrationAdcVoltQ(scpi_t * context) {
     if (ADCGetModule(context, &uModule) == SCPI_RES_ERR) {
         return SCPI_RES_ERR;
     }
-    SCPI_ResultFloat(context, eLoadDevelopGetAdcVolt(uModule - 1));
+    SCPI_ResultFloat(context, eloadCalibrateGetAdcVolt(uModule - 1));
 
     return SCPI_RES_OK;
 }
@@ -272,7 +272,7 @@ static scpi_result_t ELOAD_CalibrationTemperatureMaxResistance(scpi_t * context)
     if (!SCPI_ParamUInt32(context, &param1, TRUE)) {
         return SCPI_RES_ERR;
     }
-    if (!eLoadCalibrateSetTemperatureMaxResistance(param1)){
+    if (!eloadCalibrateSetTemperatureMaxResistance(param1)){
         SCPI_ErrorPush(context, SCPI_ERROR_EXECUTION_ERROR);
         return SCPI_RES_ERR;
     }
@@ -280,7 +280,7 @@ static scpi_result_t ELOAD_CalibrationTemperatureMaxResistance(scpi_t * context)
 }
 
 static scpi_result_t ELOAD_CalibrationTemperatureMaxResistanceQ(scpi_t * context) {
-    SCPI_ResultUInt32(context, eLoadCalibrateGetTemperatureMaxResistance());
+    SCPI_ResultUInt32(context, eloadCalibrateGetTemperatureMaxResistance());
     return SCPI_RES_OK;
 }
 
@@ -289,7 +289,7 @@ static scpi_result_t ELOAD_CalibrationSenseVoltMultiplier(scpi_t * context) {
     if (!SCPI_ParamFloat(context, &param1, TRUE)) {
         return SCPI_RES_ERR;
     }
-    if (!eLoadCalibrateSetSenseVoltMultiplier(param1)){
+    if (!eloadCalibrateSetSenseVoltMultiplier(param1)){
         SCPI_ErrorPush(context, SCPI_ERROR_EXECUTION_ERROR);
         return SCPI_RES_ERR;
     }
@@ -297,7 +297,7 @@ static scpi_result_t ELOAD_CalibrationSenseVoltMultiplier(scpi_t * context) {
 }
 
 static scpi_result_t ELOAD_CalibrationSenseVoltMultiplierQ(scpi_t * context) {
-    SCPI_ResultFloat(context, eLoadCalibrateGetSenseVoltMultiplier());
+    SCPI_ResultFloat(context, eloadCalibrateGetSenseVoltMultiplier());
     return SCPI_RES_OK;
 }
 
