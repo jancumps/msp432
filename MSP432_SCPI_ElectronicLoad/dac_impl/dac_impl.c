@@ -49,6 +49,8 @@ uint8_t getAddressFromModule(uint8_t module);
  */
 Void fnTaskDAC(UArg arg0, UArg arg1)
 {
+    // int iSize = MSGDAC_SIZE; // 4 todo comment out. This is only used to set the right value in the RTOS mailbox config
+
     MsgDAC d_msg;
     d_i2cTransaction.writeBuf = d_txBuffer;
     d_i2cTransaction.readBuf = d_rxBuffer;

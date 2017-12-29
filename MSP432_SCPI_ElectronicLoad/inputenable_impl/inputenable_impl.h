@@ -10,10 +10,13 @@
 
 #include <stdbool.h>
 
-// for TI-RTOS message size, count the bytes. Currently: 1
+
 typedef struct MsgInputEnable {
      bool value;
 } MsgInputEnable;
+
+// for TI-RTOS message size, use the structure size:
+#define MSGINPUTENABLE_SIZE (sizeof(MsgInputEnable))
 
 bool inputenableImplGetInputEnable();
 

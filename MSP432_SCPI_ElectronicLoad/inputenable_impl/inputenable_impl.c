@@ -38,6 +38,8 @@ I2C_Transaction d_i2cTransaction;
  */
 Void fnTaskInputEnable(UArg arg0, UArg arg1)
 {
+    // int iSize = MSGINPUTENABLE_SIZE; // 1 todo comment out. This is only used to set the right value in the RTOS mailbox config
+
     MsgInputEnable d_msg;
     d_i2cTransaction.writeBuf = d_txBuffer;
     d_i2cTransaction.readBuf = d_rxBuffer;
