@@ -34,9 +34,9 @@
 #define DAC857X_CFG_H3 0b00010110
 
 
-uint8_t         d_txBuffer[3];
-uint8_t         d_rxBuffer[1]; // DAC doesn't read
-I2C_Transaction d_i2cTransaction;
+uint8_t         d_dactxBuffer[3];
+uint8_t         d_dacrxBuffer[1]; // DAC doesn't read
+I2C_Transaction d_daci2cTransaction;
 
 static const uint8_t array_DAC857X_CFG_H[4] = {DAC857X_CFG_H0, DAC857X_CFG_H1, DAC857X_CFG_H2, DAC857X_CFG_H3};
 
@@ -52,20 +52,20 @@ Void fnTaskDAC(UArg arg0, UArg arg1)
     // int iSize = MSGDAC_SIZE; // 4 todo comment out. This is only used to set the right value in the RTOS mailbox config
 
     MsgDAC d_msg;
-    d_i2cTransaction.writeBuf = d_txBuffer;
-    d_i2cTransaction.readBuf = d_rxBuffer;
-    d_i2cTransaction.slaveAddress = DAC_I2C_ADDR;
-    d_i2cTransaction.writeCount = 3;
-    d_i2cTransaction.readCount = 0;
+    d_daci2cTransaction.writeBuf = d_dactxBuffer;
+    d_daci2cTransaction.readBuf = d_dacrxBuffer;
+    d_daci2cTransaction.slaveAddress = DAC_I2C_ADDR;
+    d_daci2cTransaction.writeCount = 3;
+    d_daci2cTransaction.readCount = 0;
 
     while (1) {
 
         /* wait for mailbox to be posted by writer() */
         if (Mailbox_pend(mbDAC, &d_msg, BIOS_WAIT_FOREVER)) {
-            d_txBuffer[0] = getAddressFromModule(d_msg.module); // set value direct
-            d_txBuffer[1] = d_msg.value >> 8; // MSB
-            d_txBuffer[2] = d_msg.value; // LSB
-            if (! I2C_transfer(i2c_implGetHandle(), &d_i2cTransaction)) {
+            d_dactxBuffer[0] = getAddressFromModule(d_msg.module); // set value direct
+            d_dactxBuffer[1] = d_msg.value >> 8; // MSB
+            d_dactxBuffer[2] = d_msg.value; // LSB
+            if (! I2C_transfer(i2c_implGetHandle(), &d_daci2cTransaction)) {
                 System_printf("I2C Bus fault\n");
                 System_flush();
             }
