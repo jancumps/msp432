@@ -33,6 +33,7 @@ void eloadInit();
 void eloadReset();
 
 float eloadGetVoltageDC();
+float eloadGetCurrentDC();
 
 void eloadSetMode(eload_mode mode);
 eload_mode eloadGetMode();

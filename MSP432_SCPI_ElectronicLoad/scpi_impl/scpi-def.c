@@ -89,6 +89,13 @@ static scpi_result_t DMM_MeasureVoltageDcQ(scpi_t * context) {
     return SCPI_RES_OK;
 }
 
+static scpi_result_t DMM_MeasureCurrentDcQ(scpi_t * context) {
+
+    SCPI_ResultFloat(context, eloadGetCurrentDC());
+
+    return SCPI_RES_OK;
+}
+
 
 
 static scpi_result_t DACGetModule(scpi_t *context, uint32_t *uModule) {
@@ -329,7 +336,7 @@ const scpi_command_t scpi_commands[] = {
 //    {.pattern = "CONFigure:VOLTage:DC", .callback = DMM_ConfigureVoltageDc,},
 //    {.pattern = "MEASure:VOLTage:DC:RATio?", .callback = SCPI_StubQ,},
 //    {.pattern = "MEASure:VOLTage:AC?", .callback = DMM_MeasureVoltageAcQ,},
-//    {.pattern = "MEASure:CURRent:DC?", .callback = SCPI_StubQ,},
+    {.pattern = "MEASure:CURRent:DC?", .callback = DMM_MeasureCurrentDcQ,},
 //    {.pattern = "MEASure:CURRent:AC?", .callback = SCPI_StubQ,},
 //    {.pattern = "MEASure:RESistance?", .callback = SCPI_StubQ,},
 //    {.pattern = "MEASure:FRESistance?", .callback = SCPI_StubQ,},

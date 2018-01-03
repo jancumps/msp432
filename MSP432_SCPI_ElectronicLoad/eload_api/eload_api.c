@@ -46,18 +46,37 @@ void eloadReset() {
  * The opamp U3D has a gain of .033.
  * The calibrated multiplier to calculate the voltage at the sense inputs
  * is stored in the calibration structure.
- * We fetch that in this function. If not set yet, we use the theoreticalmultiplier 33.3333
+ * We fetch that in this function. If not set yet, we use the theoretical multiplier 33.3333
  */
 float eloadGetVoltageDC() {
     float fRetVal = calibrationGetSenseVoltageMultiplier();
     if( fRetVal == 0.0) {
         fRetVal = 33.3333;
     }
-    fRetVal = fRetVal * adcImplToFloat(adcImplGetAdc(1)); // thevalue is sampled from ADC 2
+    fRetVal = fRetVal * adcImplToFloat(adcImplGetAdc(1)); // the value is sampled from ADC 2
 
     return fRetVal;
 
 }
+
+/**
+ * return the current on the sense resistor, as sampled by ADC 2.
+ * The opamp U3C has a gain of -7.8, U3B -1.
+ * todo: The calibrated multiplier to calculate the voltage at the sense inputs
+ * is stored in the calibration structure.
+ * We fetch that in this function. If not set yet, we use the theoretical multiplier 7.8
+ */
+float eloadGetCurrentDC() {
+    float fRetVal = 7.8; // todo calibrationGetSenseCurrentMultiplier();
+    if( fRetVal == 0.0) {
+        fRetVal = 7.8;
+    }
+    fRetVal = fRetVal * adcImplToFloat(adcImplGetAdc(0)); // the value is sampled from ADC 1
+
+    return fRetVal;
+
+}
+
 
 void eloadSetMode(eload_mode mode){
     // switch input off
