@@ -67,7 +67,7 @@ float eloadGetVoltageDC() {
  * We fetch that in this function. If not set yet, we use the theoretical multiplier 7.8
  */
 float eloadGetCurrentDC() {
-    float fRetVal = 7.8; // todo calibrationGetSenseCurrentMultiplier()
+    float fRetVal = 7.85; // todo calibrationGetSenseCurrentMultiplier()
     if( fRetVal == 0.0) {
         fRetVal = 7.8;
     }
