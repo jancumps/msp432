@@ -71,7 +71,7 @@ float eloadGetCurrentDC() {
     if( fRetVal == 0.0) {
         fRetVal = 7.8;
     }
-    fRetVal = ((adcImplToFloat(adcImplGetAdc(0) - (-1136)))*20/7.8); // the value is sampled from ADC 1 todo -1136 should be the raw adc when the current is 0; 20 (1/0.05) is the sense resistor
+    fRetVal = ((adcImplToFloat(adcImplGetAdc(0) - (/*-1136*/0)))*20/6.8); // the value is sampled from ADC 1 todo -1136 should be the raw adc when the current is 0; 20 (1/0.05) is the sense resistor
 
     return fRetVal;
 
