@@ -23,5 +23,12 @@ float calibrationGetTemperatureMaxResistanceFloat();
 
 bool calibrationSetSenseVoltageMultiplier(float value);
 float calibrationGetSenseVoltageMultiplier();
+bool calibrationSetSenseVoltageOffset(float value);
+float calibrationGetSenseVoltageOffset();
+
+bool calibrationSetCurrentMultiplier(float value);
+float calibrationGetCurrentMultiplier();
+bool calibrationSetCurrentOffset(float value);
+float calibrationGetCurrentOffset();
 
 #endif /* CALIBRATION_IMPL_CALIBRATION_IMPL_H_ */

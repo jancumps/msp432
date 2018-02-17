@@ -21,7 +21,10 @@
 typedef struct CalibrationData {
     uint32_t version;
     float temperature_threshold;  // todo convert to the ADC 16 bit value in stead of float
-    float sence_voltage_multiplier;
+    float sense_voltage_multiplier;
+    float sense_voltage_offset;
+    float current_multiplier;
+    float current_offset;
 } CalibrationData;
 
 #define CALIBRATION_DATA_SIZE (sizeof(CalibrationData))
@@ -109,14 +112,66 @@ float calibrationGetTemperatureMaxResistanceFloat() { // todo: remove when we tu
     return _CalibrationData.temperature_threshold;
 }
 
+// sense voltage calibration
+
+
 bool calibrationSetSenseVoltageMultiplier(float value) {
     if(_bCalibrationActive) {
-        _CalibrationData.sence_voltage_multiplier = value;
+        _CalibrationData.sense_voltage_multiplier = value;
     }
     return _bCalibrationActive;
 }
 
-
 float calibrationGetSenseVoltageMultiplier() {
-    return isnan(_CalibrationData.sence_voltage_multiplier) ? 0.0 : _CalibrationData.sence_voltage_multiplier;
+    /* The opamp U3D has a gain of .033.
+    * The calibrated multiplier to calculate the voltage at the sense inputs
+    * is stored in the calibration structure.
+    * We fetch that in this function. If not set yet, we use the theoretical multiplier 33.3333
+    */
+    float fRetval = 0.0;
+    fRetval = isnan(_CalibrationData.sense_voltage_multiplier) ? 0.33 : _CalibrationData.sense_voltage_multiplier;
+    return fRetval > 0.0 ? fRetval : 0.33;
+}
+
+bool calibrationSetSenseVoltageOffset(float value) {
+    if(_bCalibrationActive) {
+        _CalibrationData.sense_voltage_offset = value;
+    }
+    return _bCalibrationActive;
+}
+
+float calibrationGetSenseVoltageOffset() {
+    float fRetval = 0.0;
+    fRetval = isnan(_CalibrationData.sense_voltage_offset) ? 0.0 : _CalibrationData.sense_voltage_offset;
+    return fRetval;
+}
+
+
+// current calibration
+
+bool calibrationSetCurrentMultiplier(float value) {
+    if(_bCalibrationActive) {
+        _CalibrationData.current_multiplier = value;
+    }
+    return _bCalibrationActive;
+}
+
+float calibrationGetCurrentMultiplier() {
+    // The opamp U3C has a gain of -6.8, U3B -1. !! populate R32 with a 68K resistor
+    float fRetval = 0.0;
+    fRetval = isnan(_CalibrationData.current_multiplier) ? 6.8 : _CalibrationData.current_multiplier;
+    return fRetval > 0.0 ? fRetval : 6.8;
+}
+
+bool calibrationSetCurrentOffset(float value) {
+    if(_bCalibrationActive) {
+        _CalibrationData.current_offset = value;
+    }
+    return _bCalibrationActive;
+}
+
+float calibrationGetCurrentOffset() {
+    float fRetval = 0.0;
+    fRetval = isnan(_CalibrationData.current_offset) ? 0.0 : _CalibrationData.current_offset;
+    return fRetval;
 }

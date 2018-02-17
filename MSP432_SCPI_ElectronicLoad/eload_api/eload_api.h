@@ -66,6 +66,12 @@ bool eloadCalibrateSetTemperatureMaxResistance(uint32_t value);
 uint32_t eloadCalibrateGetTemperatureMaxResistance();
 bool eloadCalibrateSetSenseVoltMultiplier(float value);
 float eloadCalibrateGetSenseVoltMultiplier();
+bool eloadCalibrateSetSenseVoltOffset(float value);
+float eloadCalibrateGetSenseVoltOffset();
+bool eloadCalibrateSetCurrentMultiplier(float value);
+float eloadCalibrateGetCurrentMultiplier();
+bool eloadCalibrateSetCurrentOffset(float value);
+float eloadCalibrateGetCurrentOffset();
 float eloadCalibrateGetAdcVolt(uint32_t uModule);
 
 

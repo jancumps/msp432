@@ -49,32 +49,24 @@ void eloadReset() {
  * We fetch that in this function. If not set yet, we use the theoretical multiplier 33.3333
  */
 float eloadGetVoltageDC() {
-    float fRetVal = calibrationGetSenseVoltageMultiplier();
-    if( fRetVal == 0.0) {
-        fRetVal = 33.3333;
-    }
-    fRetVal = fRetVal * adcImplToFloat(adcImplGetAdc(1)); // the value is sampled from ADC 2
-
+    float fRetVal = 0.0;
+    fRetVal = calibrationGetSenseVoltageMultiplier() *
+            ( adcImplToFloat(adcImplGetAdc(1)) - calibrationGetSenseVoltageOffset()); // the value is sampled from ADC 2
     return fRetVal;
-
 }
 
 /**
- * return the current on the sense resistor, as sampled by ADC 2.
- * The opamp U3C has a gain of -7.8, U3B -1.
- * todo: The calibrated multiplier to calculate the voltage at the sense inputs
- * is stored in the calibration structure.
- * We fetch that in this function. If not set yet, we use the theoretical multiplier 7.8
+ * return the current on the sense resistor, as sampled by ADC 1.
+ * The opamp U3C has a gain of -6.8, U3B -1. !! populate R32 with a 68K resistor
  */
 float eloadGetCurrentDC() {
-    float fRetVal = 7.85; // todo calibrationGetSenseCurrentMultiplier()
-    if( fRetVal == 0.0) {
-        fRetVal = 7.8;
-    }
-    fRetVal = ((adcImplToFloat(adcImplGetAdc(0) - (/*-1136*/0)))*20/6.8); // the value is sampled from ADC 1 todo -1136 should be the raw adc when the current is 0; 20 (1/0.05) is the sense resistor
-
+    float fRetVal = 0.0;
+    fRetVal = (
+            (adcImplToFloat(adcImplGetAdc(0) - (calibrationGetCurrentOffset())))
+            *20/calibrationGetCurrentMultiplier()
+    );
+    // 20 (1/0.05) is the sense resistor
     return fRetVal;
-
 }
 
 
@@ -212,6 +204,31 @@ bool eloadCalibrateSetSenseVoltMultiplier(float value) {
 float eloadCalibrateGetSenseVoltMultiplier() {
     return calibrationGetSenseVoltageMultiplier();
 }
+
+bool eloadCalibrateSetSenseVoltOffset(float value) {
+    return calibrationSetSenseVoltageOffset(value);
+}
+
+float eloadCalibrateGetSenseVoltOffset() {
+    return calibrationGetSenseVoltageOffset();
+}
+
+bool eloadCalibrateSetCurrentMultiplier(float value) {
+    return calibrationSetCurrentMultiplier(value);
+}
+
+float eloadCalibrateGetCurrentMultiplier() {
+    return calibrationGetCurrentMultiplier();
+}
+
+bool eloadCalibrateSetCurrentOffset(float value) {
+    return calibrationSetCurrentOffset(value);
+}
+
+float eloadCalibrateGetCurrentOffset() {
+    return calibrationGetCurrentOffset();
+}
+
 
 float eloadCalibrateGetAdcVolt(uint32_t uModule) { // module is 0 based
 
