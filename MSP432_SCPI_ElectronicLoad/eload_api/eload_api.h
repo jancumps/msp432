@@ -42,8 +42,8 @@ void eloadControlLoop();
 uint32_t eloadControlLoopGetSchedule();
 
 // instrument operations
-bool eloadSetConstantCurrent(uint32_t value);
-bool eloadSetConstantVoltage(uint32_t value);
+bool eloadSetConstantCurrent(float value);
+bool eloadSetConstantVoltage(float value);
 
 uint32_t eloadGetCurrentRangeMax();
 uint32_t eloadGetVoltageRangeMax();
@@ -64,14 +64,18 @@ void eloadCalibrationStart();
 bool eloadCalibrationEnd();
 bool eloadCalibrateSetTemperatureMaxResistance(uint32_t value);
 uint32_t eloadCalibrateGetTemperatureMaxResistance();
-bool eloadCalibrateSetSenseVoltMultiplier(float value);
-float eloadCalibrateGetSenseVoltMultiplier();
-bool eloadCalibrateSetSenseVoltOffset(float value);
-float eloadCalibrateGetSenseVoltOffset();
-bool eloadCalibrateSetCurrentMultiplier(float value);
-float eloadCalibrateGetCurrentMultiplier();
-bool eloadCalibrateSetCurrentOffset(float value);
-float eloadCalibrateGetCurrentOffset();
+bool eloadCalibrateSetSenseVoltReadMultiplier(float value);
+float eloadCalibrateGetSenseVoltReadMultiplier();
+bool eloadCalibrateSetSenseVoltReadOffset(float value);
+float eloadCalibrateGetSenseVoltReadOffset();
+bool eloadCalibrateSetCurrentReadMultiplier(float value);
+float eloadCalibrateGetCurrentReadMultiplier();
+bool eloadCalibrateSetCurrentReadOffset(float value);
+float eloadCalibrateGetCurrentReadOffset();
+bool eloadCalibrateSetCurrentWriteMultiplier(float value);
+float eloadCalibrateGetCurrentWriteMultiplier();
+bool eloadCalibrateSetCurrentWriteOffset(float value);
+float eloadCalibrateGetCurrentWriteOffset();
 float eloadCalibrateGetAdcVolt(uint32_t uModule);
 
 

@@ -21,14 +21,19 @@ uint32_t calibrationGetTemperatureMaxResistance();
 float calibrationGetTemperatureMaxResistanceFloat();
 
 
-bool calibrationSetSenseVoltageMultiplier(float value);
-float calibrationGetSenseVoltageMultiplier();
-bool calibrationSetSenseVoltageOffset(float value);
-float calibrationGetSenseVoltageOffset();
+bool calibrationSetSenseVoltageReadMultiplier(float value);
+float calibrationGetSenseVoltageReadMultiplier();
+bool calibrationSetSenseVoltageReadOffset(float value);
+float calibrationGetSenseVoltageReadOffset();
 
-bool calibrationSetCurrentMultiplier(float value);
-float calibrationGetCurrentMultiplier();
-bool calibrationSetCurrentOffset(float value);
-float calibrationGetCurrentOffset();
+bool calibrationSetCurrentReadMultiplier(float value);
+float calibrationGetCurrentReadMultiplier();
+bool calibrationSetCurrentReadOffset(float value);
+float calibrationGetCurrentReadOffset();
+
+bool calibrationSetCurrentWriteMultiplier(float value);
+float calibrationGetCurrentWriteMultiplier();
+bool calibrationSetCurrentWriteOffset(float value);
+float calibrationGetCurrentWriteOffset();
 
 #endif /* CALIBRATION_IMPL_CALIBRATION_IMPL_H_ */

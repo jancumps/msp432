@@ -7,15 +7,18 @@
 
 #include "control_strategy_constantcurrent.h"
 #include "eload_api.h"
+#include "calibration_impl.h"
 #include <stddef.h>
 #include <stdbool.h>
 
-uint32_t uConstantCurrent;
+float fConstantCurrent;
 bool bConstantCurrentChanged;
 
 void ConstantCurrentStrategyControlFunction () {
     if (bConstantCurrentChanged) {
-        eloadRawSetDac(0, uConstantCurrent);
+        uint32_t value = 0U;
+        value = ((fConstantCurrent/calibrationGetCurrentWriteMultiplier())-calibrationGetCurrentWriteOffset()); // todo: double check if it is - or plus offset
+        eloadRawSetDac(0, value);
         bConstantCurrentChanged = false;
     }
     return;
@@ -33,17 +36,17 @@ int8_t ConstantCurrentStrategyGetChar() {
     return 'I';
 }
 
-void ConstantCurrentStrategySetCurrent(uint32_t uValue) {
+void ConstantCurrentStrategySetCurrent(float fValue) {
     // todo: set the target current via DAC.
     // todo : convert volt/DAC settings
     // todo: float?
-    uConstantCurrent = uValue;
+    fConstantCurrent = fValue;
     bConstantCurrentChanged = true;
 
 }
 
 void setConstantCurrentStrategy() {
-    uConstantCurrent = 0U;
+    fConstantCurrent = 0.0f;
     bConstantCurrentChanged = true;
     __setControlStrategy(ConstantCurrentStrategyControlFunction,
                          ConstantCurrentGStrategyGetSchedule,

@@ -18,8 +18,8 @@ typedef void (*ControlStrategyControlFunction) ();
 typedef uint32_t (*ControlStrategyGetSchedule) ();
 typedef eload_mode (*ControlStrategyGetMode) ();
 typedef int8_t (*ControlStrategyGetChar) ();
-typedef void (*ControlStrategySetCurrent) (uint32_t uValue);
-typedef void (*ControlStrategySetVoltage) (uint32_t uValue);
+typedef void (*ControlStrategySetCurrent) (float fValue);
+typedef void (*ControlStrategySetVoltage) (float fValue);
 
 
 typedef struct ControlStrategy {

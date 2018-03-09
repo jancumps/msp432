@@ -50,8 +50,8 @@ void eloadReset() {
  */
 float eloadGetVoltageDC() {
     float fRetVal = 0.0;
-    fRetVal = calibrationGetSenseVoltageMultiplier() *
-            ( adcImplToFloat(adcImplGetAdc(1)) - calibrationGetSenseVoltageOffset()); // the value is sampled from ADC 2
+    fRetVal = calibrationGetSenseVoltageReadMultiplier() *
+            ( adcImplToFloat(adcImplGetAdc(1)) - calibrationGetSenseVoltageReadOffset()); // the value is sampled from ADC 2
     return fRetVal;
 }
 
@@ -62,8 +62,8 @@ float eloadGetVoltageDC() {
 float eloadGetCurrentDC() {
     float fRetVal = 0.0;
     fRetVal = (
-            (adcImplToFloat(adcImplGetAdc(0) - (calibrationGetCurrentOffset())))
-            *20/calibrationGetCurrentMultiplier()
+            (adcImplToFloat(adcImplGetAdc(0) - (calibrationGetCurrentReadOffset())))
+            *20/calibrationGetCurrentReadMultiplier()
     );
     // 20 (1/0.05) is the sense resistor
     return fRetVal;
@@ -102,7 +102,7 @@ uint32_t eloadControlLoopGetSchedule() {
     return getControlStrategy()->getSchedule();
 }
 
-bool eloadSetConstantCurrent(uint32_t value) {
+bool eloadSetConstantCurrent(float value) {
     bool bRet = false;
     if (getControlStrategy()->setCurrent) { // does strategy support the operation?
         getControlStrategy()->setCurrent(value);
@@ -112,7 +112,7 @@ bool eloadSetConstantCurrent(uint32_t value) {
 }
 
 
-bool eloadSetConstantVoltage(uint32_t value) {
+bool eloadSetConstantVoltage(float value) {
     bool bRet = false;
     if (getControlStrategy()->setVoltage) { // does strategy support the operation?
         getControlStrategy()->setVoltage(value);
@@ -197,36 +197,52 @@ uint32_t eloadCalibrateGetTemperatureMaxResistance() {
     return calibrationGetTemperatureMaxResistance();
 }
 
-bool eloadCalibrateSetSenseVoltMultiplier(float value) {
-    return calibrationSetSenseVoltageMultiplier(value);
+bool eloadCalibrateSetSenseVoltReadMultiplier(float value) {
+    return calibrationSetSenseVoltageReadMultiplier(value);
 }
 
-float eloadCalibrateGetSenseVoltMultiplier() {
-    return calibrationGetSenseVoltageMultiplier();
+float eloadCalibrateGetSenseVoltReadMultiplier() {
+    return calibrationGetSenseVoltageReadMultiplier();
 }
 
-bool eloadCalibrateSetSenseVoltOffset(float value) {
-    return calibrationSetSenseVoltageOffset(value);
+bool eloadCalibrateSetSenseVoltReadOffset(float value) {
+    return calibrationSetSenseVoltageReadOffset(value);
 }
 
-float eloadCalibrateGetSenseVoltOffset() {
-    return calibrationGetSenseVoltageOffset();
+float eloadCalibrateGetSenseVoltReadOffset() {
+    return calibrationGetSenseVoltageReadOffset();
 }
 
-bool eloadCalibrateSetCurrentMultiplier(float value) {
-    return calibrationSetCurrentMultiplier(value);
+bool eloadCalibrateSetCurrentReadMultiplier(float value) {
+    return calibrationSetCurrentReadMultiplier(value);
 }
 
-float eloadCalibrateGetCurrentMultiplier() {
-    return calibrationGetCurrentMultiplier();
+float eloadCalibrateGetCurrentReadMultiplier() {
+    return calibrationGetCurrentReadMultiplier();
 }
 
-bool eloadCalibrateSetCurrentOffset(float value) {
-    return calibrationSetCurrentOffset(value);
+bool eloadCalibrateSetCurrentReadOffset(float value) {
+    return calibrationSetCurrentReadOffset(value);
 }
 
-float eloadCalibrateGetCurrentOffset() {
-    return calibrationGetCurrentOffset();
+float eloadCalibrateGetCurrentReadOffset() {
+    return calibrationGetCurrentReadOffset();
+}
+
+bool eloadCalibrateSetCurrentWriteMultiplier(float value) {
+    return calibrationSetCurrentWriteMultiplier(value);
+}
+
+float eloadCalibrateGetCurrentWriteMultiplier() {
+    return calibrationGetCurrentWriteMultiplier();
+}
+
+bool eloadCalibrateSetCurrentWriteOffset(float value) {
+    return calibrationSetCurrentWriteOffset(value);
+}
+
+float eloadCalibrateGetCurrentWriteOffset() {
+    return calibrationGetCurrentWriteOffset();
 }
 
 

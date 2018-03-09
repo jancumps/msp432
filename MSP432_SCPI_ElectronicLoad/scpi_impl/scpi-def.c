@@ -291,74 +291,107 @@ static scpi_result_t ELOAD_CalibrationTemperatureMaxResistanceQ(scpi_t * context
     return SCPI_RES_OK;
 }
 
-static scpi_result_t ELOAD_CalibrationSenseVoltMultiplier(scpi_t * context) {
+static scpi_result_t ELOAD_CalibrationSenseVoltReadMultiplier(scpi_t * context) {
     float param1;
     if (!SCPI_ParamFloat(context, &param1, TRUE)) {
         return SCPI_RES_ERR;
     }
-    if (!eloadCalibrateSetSenseVoltMultiplier(param1)){
+    if (!eloadCalibrateSetSenseVoltReadMultiplier(param1)){
         SCPI_ErrorPush(context, SCPI_ERROR_EXECUTION_ERROR);
         return SCPI_RES_ERR;
     }
     return SCPI_RES_OK;
 }
 
-static scpi_result_t ELOAD_CalibrationSenseVoltMultiplierQ(scpi_t * context) {
-    SCPI_ResultFloat(context, eloadCalibrateGetSenseVoltMultiplier());
+static scpi_result_t ELOAD_CalibrationSenseVoltReadMultiplierQ(scpi_t * context) {
+    SCPI_ResultFloat(context, eloadCalibrateGetSenseVoltReadMultiplier());
     return SCPI_RES_OK;
 }
 
-static scpi_result_t ELOAD_CalibrationSenseVoltOffset(scpi_t * context) {
+static scpi_result_t ELOAD_CalibrationSenseVoltReadOffset(scpi_t * context) {
     float param1;
     if (!SCPI_ParamFloat(context, &param1, TRUE)) {
         return SCPI_RES_ERR;
     }
-    if (!eloadCalibrateSetSenseVoltOffset(param1)){
+    if (!eloadCalibrateSetSenseVoltReadOffset(param1)){
         SCPI_ErrorPush(context, SCPI_ERROR_EXECUTION_ERROR);
         return SCPI_RES_ERR;
     }
     return SCPI_RES_OK;
 }
 
-static scpi_result_t ELOAD_CalibrationSenseVoltOffsetQ(scpi_t * context) {
-    SCPI_ResultFloat(context, eloadCalibrateGetSenseVoltOffset());
+static scpi_result_t ELOAD_CalibrationSenseVoltReadOffsetQ(scpi_t * context) {
+    SCPI_ResultFloat(context, eloadCalibrateGetSenseVoltReadOffset());
     return SCPI_RES_OK;
 }
 
-static scpi_result_t ELOAD_CalibrationCurrentMultiplier(scpi_t * context) {
+static scpi_result_t ELOAD_CalibrationCurrentReadMultiplier(scpi_t * context) {
     float param1;
     if (!SCPI_ParamFloat(context, &param1, TRUE)) {
         return SCPI_RES_ERR;
     }
-    if (!eloadCalibrateSetCurrentMultiplier(param1)){
+    if (!eloadCalibrateSetCurrentReadMultiplier(param1)){
         SCPI_ErrorPush(context, SCPI_ERROR_EXECUTION_ERROR);
         return SCPI_RES_ERR;
     }
     return SCPI_RES_OK;
 }
 
-static scpi_result_t ELOAD_CalibrationCurrentMultiplierQ(scpi_t * context) {
-    SCPI_ResultFloat(context, eloadCalibrateGetCurrentMultiplier());
+static scpi_result_t ELOAD_CalibrationCurrentReadMultiplierQ(scpi_t * context) {
+    SCPI_ResultFloat(context, eloadCalibrateGetCurrentReadMultiplier());
     return SCPI_RES_OK;
 }
 
-static scpi_result_t ELOAD_CalibrationCurrentOffset(scpi_t * context) {
+static scpi_result_t ELOAD_CalibrationCurrentReadOffset(scpi_t * context) {
     float param1;
     if (!SCPI_ParamFloat(context, &param1, TRUE)) {
         return SCPI_RES_ERR;
     }
-    if (!eloadCalibrateSetCurrentOffset(param1)){
+    if (!eloadCalibrateSetCurrentReadOffset(param1)){
         SCPI_ErrorPush(context, SCPI_ERROR_EXECUTION_ERROR);
         return SCPI_RES_ERR;
     }
     return SCPI_RES_OK;
 }
 
-static scpi_result_t ELOAD_CalibrationCurrentOffsetQ(scpi_t * context) {
-    SCPI_ResultFloat(context, eloadCalibrateGetCurrentOffset());
+static scpi_result_t ELOAD_CalibrationCurrentReadOffsetQ(scpi_t * context) {
+    SCPI_ResultFloat(context, eloadCalibrateGetCurrentReadOffset());
     return SCPI_RES_OK;
 }
 
+static scpi_result_t ELOAD_CalibrationCurrentWriteMultiplier(scpi_t * context) {
+    float param1;
+    if (!SCPI_ParamFloat(context, &param1, TRUE)) {
+        return SCPI_RES_ERR;
+    }
+    if (!eloadCalibrateSetCurrentWriteMultiplier(param1)){
+        SCPI_ErrorPush(context, SCPI_ERROR_EXECUTION_ERROR);
+        return SCPI_RES_ERR;
+    }
+    return SCPI_RES_OK;
+}
+
+static scpi_result_t ELOAD_CalibrationCurrentWriteMultiplierQ(scpi_t * context) {
+    SCPI_ResultFloat(context, eloadCalibrateGetCurrentWriteMultiplier());
+    return SCPI_RES_OK;
+}
+
+static scpi_result_t ELOAD_CalibrationCurrentWriteOffset(scpi_t * context) {
+    float param1;
+    if (!SCPI_ParamFloat(context, &param1, TRUE)) {
+        return SCPI_RES_ERR;
+    }
+    if (!eloadCalibrateSetCurrentWriteOffset(param1)){
+        SCPI_ErrorPush(context, SCPI_ERROR_EXECUTION_ERROR);
+        return SCPI_RES_ERR;
+    }
+    return SCPI_RES_OK;
+}
+
+static scpi_result_t ELOAD_CalibrationCurrentWriteOffsetQ(scpi_t * context) {
+    SCPI_ResultFloat(context, eloadCalibrateGetCurrentWriteOffset());
+    return SCPI_RES_OK;
+}
 const scpi_command_t scpi_commands[] = {
     /* IEEE Mandated Commands (SCPI std V1999.0 4.1.1) */
     { .pattern = "*CLS", .callback = SCPI_CoreCls,},
@@ -412,14 +445,18 @@ const scpi_command_t scpi_commands[] = {
     {.pattern = "CALibration:ADC#:VOLTage?", .callback = ELOAD_CalibrationAdcVoltQ,},
     {.pattern = "CALibration:TEMPERATUREMAXResistance", .callback = ELOAD_CalibrationTemperatureMaxResistance,},
     {.pattern = "CALibration:TEMPERATUREMAXResistance?", .callback = ELOAD_CalibrationTemperatureMaxResistanceQ,},
-    {.pattern = "CALibration:SENSEVOLTMultiplier", .callback = ELOAD_CalibrationSenseVoltMultiplier,},
-    {.pattern = "CALibration:SENSEVOLTMultiplier?", .callback = ELOAD_CalibrationSenseVoltMultiplierQ,},
-    {.pattern = "CALibration:SENSEVOLTOffset", .callback = ELOAD_CalibrationSenseVoltOffset,},
-    {.pattern = "CALibration:SENSEVOLTOffset?", .callback = ELOAD_CalibrationSenseVoltOffsetQ,},
-    {.pattern = "CALibration:CURRENTMultiplier", .callback = ELOAD_CalibrationCurrentMultiplier,},
-    {.pattern = "CALibration:CURRENTMultiplier?", .callback = ELOAD_CalibrationCurrentMultiplierQ,},
-    {.pattern = "CALibration:CURRENTOffset", .callback = ELOAD_CalibrationCurrentOffset,},
-    {.pattern = "CALibration:CURRENTOffset?", .callback = ELOAD_CalibrationCurrentOffsetQ,},
+    {.pattern = "CALibration:SENSEVOLTREADMultiplier", .callback = ELOAD_CalibrationSenseVoltReadMultiplier,},
+    {.pattern = "CALibration:SENSEVOLTREADMultiplier?", .callback = ELOAD_CalibrationSenseVoltReadMultiplierQ,},
+    {.pattern = "CALibration:SENSEVOLTREADOffset", .callback = ELOAD_CalibrationSenseVoltReadOffset,},
+    {.pattern = "CALibration:SENSEVOLTREADOffset?", .callback = ELOAD_CalibrationSenseVoltReadOffsetQ,},
+    {.pattern = "CALibration:CURRENTREADMultiplier", .callback = ELOAD_CalibrationCurrentReadMultiplier,},
+    {.pattern = "CALibration:CURRENTREADMultiplier?", .callback = ELOAD_CalibrationCurrentReadMultiplierQ,},
+    {.pattern = "CALibration:CURRENTREADOffset", .callback = ELOAD_CalibrationCurrentReadOffset,},
+    {.pattern = "CALibration:CURRENTREADOffset?", .callback = ELOAD_CalibrationCurrentReadOffsetQ,},
+    {.pattern = "CALibration:CURRENTWRITEMultiplier", .callback = ELOAD_CalibrationCurrentWriteMultiplier,},
+    {.pattern = "CALibration:CURRENTWRITEMultiplier?", .callback = ELOAD_CalibrationCurrentWriteMultiplierQ,},
+    {.pattern = "CALibration:CURRENTWRITEOffset", .callback = ELOAD_CalibrationCurrentWriteOffset,},
+    {.pattern = "CALibration:CURRENTWRITEOffset?", .callback = ELOAD_CalibrationCurrentWriteOffsetQ,},
 
     SCPI_CMD_LIST_END
 };

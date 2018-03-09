@@ -21,10 +21,12 @@
 typedef struct CalibrationData {
     uint32_t version;
     float temperature_threshold;  // todo convert to the ADC 16 bit value in stead of float
-    float sense_voltage_multiplier;
-    float sense_voltage_offset;
-    float current_multiplier;
-    float current_offset;
+    float sense_voltage_read_multiplier;
+    float sense_voltage_read_offset;
+    float current_read_multiplier;
+    float current_read_offset;
+    float current_write_multiplier;
+    float current_write_offset;
 } CalibrationData;
 
 #define CALIBRATION_DATA_SIZE (sizeof(CalibrationData))
@@ -115,63 +117,92 @@ float calibrationGetTemperatureMaxResistanceFloat() { // todo: remove when we tu
 // sense voltage calibration
 
 
-bool calibrationSetSenseVoltageMultiplier(float value) {
+bool calibrationSetSenseVoltageReadMultiplier(float value) {
     if(_bCalibrationActive) {
-        _CalibrationData.sense_voltage_multiplier = value;
+        _CalibrationData.sense_voltage_read_multiplier = value;
     }
     return _bCalibrationActive;
 }
 
-float calibrationGetSenseVoltageMultiplier() {
+float calibrationGetSenseVoltageReadMultiplier() {
     /* The opamp U3D has a gain of .033.
     * The calibrated multiplier to calculate the voltage at the sense inputs
     * is stored in the calibration structure.
     * We fetch that in this function. If not set yet, we use the theoretical multiplier 33.3333
     */
     float fRetval = 0.0;
-    fRetval = isnan(_CalibrationData.sense_voltage_multiplier) ? 0.33 : _CalibrationData.sense_voltage_multiplier;
+    fRetval = isnan(_CalibrationData.sense_voltage_read_multiplier) ? 0.33 : _CalibrationData.sense_voltage_read_multiplier;
     return fRetval > 0.0 ? fRetval : 0.33;
 }
 
-bool calibrationSetSenseVoltageOffset(float value) {
+bool calibrationSetSenseVoltageReadOffset(float value) {
     if(_bCalibrationActive) {
-        _CalibrationData.sense_voltage_offset = value;
+        _CalibrationData.sense_voltage_read_offset = value;
     }
     return _bCalibrationActive;
 }
 
-float calibrationGetSenseVoltageOffset() {
+float calibrationGetSenseVoltageReadOffset() {
     float fRetval = 0.0;
-    fRetval = isnan(_CalibrationData.sense_voltage_offset) ? 0.0 : _CalibrationData.sense_voltage_offset;
+    fRetval = isnan(_CalibrationData.sense_voltage_read_offset) ? 0.0 : _CalibrationData.sense_voltage_read_offset;
     return fRetval;
 }
 
 
-// current calibration
+// current read calibration
 
-bool calibrationSetCurrentMultiplier(float value) {
+bool calibrationSetCurrentReadMultiplier(float value) {
     if(_bCalibrationActive) {
-        _CalibrationData.current_multiplier = value;
+        _CalibrationData.current_read_multiplier = value;
     }
     return _bCalibrationActive;
 }
 
-float calibrationGetCurrentMultiplier() {
+float calibrationGetCurrentReadMultiplier() {
     // The opamp U3C has a gain of -6.8, U3B -1. !! populate R32 with a 68K resistor
     float fRetval = 0.0;
-    fRetval = isnan(_CalibrationData.current_multiplier) ? 6.8 : _CalibrationData.current_multiplier;
+    fRetval = isnan(_CalibrationData.current_read_multiplier) ? 6.8 : _CalibrationData.current_read_multiplier;
     return fRetval > 0.0 ? fRetval : 6.8;
 }
 
-bool calibrationSetCurrentOffset(float value) {
+bool calibrationSetCurrentReadOffset(float value) {
     if(_bCalibrationActive) {
-        _CalibrationData.current_offset = value;
+        _CalibrationData.current_read_offset = value;
     }
     return _bCalibrationActive;
 }
 
-float calibrationGetCurrentOffset() {
+float calibrationGetCurrentReadOffset() {
     float fRetval = 0.0;
-    fRetval = isnan(_CalibrationData.current_offset) ? 0.0 : _CalibrationData.current_offset;
+    fRetval = isnan(_CalibrationData.current_read_offset) ? 0.0 : _CalibrationData.current_read_offset;
+    return fRetval;
+}
+
+// current write calibration
+
+bool calibrationSetCurrentWriteMultiplier(float value) {
+    if(_bCalibrationActive) {
+        _CalibrationData.current_write_multiplier = value;
+    }
+    return _bCalibrationActive;
+}
+
+float calibrationGetCurrentWriteMultiplier() {
+    // The DAC drives the FET todo in my case the DAC setting multiplied by 0.000116 gives current
+    float fRetval = 0.0;
+    fRetval = isnan(_CalibrationData.current_write_multiplier) ? 0.000116 : _CalibrationData.current_write_multiplier;
+    return fRetval > 0.0 ? fRetval : 0.000116;
+}
+
+bool calibrationSetCurrentWriteOffset(float value) {
+    if(_bCalibrationActive) {
+        _CalibrationData.current_write_offset = value;
+    }
+    return _bCalibrationActive;
+}
+
+float calibrationGetCurrentWriteOffset() {
+    float fRetval = 0.0;
+    fRetval = isnan(_CalibrationData.current_write_offset) ? 0.0 : _CalibrationData.current_write_offset;
     return fRetval;
 }
