@@ -202,7 +202,8 @@ bool calibrationSetCurrentWriteOffset(float value) {
 }
 
 float calibrationGetCurrentWriteOffset() {
+    // The DAC drives the FET todo in my case the DAC runs 0.008 A when not driven
     float fRetval = 0.0;
-    fRetval = isnan(_CalibrationData.current_write_offset) ? 0.0 : _CalibrationData.current_write_offset;
+    fRetval = isnan(_CalibrationData.current_write_offset) ? 0.008 : _CalibrationData.current_write_offset;
     return fRetval;
 }

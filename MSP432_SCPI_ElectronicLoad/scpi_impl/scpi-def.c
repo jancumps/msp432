@@ -189,16 +189,16 @@ static scpi_result_t SCPI_DevelopGetAdcRaw(scpi_t * context) {
 
 
 static scpi_result_t ELOAD_SetCurrentImmediate(scpi_t * context) {
-    uint32_t param1;
+    float param1;
 
         /* read first parameter if present */
-    if (!SCPI_ParamUInt32(context, &param1, TRUE)) {
+    if (!SCPI_ParamFloat(context, &param1, TRUE)) {
         return SCPI_RES_ERR;
     }
-    if (param1 > UINT16_MAX) {
-        SCPI_ErrorPush(context, SCPI_ERROR_ILLEGAL_PARAMETER_VALUE);
-        return SCPI_RES_ERR;
-    }
+//    if (param1 > UINT16_MAX) { // todo qet maximum current here
+//        SCPI_ErrorPush(context, SCPI_ERROR_ILLEGAL_PARAMETER_VALUE);
+//        return SCPI_RES_ERR;
+//    }
     if (!eloadSetConstantCurrent(param1) ){
         SCPI_ErrorPush(context, SCPI_ERROR_EXECUTION_ERROR); // fail if function not supported by current operation mode
         return SCPI_RES_ERR;
