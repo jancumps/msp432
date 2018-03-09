@@ -52,23 +52,42 @@ Void fnTaskDisplay(UArg arg0, UArg arg1)
     GrFlush(&g_sContext);
     int8_t cMode;
 
+    float fVoltage = 0.0f;
+    float fCurrent = 0.0f;
 
 
     while (1) {
         Task_sleep((UInt)arg0);
         cMode = eloadGetChar();
+        fVoltage = eloadGetVoltageDC();
+        fCurrent = eloadGetCurrentDC();
         GrClearDisplay(&g_sContext);
         GrContextFontSet(&g_sContext, &g_sFontCmss12);
         GrStringDraw(&g_sContext, "mode: ", -1, 5, 0, 0);
         GrStringDraw(&g_sContext, &cMode, 1, 40, 0, 0);
 
         i = 0;
-        sprintf(formatString, "C: %02.4f\0", eloadGetCurrentDC() );
+        sprintf(formatString, "C: %02.4f\0", fCurrent);
         GrContextFontSet(&g_sContext, &g_sFontFixed6x8);
         GrStringDraw(&g_sContext, (int8_t *)formatString, -1, 4, (15 + 12*i), 0);
 
         i = 1;
-        sprintf(formatString, "V: %02.4f\0", eloadGetVoltageDC() );
+        sprintf(formatString, "V: %02.4f\0", fVoltage);
+        GrContextFontSet(&g_sContext, &g_sFontFixed6x8);
+        GrStringDraw(&g_sContext, (int8_t *)formatString, -1, 4, (15 + 12*i), 0);
+
+        i = 2;
+        sprintf(formatString, "P: %02.4f\0", fVoltage * fCurrent);
+        GrContextFontSet(&g_sContext, &g_sFontFixed6x8);
+        GrStringDraw(&g_sContext, (int8_t *)formatString, -1, 4, (15 + 12*i), 0);
+
+        i = 3;
+        if (fCurrent> 0.0f) {
+            sprintf(formatString, "R: %02.4f\0", fVoltage / fCurrent);
+        } else {
+            sprintf( formatString, "R: --.--");
+        }
+
         GrContextFontSet(&g_sContext, &g_sFontFixed6x8);
         GrStringDraw(&g_sContext, (int8_t *)formatString, -1, 4, (15 + 12*i), 0);
 
