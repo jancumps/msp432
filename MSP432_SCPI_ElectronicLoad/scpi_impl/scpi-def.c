@@ -247,6 +247,13 @@ static scpi_result_t ELOAD_GetInputState(scpi_t * context) {
     return SCPI_RES_OK;
 }
 
+static scpi_result_t ELOAD_SetFunction(scpi_t * context) {
+    // todo implement all possible functions, currently always constant current
+    eloadSetMode(ELOAD_MODE_CURRENT);
+
+    return SCPI_RES_OK;
+}
+
 /* CALIBRATION AND CONFIGURATION COMMANDS */
 
 static scpi_result_t ELOAD_CalibrationStart(scpi_t * context) {
@@ -438,6 +445,7 @@ const scpi_command_t scpi_commands[] = {
     {.pattern = "[:SOURce]:VOLTage[:LEVel][:IMMediate]", .callback = ELOAD_SetVoltageImmediate,},
     {.pattern = "[:SOURce]:INPut[:STATe]", .callback = ELOAD_SetInputState,},
     {.pattern = "[:SOURce]:INPut[:STATe]?", .callback = ELOAD_GetInputState,},
+    {.pattern = "[:SOURce]:FUNCtion", .callback = ELOAD_SetFunction,},
 
     /* CALIBRATION AND CONFIGURATION COMMANDS */
     {.pattern = "CALibration:STArt", .callback = ELOAD_CalibrationStart,},
