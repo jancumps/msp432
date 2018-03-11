@@ -54,7 +54,21 @@
 #include "eload_api.h"
 
 
+enum scpi_mode_t {
+    SCPI_MODE_UNDEFINED,
+    SCPI_MODE_CURRENT,
+    SCPI_MODE_VOLTAGE,
+    SCPI_MODE_POWER,
+    SCPI_MODE_RESISTANCE
+};
 
+const scpi_choice_def_t scpi_mode_def[] = {
+    {/* name */ "CURRent",      /* type */ SCPI_MODE_CURRENT  },
+    {/* name */ "VOLTage",      /* type */ SCPI_MODE_VOLTAGE  },
+    {/* name */ "POWer",    /* type */ SCPI_MODE_POWER    },
+    {/* name */ "RESistance",     /* type */ SCPI_MODE_RESISTANCE    },
+    SCPI_CHOICE_LIST_END,
+};
 
 /**
  * Reimplement IEEE488.2 *TST?
@@ -249,9 +263,29 @@ static scpi_result_t ELOAD_GetInputState(scpi_t * context) {
 
 static scpi_result_t ELOAD_SetFunction(scpi_t * context) {
     // todo implement all possible functions, currently always constant current
-    eloadSetMode(ELOAD_MODE_CURRENT);
 
-    return SCPI_RES_OK;
+    int32_t param1;
+    scpi_bool_t result;
+
+    result = SCPI_ParamChoice( context, scpi_mode_def, &param1, TRUE );
+    if ( false == result )
+    {
+        return SCPI_RES_ERR;
+    }
+    else
+    {
+        switch (param1) {
+        case SCPI_MODE_CURRENT:
+            eloadSetMode(ELOAD_MODE_CURRENT);
+            break;
+        default:
+            eloadSetMode(ELOAD_MODE_CURRENT); // todo: what if invalid entry given?
+        }
+
+    }
+
+
+    return result;
 }
 
 /* CALIBRATION AND CONFIGURATION COMMANDS */
