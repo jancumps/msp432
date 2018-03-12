@@ -277,13 +277,13 @@ static scpi_result_t ELOAD_SetFunction(scpi_t * context) {
         switch (param1) {
         case SCPI_MODE_CURRENT:
             eloadSetMode(ELOAD_MODE_CURRENT);
+            result = SCPI_RES_OK;
             break;
         default:
-            eloadSetMode(ELOAD_MODE_CURRENT); // todo: what if invalid entry given?
-        }
-
+            SCPI_ErrorPush(context, SCPI_ERROR_ILLEGAL_PARAMETER_VALUE);
+            result = SCPI_RES_ERR;
+       }
     }
-
 
     return result;
 }
