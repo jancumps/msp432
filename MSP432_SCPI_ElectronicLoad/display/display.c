@@ -87,7 +87,11 @@ Void fnTaskDisplay(UArg arg0, UArg arg1)
         } else {
             sprintf( formatString, "R: --.--");
         }
+        GrContextFontSet(&g_sContext, &g_sFontFixed6x8);
+        GrStringDraw(&g_sContext, (int8_t *)formatString, -1, 4, (15 + 12*i), 0);
 
+        i = 4;
+        sprintf(formatString, "Input: O%s\0", eloadInputEnabled()? "n " : "ff");
         GrContextFontSet(&g_sContext, &g_sFontFixed6x8);
         GrStringDraw(&g_sContext, (int8_t *)formatString, -1, 4, (15 + 12*i), 0);
 
