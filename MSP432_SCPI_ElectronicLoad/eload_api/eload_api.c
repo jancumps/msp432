@@ -121,6 +121,10 @@ bool eloadSetConstantVoltage(float value) {
     return bRet;
 }
 
+float eloadGetSetpoint() {
+    return getControlStrategy()->getSetpoint();
+}
+
 
 uint32_t eloadGetCurrentRangeMax() {
     return 0b1111111111111111; // 16 bit ADC

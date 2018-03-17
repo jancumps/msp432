@@ -63,11 +63,16 @@ Void fnTaskDisplay(UArg arg0, UArg arg1)
         fCurrent = eloadGetCurrentDC();
         GrClearDisplay(&g_sContext);
         GrContextFontSet(&g_sContext, &g_sFontCmss12);
-        GrStringDraw(&g_sContext, "mode: ", -1, 5, 0, 0);
-        GrStringDraw(&g_sContext, &cMode, 1, 40, 0, 0);
+
+
+//        GrStringDraw(&g_sContext, "mode: ", -1, 5, 0, 0);
+//        GrStringDraw(&g_sContext, &cMode, 1, 40, 0, 0);
+        sprintf(formatString, "mode: %c %02.4f\0", cMode, eloadGetSetpoint());
+        GrContextFontSet(&g_sContext, &g_sFontFixed6x8);
+        GrStringDraw(&g_sContext, (int8_t *)formatString, -1, 4, 0, 0);
 
         i = 0;
-        sprintf(formatString, "C: %02.4f\0", fCurrent);
+        sprintf(formatString, "I: %02.4f\0", fCurrent);
         GrContextFontSet(&g_sContext, &g_sFontFixed6x8);
         GrStringDraw(&g_sContext, (int8_t *)formatString, -1, 4, (15 + 12*i), 0);
 

@@ -21,7 +21,8 @@ void __setControlStrategy(ControlStrategyControlFunction f,
                           ControlStrategyGetMode m,
                           ControlStrategyGetChar c,
                           ControlStrategySetCurrent sc,
-                          ControlStrategySetVoltage sv) {
+                          ControlStrategySetVoltage sv,
+                          ControlStrategyGetSetpoint sp) {
 
     cs.controlFunction = f;
     cs.getSchedule = s;
@@ -29,4 +30,5 @@ void __setControlStrategy(ControlStrategyControlFunction f,
     cs.getChar = c;
     cs.setCurrent = sc;
     cs.setVoltage = sv;
+    cs.getSetpoint = sp;
 }

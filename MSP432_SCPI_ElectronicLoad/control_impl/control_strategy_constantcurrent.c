@@ -42,7 +42,10 @@ void ConstantCurrentStrategySetCurrent(float fValue) {
     // todo: float?
     fConstantCurrent = fValue;
     bConstantCurrentChanged = true;
+}
 
+float ConstantCurrentStrategyGetSetpoint() {
+    return fConstantCurrent;
 }
 
 void setConstantCurrentStrategy() {
@@ -53,7 +56,8 @@ void setConstantCurrentStrategy() {
                          ConstantCurrentStrategyGetMode,
                          ConstantCurrentStrategyGetChar,
                          ConstantCurrentStrategySetCurrent,
-                         NULL);
+                         NULL,
+                         ConstantCurrentStrategyGetSetpoint);
 
 }
 

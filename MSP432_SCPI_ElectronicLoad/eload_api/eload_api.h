@@ -44,6 +44,7 @@ uint32_t eloadControlLoopGetSchedule();
 // instrument operations
 bool eloadSetConstantCurrent(float value);
 bool eloadSetConstantVoltage(float value);
+float eloadGetSetpoint();
 
 uint32_t eloadGetCurrentRangeMax();
 uint32_t eloadGetVoltageRangeMax();

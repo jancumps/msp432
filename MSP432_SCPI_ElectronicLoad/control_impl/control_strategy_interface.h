@@ -20,6 +20,7 @@ typedef eload_mode (*ControlStrategyGetMode) ();
 typedef int8_t (*ControlStrategyGetChar) ();
 typedef void (*ControlStrategySetCurrent) (float fValue);
 typedef void (*ControlStrategySetVoltage) (float fValue);
+typedef float (*ControlStrategyGetSetpoint) ();
 
 
 typedef struct ControlStrategy {
@@ -29,6 +30,7 @@ typedef struct ControlStrategy {
     ControlStrategyGetChar getChar;                 // one char representation of the strategy. e.g.: 'I' for constant current
     ControlStrategySetCurrent setCurrent;           // set current for those strategies that support it (e.g.: constant current)
     ControlStrategySetCurrent setVoltage;           // set voltage for those strategies that support it (e.g.: constant voltage)
+    ControlStrategyGetSetpoint getSetpoint;         // get the set value.
 } ControlStrategy;
 
 
@@ -41,7 +43,9 @@ void __setControlStrategy(ControlStrategyControlFunction f,
                           ControlStrategyGetMode m,
                           ControlStrategyGetChar c,
                           ControlStrategySetCurrent sc,
-                          ControlStrategySetVoltage sv);
+                          ControlStrategySetVoltage sv,
+                          ControlStrategyGetSetpoint sp  );
+
 
 
 #endif /* CONTROL_IMPL_CONTROL_STRATEGY_INTERFACE_H_ */
