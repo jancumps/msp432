@@ -31,6 +31,11 @@
 #include "scpi/scpi.h"
 #include"scpi-def.h"
 
+//#ifdef SCPI_LOG
+//#include "System.h"
+//#endif // SCPI_LOG
+
+
 
 UART_Handle uart;
 
@@ -88,6 +93,10 @@ Void fnTaskUART(UArg arg0, UArg arg1)
         // in my case: I get an interrupt for a single character, no need to loop.
         GPIO_toggle(Board_LED1); // LED B - visual clue that we've received a request over USB
         scpi_instrument_input((const char *)&input, 1);
+#ifdef SCPI_LOG
+        System_printf("%c", input);
+//        System_flush();
+#endif // SCPI_LOG
         GPIO_toggle(Board_LED1); // LED B - visual clue off
     }
 }

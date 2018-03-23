@@ -71,6 +71,9 @@ Void fnTaskHeartbeat(UArg arg0, UArg arg1)
         GPIO_write(Board_LED0, Board_LED_ON);
         Task_sleep(onTime);
         GPIO_write(Board_LED0, Board_LED_OFF);
+#ifdef SCPI_LOG
+        System_flush();
+#endif // SCPI_LOG
     }
 }
 
