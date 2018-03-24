@@ -266,6 +266,7 @@ static scpi_result_t ELOAD_SetFunction(scpi_t * context) {
 
     int32_t param1;
     scpi_bool_t result;
+    scpi_result_t retval;
 
     result = SCPI_ParamChoice( context, scpi_mode_def, &param1, TRUE );
     if ( false == result )
@@ -277,15 +278,15 @@ static scpi_result_t ELOAD_SetFunction(scpi_t * context) {
         switch (param1) {
         case SCPI_MODE_CURRENT:
             eloadSetMode(ELOAD_MODE_CURRENT);
-            result = SCPI_RES_OK;
+            retval = SCPI_RES_OK;
             break;
         default:
             SCPI_ErrorPush(context, SCPI_ERROR_ILLEGAL_PARAMETER_VALUE);
-            result = SCPI_RES_ERR;
+            retval = SCPI_RES_ERR;
        }
     }
 
-    return result;
+    return retval;
 }
 
 /* CALIBRATION AND CONFIGURATION COMMANDS */
