@@ -92,8 +92,8 @@ Void fnTaskADC(UArg arg0, UArg arg1)
             // we write value to the inactive robin
             // store value of ADC[i]
             // the ADC needs time between channel selection and sampling
-            // we assign 1/4 of the task sleep time to
-            // each of the 4 samples
+            // we assign 1/ADC_ACTIVE_INPUTS of the task sleep time to
+            // each of the ADC_ACTIVE_INPUTS samples
             // this puts more burden on the RTOS switcher - a compromise
             // - but certainly preferable to a loop
             // (except when later on we find out that the wait is only a few cpu cycles)
