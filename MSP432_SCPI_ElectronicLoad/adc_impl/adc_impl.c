@@ -50,11 +50,11 @@
 // if you use getAdc() to retrieve values, this is sorted out for you
 
 typedef struct ADCValues {
-    uint16_t raw[4];
+    uint16_t raw[ADC_ACTIVE_INPUTS];
 } ADCValues;
 
 volatile ADCValues adcRoundRobin[2];
-volatile uint32_t adcRoundRobinIndex = 0;
+volatile uint32_t adcRoundRobinIndex[ADC_ACTIVE_INPUTS] = {0};
 
 // volts per step
 const float VPS = 6.144 / 32768.0; // todo: is this correct for a 2v ref?
@@ -97,12 +97,12 @@ Void fnTaskADC(UArg arg0, UArg arg1)
             // this puts more burden on the RTOS switcher - a compromise
             // - but certainly preferable to a loop
             // (except when later on we find out that the wait is only a few cpu cycles)
-            adcRoundRobin[adcRoundRobinIndex ? 0 : 1].raw[i] = sampleADC(i, (UInt)arg0/ADC_ACTIVE_INPUTS);
+            adcRoundRobin[adcRoundRobinIndex[i] ? 0 : 1].raw[i] = sampleADC(i, (UInt)arg0/ADC_ACTIVE_INPUTS);
+            // after value(s) written, we activate the inactive robin
+            adcRoundRobinIndex[i] = adcRoundRobinIndex[i] ? 0 : 1;
         }
 
 
-        // after value(s) written, we activate the inactive robin
-        adcRoundRobinIndex = adcRoundRobinIndex ? 0 : 1;
 
         // commented because mcu spends more time in these lines than in the remainder
         // enable when needed, then comment out again
@@ -118,7 +118,7 @@ Void fnTaskADC(UArg arg0, UArg arg1)
 }
 
 uint16_t adcImplGetAdc(uint32_t uModule) {
-    return adcRoundRobin[adcRoundRobinIndex].raw[uModule];
+    return adcRoundRobin[adcRoundRobinIndex[uModule]].raw[uModule];
 }
 
 uint16_t adcImplToValue(uint16_t uRaw){
