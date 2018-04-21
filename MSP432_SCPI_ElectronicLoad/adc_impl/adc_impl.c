@@ -50,11 +50,17 @@
 // if you use getAdc() to retrieve values, this is sorted out for you
 
 typedef struct ADCValues {
-    uint16_t raw[ADC_ACTIVE_INPUTS];
+    uint16_t raw[4]; // I only need 3 locations because the fourth channel isn't sampled. But Peter's client app also asks the ADC values of channel 4.
+                     // it's easier to just provide a read of 0 than to adapt the code to deal with an attempt to read ADC 4.
+                     // if you connect something to the input of ADC 4, you can adapt the code below and set ADC_ACTIVE_INPUTS to 4.
+                     // it will decrease the buffer time betwen two reads from 12/3 to 1s/4.
 } ADCValues;
 
 volatile ADCValues adcRoundRobin[2];
-volatile uint32_t adcRoundRobinIndex[ADC_ACTIVE_INPUTS] = {0};
+volatile uint32_t adcRoundRobinIndex[4] = {0}; // I only need 3 locations because the fourth channel isn't sampled. But Peter's client app also asks the ADC values of channel 4.
+                                               // it's easier to just provide a read of 0 than to adapt the code to deal with an attempt to read ADC 4.
+                                               // if you connect something to the input of ADC 4, you can adapt the code below and set ADC_ACTIVE_INPUTS to 4.
+                                               // it will decrease the buffer time betwen two reads from 12/3 to 1s/4.
 
 // volts per step
 const float VPS = 6.144 / 32768.0; // todo: is this correct for a 2v ref?
