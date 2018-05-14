@@ -7,18 +7,18 @@
 
 
 #include "calibration_impl.h"
-#include <rom.h>
-#include <rom_map.h>
 #include <math.h>
-#include "flash.h"
-#include "adc_impl.h"
-
-#define CALIBRATION_START 0x0003F000
+#include <string.h>
+#include <ti/devices/msp432e4/driverlib/eeprom.h>
+#include <ti/devices/msp432e4/driverlib/sysctl.h>
+//#include "adc_impl.h"
 
 // update the version only when adding new fields
 #define CALIBRATION_DATA_VERSION 1U
+#define CALIBRATION_START 0x00
 
 typedef struct CalibrationData {
+    char code[6];
     uint32_t version;
     float temperature_threshold;  // todo convert to the ADC 16 bit value in stead of float
     float sense_voltage_read_multiplier;
@@ -36,6 +36,7 @@ CalibrationData _CalibrationData;
 bool _bCalibrationActive = false;
 
 void calibrationWrite();
+void calibrationInit();
 
 
 bool calibrationActive() {
@@ -57,31 +58,53 @@ bool calibrationEnd() {
     return (bRetVal);
 }
 
+bool calibrationErase() {
+    bool bRetVal = false;
+    if (_bCalibrationActive) {
+        strcpy(_CalibrationData.code, "eload");
+        _CalibrationData.version = CALIBRATION_DATA_VERSION;
+        _CalibrationData.temperature_threshold = 0.246244535;
+        _CalibrationData.sense_voltage_read_multiplier = 0.33;
+        _CalibrationData.sense_voltage_read_offset = 0.0;
+        _CalibrationData.current_read_multiplier = 6.8;
+        _CalibrationData.current_read_offset = 0.0;
+        _CalibrationData.current_write_multiplier = 0.000116;
+        _CalibrationData.current_write_offset = 0.0;
+        bRetVal = true;
+    }
+    return (bRetVal);
+}
+
+
+
+void calibrationInit() {
+    static bool bInited = false;
+    if(!bInited) {
+        /* Enable the EEPROM peripheral. */
+        SysCtlPeripheralEnable(SYSCTL_PERIPH_EEPROM0);
+
+        /* Initialize the EEPROM */
+        EEPROMInit();
+        bInited = true;
+    }
+}
+
 void calibrationRead() {
-    memcpy(&_CalibrationData, (const void *)CALIBRATION_START, CALIBRATION_DATA_SIZE);
+    calibrationInit();
+    EEPROMRead((uint32_t *)&_CalibrationData, (uint32_t)(CALIBRATION_START),
+               (uint32_t)CALIBRATION_DATA_SIZE);
+    if(strcmp(_CalibrationData.code, "eload")) { // check if code == "eload"s
+        calibrationErase();
+    }
 }
 
 void calibrationWrite() {
     _CalibrationData.version = CALIBRATION_DATA_VERSION; // writing calibration data will always set the version to the latest
+    strcpy(_CalibrationData.code, "eload");
 
-    /* Unprotecting Info Bank 0, Sector 0  */
-    MAP_FlashCtl_unprotectSector(FLASH_MAIN_MEMORY_SPACE_BANK1,FLASH_SECTOR31);
-
-    /* Trying to erase the sector. Within this function, the API will
-        automatically try to erase the maximum number of tries. If it fails,
-         trap in an infinite loop */
-    if(!MAP_FlashCtl_eraseSector(CALIBRATION_START))
-        while(1);
-
-    /* Trying to program the memory. Within this function, the API will
-        automatically try to program the maximum number of tries. If it fails,
-        trap inside an infinite loop */
-    if(!MAP_FlashCtl_programMemory(&_CalibrationData,
-            (void *)CALIBRATION_START, CALIBRATION_DATA_SIZE))
-                while(1);
-
-    /* Setting the sector back to protected  */
-    MAP_FlashCtl_protectSector(FLASH_MAIN_MEMORY_SPACE_BANK1,FLASH_SECTOR31);
+    calibrationInit();
+    EEPROMProgram((uint32_t *)&_CalibrationData, (uint32_t)(CALIBRATION_START),
+                  (uint32_t)CALIBRATION_DATA_SIZE);
 }
 
 /**

@@ -12,3 +12,5 @@
 /targetConfigs/
 /documentation/
 MSP432_SCPI_ElectronicLoad*.zip
+*.ccxml
+*.json

@@ -5,21 +5,13 @@
  *      Author: jancu
  */
 
-/* XDCtools Header files */
-#include <inputenable_impl/inputenable_impl.h>
-#include <xdc/std.h>
-#include <xdc/runtime/System.h>
-#include <xdc/runtime/Error.h>
-#include <xdc/cfg/global.h> // needed to get the global from the .cfg file
+#include <mqueue.h>
 
-/* BIOS Header files */
-#include <ti/sysbios/BIOS.h>
-#include <ti/sysbios/knl/Task.h>
-
-/* TI-RTOS Header files */
-//#include <ti/drivers/GPIO.h>
 #include <ti/drivers/I2C.h>
 #include "i2c_impl.h"
+#include <inputenable_impl.h>
+
+#include "rtos_schedules.h"
 
 
 // the address is 0011000
@@ -33,11 +25,10 @@ uint8_t         d_iorxBuffer[1]; // DAC doesn't read
 I2C_Transaction d_ioi2cTransaction;
 
 /*
- *  ======== fnTaskInputEnable ========
- *  Task for this function is created statically. See the project's .cfg file.
+ *  ======== threadTemperatureOverProtection ========
+
  */
-Void fnTaskInputEnable(UArg arg0, UArg arg1)
-{
+void *threadInputEnable(void *arg0) {
     // int iSize = MSGINPUTENABLE_SIZE; // 1 todo comment out. This is only used to set the right value in the RTOS mailbox config
 
     MsgInputEnable d_msg;
@@ -54,15 +45,15 @@ Void fnTaskInputEnable(UArg arg0, UArg arg1)
     d_iotxBuffer[0] = 0x01; // control register: select output port register
     d_iotxBuffer[1] = 0xFF; // set each bit high in the output register
     if (! I2C_transfer(i2c_implGetHandle(), &d_ioi2cTransaction)) {
-        System_printf("I2C Bus fault\n");
-        System_flush();
+//        System_printf("I2C Bus fault\n");
+//        System_flush();
     }
 
     d_iotxBuffer[0] = 0x03; // control register: select configuration register
     d_iotxBuffer[1] = 0x00; // set each bit low so that all 8 pins are outputs (recommended state for unused pins)
     if (! I2C_transfer(i2c_implGetHandle(), &d_ioi2cTransaction)) {
-        System_printf("I2C Bus fault\n");
-        System_flush();
+//        System_printf("I2C Bus fault\n");
+//        System_flush();
     }
 
 
@@ -71,15 +62,26 @@ Void fnTaskInputEnable(UArg arg0, UArg arg1)
 
     d_iotxBuffer[0] = 0x01; // control register: select output port register
 
+    mqd_t mq;
+    struct mq_attr attr;
+
+    attr.mq_flags = 0;
+    attr.mq_maxmsg = 1;
+    attr.mq_msgsize = MSGINPUTENABLE_SIZE;
+    attr.mq_curmsgs = 0;
+    mq = mq_open(QUEUE_NAME_INPUTENABLE, O_CREAT | O_RDONLY, 0644, &attr);
+
+
     while (1) {
+        ssize_t bytes_read;
+        bytes_read = mq_receive(mq, (char *)&d_msg, MSGINPUTENABLE_SIZE, NULL);
 
         /* wait for mailbox to be posted by writer() */
-        if (Mailbox_pend(mbInputEnable, &d_msg, BIOS_WAIT_FOREVER)) {
-
+        if (bytes_read) {
             d_iotxBuffer[1] = d_msg.value ? 0x3F : 0xFF; // bit 7 low is output enable.
             if (! I2C_transfer(i2c_implGetHandle(), &d_ioi2cTransaction)) {
-                System_printf("I2C Bus fault\n");
-                System_flush();
+//                System_printf("I2C Bus fault\n");
+//                System_flush();
             } else {
                 bInputEnable_State = d_msg.value;
             }

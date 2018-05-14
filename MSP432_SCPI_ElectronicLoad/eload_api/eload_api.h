@@ -63,6 +63,7 @@ uint32_t eloadDevelopGetAdcRaw();
 // calibration
 void eloadCalibrationStart();
 bool eloadCalibrationEnd();
+bool eloadCalibrationErase();
 bool eloadCalibrateSetTemperatureMaxResistance(uint32_t value);
 uint32_t eloadCalibrateGetTemperatureMaxResistance();
 bool eloadCalibrateSetSenseVoltReadMultiplier(float value);

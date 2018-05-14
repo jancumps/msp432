@@ -13,6 +13,7 @@
 
 void calibrationStart();
 bool calibrationEnd();
+bool calibrationErase();
 
 void calibrationRead();
 

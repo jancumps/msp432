@@ -5,57 +5,49 @@
  *      Author: jancumps
  */
 
-/* XDCtools Header files */
-#include <xdc/std.h>
-#include <xdc/runtime/System.h>
-#include <xdc/runtime/Error.h>
 
-/* BIOS Header files */
-#include <ti/sysbios/BIOS.h>
-#include <ti/sysbios/knl/Task.h>
-#include <ti/sysbios/knl/Clock.h>
-#include <ti/sysbios/knl/Semaphore.h>
+#include <stdint.h>
+#include <stdint.h>
 
 /* TI-RTOS Header files */
 #include <ti/drivers/GPIO.h>
 #include <ti/drivers/UART.h>
 
+#include <semaphore.h>
+
 /* Example/Board Header files */
 #include "Board.h"
 
-#include "gpio.h"
+#include "rtos_schedules.h"
 
-#include <stdint.h>
 #include <uart_impl.h>
 
 #include "scpi/scpi.h"
 #include"scpi-def.h"
 
-//#ifdef SCPI_LOG
-//#include "System.h"
-//#endif // SCPI_LOG
-
-
 
 UART_Handle uart;
-
-Semaphore_Handle SEM_uart_rx; // this binary semaphore handles uart receiving interrupts
+sem_t SEM_uart_rx; // this binary semaphore handles uart receiving interrupts
 
 void UART00_IRQHandler(UART_Handle handle, void *buffer, size_t num);
 
+
+
 /*
- *  ======== fnTaskUART ========
- *  Task for this function is created statically. See the project's .cfg file.
+ *  ======== mainThread ========
  */
-Void fnTaskUART(UArg arg0, UArg arg1)
+void *threadUART(void *arg0)
 {
-    char input;
+    char        input;
     UART_Params uartParams;
-    Error_Block eb;
-    Semaphore_Params sem_params;
+    int iError;
 
+    /* Call driver init functions */
+//    GPIO_init();
+    UART_init();
 
-
+    /* Configure the LED pin */
+    GPIO_setConfig(Board_GPIO_LED0, GPIO_CFG_OUT_STD | GPIO_CFG_OUT_LOW);
 
     /* Create a UART with data processing off. */
     UART_Params_init(&uartParams);
@@ -77,27 +69,27 @@ Void fnTaskUART(UArg arg0, UArg arg1)
 #endif
 #endif
 
-
     if (uart == NULL) {
-        System_abort("Error opening the UART");
+        /* UART_open() failed */
+        while (1);
     }
 
-    Semaphore_Params_init(&sem_params);
-    sem_params.mode = Semaphore_Mode_BINARY;
+    iError = sem_init(&SEM_uart_rx, 0, 0);
+    /* Configure the LED pin */
+    GPIO_setConfig(Board_GPIO_LED1, GPIO_CFG_OUT_STD | GPIO_CFG_OUT_LOW);
 
-    SEM_uart_rx = Semaphore_create(0, &sem_params, &eb);
 
+    /* Loop forever echoing */
     while (1) {
-        UART_read(uart, &input, 1); // prime the uart bus to read the first character, non blocking
-        Semaphore_pend(SEM_uart_rx, BIOS_WAIT_FOREVER); // when a character is received via UART, the interrupt handler will release the binary semaphore
+        UART_read(uart, &input, 1);
+        iError = sem_wait(&SEM_uart_rx); // when a character is received via UART, the interrupt handler will release the binary semaphore
+        while (iError) {
+            // POSIX reported error with semaphore. Can't recover.
+        }
         // in my case: I get an interrupt for a single character, no need to loop.
-        GPIO_toggle(Board_LED1); // LED B - visual clue that we've received a request over USB
+        GPIO_toggle(Board_GPIO_LED1); // LED B - visual clue that we've received a request over USB
         scpi_instrument_input((const char *)&input, 1);
-#ifdef SCPI_LOG
-        System_printf("%c", input);
-//        System_flush();
-#endif // SCPI_LOG
-        GPIO_toggle(Board_LED1); // LED B - visual clue off
+        GPIO_toggle(Board_GPIO_LED1); // LED B - visual clue off
     }
 }
 
@@ -107,9 +99,9 @@ Void fnTaskUART(UArg arg0, UArg arg1)
  */
 size_t SCPI_Write(scpi_t * context, const char * data, size_t len) {
     (void) context;
-    GPIO_toggle(Board_LED1); // LED B - visual clue that we send a reply over USB
+    GPIO_toggle(Board_GPIO_LED1); // LED B - visual clue that we send a reply over USB
     UART_write(uart, data, len); // todo: check if this needs to be writePolling()
-    GPIO_toggle(Board_LED1); // LED B - visual clue offB
+    GPIO_toggle(Board_GPIO_LED1); // LED B - visual clue offB
     return len;
 }
 
@@ -121,8 +113,6 @@ size_t SCPI_Write(scpi_t * context, const char * data, size_t len) {
 
 void UART00_IRQHandler(UART_Handle handle, void *buffer, size_t num)
 {
-    Semaphore_post(SEM_uart_rx);
+    sem_post(&SEM_uart_rx);
 }
-
-
 

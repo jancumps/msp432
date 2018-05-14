@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017, Texas Instruments Incorporated
+ * Copyright (c) 2017, Texas Instruments Incorporated
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,49 +29,41 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 /*
- *  ======== MSP432_SCPI_ElectronicLoad.c ========
+ *  ======== MSP_EXP432E401Y.cmd ========
+ *  Define the memory block start/length for the MSP_EXP432E401Y M4
  */
+--stack_size=1024   /* C stack is also used for ISR stack */
 
-/* For usleep() */
-#include <unistd.h>
-#include <stdint.h>
-#include <stddef.h>
+HEAPSIZE = 0x20000;  /* Size of heap buffer used by HeapMem */
 
-/* Driver Header files */
-#include <ti/drivers/GPIO.h>
-
-
-/* Board Header file */
-#include "Board.h"
-
-#include "rtos_schedules.h"
-
-/*
- *  ======== threadHeartBeat ========
- */
-void *threadHeartBeat(void *arg0)
+MEMORY
 {
-    /* 1 second delay */
-    uint32_t uTime = THREAD_SLEEP_HEARTBEAT * 1000000;
+    FLASH (RX) : origin = 0x00000000, length = 0x00100000
+    SRAM (RWX) : origin = 0x20000000, length = 0x00040000
+}
 
-    uint32_t uOnTime = (uint32_t)(uTime / 95); // blink 5% of the schedule
+/* Section allocation in memory */
 
+SECTIONS
+{
+    .text   :   > FLASH
+    .const  :   > FLASH
+    .cinit  :   > FLASH
+    .pinit  :   > FLASH
+    .init_array : > FLASH
 
-    /* Call driver init functions */
+    .TI.ramfunc : {} load=FLASH, run=SRAM, table(BINIT)
+    .data   :   > SRAM
+    .bss    :   > SRAM
+    .sysmem :   > SRAM
 
-    /* Configure the LED pin */
-    GPIO_setConfig(Board_GPIO_LED0, GPIO_CFG_OUT_STD | GPIO_CFG_OUT_LOW);
-    /* Turn on user LED */
-    GPIO_write(Board_GPIO_LED0, Board_GPIO_LED_ON);
+    /* Heap buffer used by HeapMem */
+    .priheap   : {
+        __primary_heap_start__ = .;
+        . += HEAPSIZE;
+        __primary_heap_end__ = .;
+    } > SRAM align 8
 
-    while (1) {
-
-        usleep(uTime - uOnTime);
-        GPIO_write(Board_GPIO_LED0, Board_GPIO_LED_ON);
-        usleep(uOnTime);
-        GPIO_write(Board_GPIO_LED0, Board_GPIO_LED_OFF);
-
-    }
+    .stack  :   > SRAM (HIGH)
 }

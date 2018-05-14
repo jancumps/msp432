@@ -10,6 +10,7 @@
 
 #include <stdbool.h>
 
+#define QUEUE_NAME_INPUTENABLE "/inputenable_queue"
 
 typedef struct MsgInputEnable {
      bool value;

@@ -10,6 +10,9 @@
 
 #include <stdint.h>
 
+#define QUEUE_NAME_DAC "/dac_queue"
+
+
 typedef struct MsgDAC {
     uint8_t module;
     uint16_t value;

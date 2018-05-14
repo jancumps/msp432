@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016, Texas Instruments Incorporated
+ * Copyright (c) 2017-2018, Texas Instruments Incorporated
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,63 +37,59 @@
 extern "C" {
 #endif
 
-#include "MSP_EXP432P401R.h"
+#include "MSP_EXP432E401Y.h"
 
-#define Board_initADC               MSP_EXP432P401R_initADC
-#define Board_initGeneral           MSP_EXP432P401R_initGeneral
-#define Board_initGPIO              MSP_EXP432P401R_initGPIO
-#define Board_initI2C               MSP_EXP432P401R_initI2C
-#define Board_initPWM               MSP_EXP432P401R_initPWM
-#define Board_initSDSPI             MSP_EXP432P401R_initSDSPI
-#define Board_initSPI               MSP_EXP432P401R_initSPI
-#define Board_initUART              MSP_EXP432P401R_initUART
-#define Board_initWatchdog          MSP_EXP432P401R_initWatchdog
-#define Board_initWiFi              MSP_EXP432P401R_initWiFi
+#define Board_initGeneral           MSP_EXP432E401Y_initGeneral
 
-#define Board_ADC0                  MSP_EXP432P401R_ADC0
-#define Board_ADC1                  MSP_EXP432P401R_ADC1
+#define Board_ADC0                  MSP_EXP432E401Y_ADC0
+#define Board_ADC1                  MSP_EXP432E401Y_ADC1
 
-#define Board_LED_ON                MSP_EXP432P401R_LED_ON
-#define Board_LED_OFF               MSP_EXP432P401R_LED_OFF
+#define Board_ADCBUF0               MSP_EXP432E401Y_ADCBUF0
+#define Board_ADCBUF0CHANNEL0       MSP_EXP432E401Y_ADCBUF0CHANNEL0
+#define Board_ADCBUF0CHANNEL1       MSP_EXP432E401Y_ADCBUF0CHANNEL1
+#define Board_ADCBUF0CHANNEL2       MSP_EXP432E401Y_ADCBUF0CHANNEL2
+#define Board_ADCBUF0CHANNEL3       MSP_EXP432E401Y_ADCBUF0CHANNEL3
+#define Board_ADCBUF0CHANNEL4       MSP_EXP432E401Y_ADCBUF0CHANNEL4
 
-#define Board_BUTTON0               MSP_EXP432P401R_S1
-#define Board_BUTTON1               MSP_EXP432P401R_S2
-#define Board_LED0                  MSP_EXP432P401R_LED1
-#define Board_LED1                  MSP_EXP432P401R_LED_RED
-#define Board_LED2                  MSP_EXP432P401R_LED_RED
+#define Board_GPIO_LED_ON           MSP_EXP432E401Y_GPIO_LED_ON
+#define Board_GPIO_LED_OFF          MSP_EXP432E401Y_GPIO_LED_OFF
+#define Board_GPIO_LED0             MSP_EXP432E401Y_GPIO_D1
+#define Board_GPIO_LED1             MSP_EXP432E401Y_GPIO_D2
+#define Board_GPIO_LED2             MSP_EXP432E401Y_GPIO_D2
+#define Board_GPIO_BUTTON0          MSP_EXP432E401Y_GPIO_USR_SW1
+#define Board_GPIO_BUTTON1          MSP_EXP432E401Y_GPIO_USR_SW2
 
-/*
- * MSP_EXP432P401R_LED_GREEN & MSP_EXP432P401R_LED_BLUE are used for
- * PWM examples.  Uncomment the following lines if you would like to control
- * the LEDs with the GPIO driver.
- */
-//#define Board_LED2                  MSP_EXP432P401R_LED_GREEN
-//#define Board_LED3                  MSP_EXP432P401R_LED_BLUE
+#define Board_I2C0                  MSP_EXP432E401Y_I2C0
+#define Board_I2C_TMP               MSP_EXP432E401Y_I2C0
+#define Board_I2C_TPL0401           MSP_EXP432E401Y_I2C7
 
-#define Board_I2C0                  MSP_EXP432P401R_I2CB0
-#define Board_I2C_TMP               MSP_EXP432P401R_I2CB0
-#define Board_I2C_NFC               MSP_EXP432P401R_I2CB0
-#define Board_I2C_TPL0401           MSP_EXP432P401R_I2CB0
+#define Board_NVSINTERNAL           MSP_EXP432E401Y_NVSMSP432E40
 
-#define Board_PWM0                  MSP_EXP432P401R_PWM_TA1_1
-#define Board_PWM1                  MSP_EXP432P401R_PWM_TA1_2
+#define Board_PWM0                  MSP_EXP432E401Y_PWM0
 
-#define Board_SDSPI0                MSP_EXP432P401R_SDSPIB0
+#define Board_SD0                   MSP_EXP432E401Y_SDSPI0
 
-#define Board_SPI0                  MSP_EXP432P401R_SPIB0
-#define Board_SPI1                  MSP_EXP432P401R_SPIB2
+#define Board_SDFatFS0              MSP_EXP432E401Y_SDSPI0
 
-#define Board_UART0                 MSP_EXP432P401R_UARTA0
-#define Board_UART1                 MSP_EXP432P401R_UARTA2
+#define Board_SPI0                  MSP_EXP432E401Y_SPI2
+#define Board_SPI1                  MSP_EXP432E401Y_SPI3
 
-#define Board_WATCHDOG0             MSP_EXP432P401R_WATCHDOG
+#define Board_SPI_MASTER            MSP_EXP432E401Y_SPI2
+#define Board_SPI_SLAVE             MSP_EXP432E401Y_SPI2
+#define Board_SPI_MASTER_READY      MSP_EXP432E401Y_SPI_MASTER_READY
+#define Board_SPI_SLAVE_READY       MSP_EXP432E401Y_SPI_SLAVE_READY
 
-#define Board_WIFI                  MSP_EXP432P401R_WIFI
-#define Board_WIFI_SPI              MSP_EXP432P401R_SPIB0
+#define Board_TIMER0                MSP_EXP432E401Y_TIMER0
+#define Board_TIMER1                MSP_EXP432E401Y_TIMER1
+#define Board_TIMER2                MSP_EXP432E401Y_TIMER2
+
+#define Board_UART0                 MSP_EXP432E401Y_UART0
+
+#define Board_WATCHDOG0             MSP_EXP432E401Y_WATCHDOG0
 
 /* Board specific I2C addresses */
-#define Board_TMP006_ADDR           (0x40)
-#define Board_RF430CL330_ADDR       (0x28)
+#define Board_TMP_ADDR              (0x40)
+#define Board_SENSORS_BP_TMP_ADDR   Board_TMP_ADDR
 #define Board_TPL0401_ADDR          (0x40)
 
 #ifdef __cplusplus

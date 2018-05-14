@@ -25,7 +25,7 @@ void ConstantCurrentStrategyControlFunction () {
 }
 
 uint32_t ConstantCurrentGStrategyGetSchedule() {
-    return  500U;
+    return  999999U;
 }
 
 eload_mode ConstantCurrentStrategyGetMode () {
@@ -37,9 +37,6 @@ int8_t ConstantCurrentStrategyGetChar() {
 }
 
 void ConstantCurrentStrategySetCurrent(float fValue) {
-    // todo: set the target current via DAC.
-    // todo : convert volt/DAC settings
-    // todo: float?
     fConstantCurrent = fValue;
     bConstantCurrentChanged = true;
 }

@@ -5,15 +5,6 @@
  *      Author: jancu
  */
 
-/* XDCtools Header files */
-#include <xdc/std.h>
-#include <xdc/runtime/System.h>
-#include <xdc/runtime/Error.h>
-#include <xdc/cfg/global.h> // needed to get the global from the .cfg file
-
-/* BIOS Header files */
-#include <ti/sysbios/BIOS.h>
-
 
 #include <stdint.h>
 #include "eload_api.h"
@@ -25,6 +16,8 @@
 #include "control_strategy_constantcurrent.h"
 
 #include "calibration_impl.h"
+
+#include <mqueue.h>
 
 
 void eloadInit() {
@@ -81,7 +74,8 @@ void eloadSetMode(eload_mode mode){
         break;
     default:
         // don't change when an unknown mode is selected
-        System_printf("Unknown or unsupported mode, ignore\n");
+//        System_printf("Unknown or unsupported mode, ignore\n");
+        break;
     }
 
 }
@@ -146,8 +140,11 @@ void eloadInputEnable(bool bEnable) {
     // value has to be validated before it arrives here. We assume it's valid
     pMsg.value = bEnable;
     /* enqueue message */
-    Mailbox_post(mbInputEnable, &pMsg, BIOS_WAIT_FOREVER);
-
+    mqd_t mq;
+    mq = mq_open(QUEUE_NAME_INPUTENABLE, O_WRONLY);
+    if (mq != -1) { // only send data if the message queue has been initialised by the receiving end. Else our instrument isn't ready
+        mq_send(mq, (char *)&pMsg, MSGINPUTENABLE_SIZE, 0);
+    }
 }
 
 bool eloadInputEnabled() {
@@ -170,7 +167,11 @@ void eloadRawSetDac(uint32_t uModule, uint32_t value) { // module is 0 based
     pMsg.value = (uint16_t)value;
     pMsg.module = (uint8_t)uModule;
     /* enqueue message */
-    Mailbox_post(mbDAC, &pMsg, BIOS_WAIT_FOREVER);
+    mqd_t mq;
+    mq = mq_open(QUEUE_NAME_DAC, O_WRONLY);
+    if (mq != -1) { // only send data if the message queue has been initialised by the receiving end. Else our instrument isn't ready
+        mq_send(mq, (char *)&pMsg, MSGDAC_SIZE, 0);
+    }
 
 }
 
@@ -191,6 +192,10 @@ void eloadCalibrationStart() {
 
 bool eloadCalibrationEnd() {
     return calibrationEnd();
+}
+
+bool eloadCalibrationErase() {
+    return calibrationErase();
 }
 
 bool eloadCalibrateSetTemperatureMaxResistance(uint32_t value) {

@@ -6,36 +6,30 @@
  */
 
 
-/* XDCtools Header files */
-#include <xdc/std.h>
-#include <xdc/runtime/System.h>
-#include <xdc/runtime/Error.h>
 
-/* BIOS Header files */
-#include <ti/sysbios/BIOS.h>
-#include <ti/sysbios/knl/Task.h>
-#include <ti/sysbios/knl/Clock.h>
-
+#include <unistd.h>
 #include "eload_api.h"
+
+#include "rtos_schedules.h"
 
 /*
  *  ======== fnTaskControl ========
  *  Run control loop.
  *  Frequency is dependent on the control strategy.
- *  If the strategy doesn't need a loop, run at the time defined by parameter 1
+ *  If the strategy doesn't need a loop, run at the time defined by THREAD_USLEEP_CONTROL
  *  todo: maybe exit and start the task from the strategy, and don't run when not needed?
  */
-Void fnTaskControl(UArg arg0, UArg arg1)
+void *threadControl(void *arg0)
 {
 
-    UInt uDefaultWait = (UInt)arg0;
+    uint32_t uDefaultWait = THREAD_USLEEP_CONTROL;
 
 
     while (1) {
         uint32_t uWait = eloadControlLoopGetSchedule();
         eloadControlLoop();
 
-        Task_sleep(uWait ?  uWait : uDefaultWait);
+        usleep(uWait ?  uWait : uDefaultWait);
 
     }
 }

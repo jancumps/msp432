@@ -5,18 +5,9 @@
  *      Author: jancu poakes
  */
 
-/* XDCtools Header files */
-#include <xdc/std.h>
-#include <xdc/runtime/System.h>
-#include <xdc/runtime/Error.h>
-//#include <xdc/cfg/global.h> // needed to get the global from the .cfg file
+/* For usleep() */
+#include <unistd.h>
 
-/* BIOS Header files */
-#include <ti/sysbios/BIOS.h>
-#include <ti/sysbios/knl/Task.h>
-
-/* TI-RTOS Header files */
-//#include <ti/drivers/GPIO.h>
 #include <ti/drivers/I2C.h>
 
 /* Example/Board Header files */
@@ -24,6 +15,8 @@
 
 #include "i2c_impl.h"
 #include "adc_impl.h"
+
+#include "rtos_schedules.h"
 
 #define ADC_I2C_ADDR (0x48)
 
@@ -73,14 +66,13 @@ static const uint8_t array_ADS1115_CFG_H[4] = {ADS1115_CFG_H0, ADS1115_CFG_H1, A
 
 
 
-uint16_t sampleADC(uint32_t uModule, UInt uSleep);
+uint16_t sampleADC(uint32_t uModule, uint32_t uSleep);
 
 /*
- *  ======== fnTaskADC ========
- *  Task for this function is created statically. See the project's .cfg file.
+ *  ======== threadADC  ========
+
  */
-Void fnTaskADC(UArg arg0, UArg arg1)
-{
+void *threadADC(void *arg0) {
     uint32_t i;
 
     a_i2cTransaction.writeBuf = a_txBuffer;
@@ -103,7 +95,7 @@ Void fnTaskADC(UArg arg0, UArg arg1)
             // this puts more burden on the RTOS switcher - a compromise
             // - but certainly preferable to a loop
             // (except when later on we find out that the wait is only a few cpu cycles)
-            adcRoundRobin[adcRoundRobinIndex[i] ? 0 : 1].raw[i] = sampleADC(i, (UInt)arg0/ADC_ACTIVE_INPUTS);
+            adcRoundRobin[adcRoundRobinIndex[i] ? 0 : 1].raw[i] = sampleADC(i, THREAD_USLEEP_ADC / ADC_ACTIVE_INPUTS);
             // after value(s) written, we activate the inactive robin
             adcRoundRobinIndex[i] = adcRoundRobinIndex[i] ? 0 : 1;
         }
@@ -148,7 +140,7 @@ float adcImplToFloat(uint16_t uRaw) {
 }
 
 
-uint16_t sampleADC(uint32_t uModule, UInt uSleep) {
+uint16_t sampleADC(uint32_t uModule, uint32_t uSleep) {
     uint16_t uRetval = 0u;
 
     /* Point to the ADC ASD1115 and read input uModule */
@@ -161,12 +153,12 @@ uint16_t sampleADC(uint32_t uModule, UInt uSleep) {
 
     /* Init ADC and Start Sampling */
     if (! I2C_transfer(i2c_implGetHandle(), &a_i2cTransaction)){
-        System_printf("Sampling Start Failed \n");
+//        System_printf("Sampling Start Failed \n");
     }
 
     // there's a pause required between channel selection and data retrieval
     // we consume that part of the task sleep time that's assigned to us by the task.
-    Task_sleep(uSleep);
+    usleep(uSleep);
 
     a_txBuffer[0] = 0x00;
     a_i2cTransaction.writeCount = 1;
@@ -176,7 +168,7 @@ uint16_t sampleADC(uint32_t uModule, UInt uSleep) {
         uRetval = ((a_rxBuffer[0] << 8) | a_rxBuffer[1]);
     }
     else {
-        System_printf("ADC Read I2C Bus fault\n");
+//        System_printf("ADC Read I2C Bus fault\n");
     }
 
 

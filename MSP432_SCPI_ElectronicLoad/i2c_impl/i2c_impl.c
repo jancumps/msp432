@@ -23,7 +23,8 @@
 
 #include "i2c_impl.h"
 
-#define I2C_IMPL_I2C_PORT               MSP_EXP432P401R_I2CB0
+// todo: check if this IS the right I2C port - was MSP_EXP432P401R_I2CB0 on the MSP432 black
+#define I2C_IMPL_I2C_PORT               MSP_EXP432E401Y_I2C0
 
 /**
  *
@@ -38,10 +39,10 @@ I2C_Handle i2c_implGetHandle() {
         i2cParams.bitRate = I2C_400kHz;
         i2c = I2C_open(I2C_IMPL_I2C_PORT, &i2cParams);
         if (i2c == NULL) {
-            System_abort("Error Initializing I2C\n");
+//            System_abort("Error Initializing I2C\n");
         }
         else {
-            System_printf("I2C Initialized!\n");
+//            System_printf("I2C Initialized!\n");
         }
     }
 

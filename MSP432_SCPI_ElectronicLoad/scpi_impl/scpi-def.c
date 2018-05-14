@@ -54,6 +54,7 @@
 #include "eload_api.h"
 
 
+
 enum scpi_mode_t {
     SCPI_MODE_UNDEFINED,
     SCPI_MODE_CURRENT,
@@ -304,6 +305,14 @@ static scpi_result_t ELOAD_CalibrationEnd(scpi_t * context) {
     return SCPI_RES_OK;
 }
 
+static scpi_result_t ELOAD_CalibrationErase(scpi_t * context) {
+    if (!eloadCalibrationErase()){
+        SCPI_ErrorPush(context, SCPI_ERROR_EXECUTION_ERROR);
+        return SCPI_RES_ERR;
+    }
+    return SCPI_RES_OK;
+}
+
 static scpi_result_t ELOAD_CalibrationAdcVoltQ(scpi_t * context) {
 
     uint32_t uModule;
@@ -434,6 +443,7 @@ static scpi_result_t ELOAD_CalibrationCurrentWriteOffsetQ(scpi_t * context) {
     SCPI_ResultFloat(context, eloadCalibrateGetCurrentWriteOffset());
     return SCPI_RES_OK;
 }
+
 const scpi_command_t scpi_commands[] = {
     /* IEEE Mandated Commands (SCPI std V1999.0 4.1.1) */
     { .pattern = "*CLS", .callback = SCPI_CoreCls,},
@@ -485,6 +495,7 @@ const scpi_command_t scpi_commands[] = {
     /* CALIBRATION AND CONFIGURATION COMMANDS */
     {.pattern = "CALibration:STArt", .callback = ELOAD_CalibrationStart,},
     {.pattern = "CALibration:END", .callback = ELOAD_CalibrationEnd,},
+    {.pattern = "CALibration:ERAse", .callback = ELOAD_CalibrationErase,},
     {.pattern = "CALibration:ADC#:VOLTage?", .callback = ELOAD_CalibrationAdcVoltQ,},
     {.pattern = "CALibration:TEMPERATUREMAXResistance", .callback = ELOAD_CalibrationTemperatureMaxResistance,},
     {.pattern = "CALibration:TEMPERATUREMAXResistance?", .callback = ELOAD_CalibrationTemperatureMaxResistanceQ,},

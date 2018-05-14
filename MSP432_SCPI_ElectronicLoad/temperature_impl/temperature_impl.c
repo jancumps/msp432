@@ -5,28 +5,21 @@
  *      Author: jancu
  */
 
-/* XDCtools Header files */
-#include <xdc/std.h>
-#include <xdc/runtime/System.h>
-#include <xdc/runtime/Error.h>
-//#include <xdc/cfg/global.h> // needed to get the global from the .cfg file
 
-/* BIOS Header files */
-#include <ti/sysbios/BIOS.h>
-#include <ti/sysbios/knl/Task.h>
 
 #include <stdbool.h>
+#include <unistd.h>
 
 #include "eload_api.h"
 #include "temperature_impl.h"
 #include "calibration_impl.h"
 
+#include "rtos_schedules.h"
+
 /*
- *  ======== fnTaskTemperatureOverProtection ========
- *  Task for this function is created statically. See the project's .cfg file.
+ *  ======== threadTemperatureOverProtection ========
  */
-Void fnTaskTemperatureOverProtection(UArg arg0, UArg arg1)
-{
+void *threadTemperatureOverProtection(void *arg0) {
     float fSample;
     while (1)
     {
@@ -38,6 +31,6 @@ Void fnTaskTemperatureOverProtection(UArg arg0, UArg arg1)
                 }
             }
         }
-        Task_sleep(arg0);
+        sleep(THREAD_SLEEP_TEMPERATUREOVERPROTECTION);
     }
 }

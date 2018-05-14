@@ -4,52 +4,53 @@
  *  Created on: 8 jan. 2017
  *      Author: jancu
  */
+// for printf
+#include <stdio.h>
+#include <unistd.h>
 
-/* XDCtools Header files */
-#include <xdc/std.h>
-#include <xdc/runtime/System.h>
-#include <xdc/runtime/Error.h>
+#include <ti/display/DisplayExt.h>
 
-/* BIOS Header files */
-#include <ti/sysbios/BIOS.h>
-#include <ti/sysbios/knl/Task.h>
-#include <ti/sysbios/knl/Clock.h>
 
-#include <lcddriver/sharp96x96.h>
 
 #include "eload_api.h"
 #include "adc_impl.h"
 
-// for printf
-#include <stdio.h>
+#include "rtos_schedules.h"
 
-Graphics_Context g_sContext;
+
 
 /*
- *  ======== fnTaskDisplay ========
- *  Handle (the optional) LCD display. The Task_sleep is determined by arg0 which
- *  is configured for the fnTaskDisplay Task instance.
+ *  ======== threadDisplay ========
+ *  Handle (the optional) LCD display.
  */
-Void fnTaskDisplay(UArg arg0, UArg arg1)
+void *threadDisplay(void *arg0)
 {
     uint32_t i;
     char formatString[12];
+    Display_init();
+    /* Initialize display and try to open LCD type of display. */
+    Display_Params params;
+    Display_Params_init(&params);
+    params.lineClearMode = DISPLAY_CLEAR_BOTH;
+//    Display_Handle hLcd = Display_open(Display_Type_LCD | Display_Type_GRLIB, &params);
+    Display_Handle hLcd = Display_open(Display_Type_LCD, &params);
+    if (!hLcd) {
+        return NULL; // we didn't get a display handle. Check if the following is defined: BOARD_DISPLAY_USE_LCD
+    }
+    Graphics_Context *context = DisplayExt_getGraphicsContext(hLcd);
+    GrContextForegroundSet(context, ClrBlack);
+    GrContextBackgroundSet(context, ClrWhite);
+
+    GrClearDisplay(context);
+    GrContextFontSet(context, &g_sFontCmss12);
 
 
-    Sharp96x96_LCDInit();
-    GrContextInit(&g_sContext, &g_sharp96x96LCD);
-    GrContextForegroundSet(&g_sContext, ClrBlack);
-    GrContextBackgroundSet(&g_sContext, ClrWhite);
+    GrStringDraw(context, "The Breadboard", -1, 10, 15, 0);
+    GrStringDraw(context, "Electronic Load", -1, 15, 30, 0);
+    GrStringDraw(context, "Copyright Free", -1, 13, 45, 0);
+    GrStringDraw(context, "Version 0", -1, 22, 60, 0);
 
-    GrClearDisplay(&g_sContext);
-    GrContextFontSet(&g_sContext, &g_sFontCmss12);
-
-    GrStringDraw(&g_sContext, "The Breadboard", -1, 10, 15, 0);
-    GrStringDraw(&g_sContext, "Electronic Load", -1, 15, 30, 0);
-    GrStringDraw(&g_sContext, "Copyright Free", -1, 13, 45, 0);
-    GrStringDraw(&g_sContext, "Version 0", -1, 22, 60, 0);
-
-    GrFlush(&g_sContext);
+    GrFlush(context);
     int8_t cMode;
 
     float fVoltage = 0.0f;
@@ -57,34 +58,32 @@ Void fnTaskDisplay(UArg arg0, UArg arg1)
 
 
     while (1) {
-        Task_sleep((UInt)arg0);
+        sleep(THREAD_SLEEP_DISPLAY);
         cMode = eloadGetChar();
         fVoltage = eloadGetVoltageDC();
         fCurrent = eloadGetCurrentDC();
-        GrClearDisplay(&g_sContext);
-        GrContextFontSet(&g_sContext, &g_sFontCmss12);
+        GrClearDisplay(context);
+        GrContextFontSet(context, &g_sFontCmss12);
 
 
-//        GrStringDraw(&g_sContext, "mode: ", -1, 5, 0, 0);
-//        GrStringDraw(&g_sContext, &cMode, 1, 40, 0, 0);
         sprintf(formatString, "mode: %c %02.4f\0", cMode, eloadGetSetpoint());
-        GrContextFontSet(&g_sContext, &g_sFontFixed6x8);
-        GrStringDraw(&g_sContext, (int8_t *)formatString, -1, 4, 0, 0);
+        GrContextFontSet(context, &g_sFontFixed6x8);
+        GrStringDraw(context, (int8_t *)formatString, -1, 4, 0, 0);
 
         i = 0;
         sprintf(formatString, "I: %02.4f\0", fCurrent);
-        GrContextFontSet(&g_sContext, &g_sFontFixed6x8);
-        GrStringDraw(&g_sContext, (int8_t *)formatString, -1, 4, (15 + 12*i), 0);
+        GrContextFontSet(context, &g_sFontFixed6x8);
+        GrStringDraw(context, (int8_t *)formatString, -1, 4, (15 + 12*i), 0);
 
         i = 1;
         sprintf(formatString, "V: %02.4f\0", fVoltage);
-        GrContextFontSet(&g_sContext, &g_sFontFixed6x8);
-        GrStringDraw(&g_sContext, (int8_t *)formatString, -1, 4, (15 + 12*i), 0);
+        GrContextFontSet(context, &g_sFontFixed6x8);
+        GrStringDraw(context, (int8_t *)formatString, -1, 4, (15 + 12*i), 0);
 
         i = 2;
         sprintf(formatString, "P: %02.4f\0", fVoltage * fCurrent);
-        GrContextFontSet(&g_sContext, &g_sFontFixed6x8);
-        GrStringDraw(&g_sContext, (int8_t *)formatString, -1, 4, (15 + 12*i), 0);
+        GrContextFontSet(context, &g_sFontFixed6x8);
+        GrStringDraw(context, (int8_t *)formatString, -1, 4, (15 + 12*i), 0);
 
         i = 3;
         if (fCurrent> 0.0f) {
@@ -92,34 +91,34 @@ Void fnTaskDisplay(UArg arg0, UArg arg1)
         } else {
             sprintf( formatString, "R: --.--");
         }
-        GrContextFontSet(&g_sContext, &g_sFontFixed6x8);
-        GrStringDraw(&g_sContext, (int8_t *)formatString, -1, 4, (15 + 12*i), 0);
+        GrContextFontSet(context, &g_sFontFixed6x8);
+        GrStringDraw(context, (int8_t *)formatString, -1, 4, (15 + 12*i), 0);
 
         i = 4;
         sprintf(formatString, "Input: O%s\0", eloadInputEnabled()? "n " : "ff");
-        GrContextFontSet(&g_sContext, &g_sFontFixed6x8);
-        GrStringDraw(&g_sContext, (int8_t *)formatString, -1, 4, (15 + 12*i), 0);
+        GrContextFontSet(context, &g_sFontFixed6x8);
+        GrStringDraw(context, (int8_t *)formatString, -1, 4, (15 + 12*i), 0);
 
 //        // temperature
 //        i = 2;
 //        sprintf(formatString, "ADC%i: %02.4f\0", i + 1, adcImplToFloat(adcImplGetAdc(i)));
-//        GrContextFontSet(&g_sContext, &g_sFontFixed6x8);
-//        GrStringDraw(&g_sContext, (int8_t *)formatString, -1, 4, (15 + 12*i), 0);
+//        GrContextFontSet(context, &g_sFontFixed6x8);
+//        GrStringDraw(context, (int8_t *)formatString, -1, 4, (15 + 12*i), 0);
 
 //        // ADC 4 is not used
 //        i = 3;
 //        sprintf(formatString, "ADC%i: %02.4f\0", i + 1, adcImplToFloat(adcImplGetAdc(i)));
-//        GrContextFontSet(&g_sContext, &g_sFontFixed6x8);
-//        GrStringDraw(&g_sContext, (int8_t *)formatString, -1, 4, (15 + 12*i), 0);
+//        GrContextFontSet(context, &g_sFontFixed6x8);
+//        GrStringDraw(context, (int8_t *)formatString, -1, 4, (15 + 12*i), 0);
 
 
 //        for (i = 0; i < 4; i++) {
 //            // for demo purpose, show ADC voltages
 //            sprintf(formatString, "ADC%i: %02.4f\0", i + 1, adcImplToFloat(adcImplGetAdc(i)));
-//            GrContextFontSet(&g_sContext, &g_sFontFixed6x8);
-//            GrStringDraw(&g_sContext, (int8_t *)formatString, -1, 4, (15 + 12*i), 0);
+//            GrContextFontSet(context, &g_sFontFixed6x8);
+//            GrStringDraw(context, (int8_t *)formatString, -1, 4, (15 + 12*i), 0);
 //        }
-        GrFlush(&g_sContext);
+        GrFlush(context);
 
     }
 }
