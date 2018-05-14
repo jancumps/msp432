@@ -39,7 +39,6 @@ uint8_t getAddressFromModule(uint8_t module);
  *  ======== threadDAC ========
  */
 void *threadDAC(void *arg0) {
-    // int iSize = MSGDAC_SIZE; // 4 todo comment out. This is only used to set the right value in the RTOS mailbox config
 
     MsgDAC d_msg;
     d_daci2cTransaction.writeBuf = d_dactxBuffer;

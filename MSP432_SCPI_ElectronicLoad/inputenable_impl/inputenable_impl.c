@@ -29,7 +29,6 @@ I2C_Transaction d_ioi2cTransaction;
 
  */
 void *threadInputEnable(void *arg0) {
-    // int iSize = MSGINPUTENABLE_SIZE; // 1 todo comment out. This is only used to set the right value in the RTOS mailbox config
 
     MsgInputEnable d_msg;
     d_ioi2cTransaction.writeBuf = d_iotxBuffer;

@@ -100,7 +100,7 @@ void *threadUART(void *arg0)
 size_t SCPI_Write(scpi_t * context, const char * data, size_t len) {
     (void) context;
     GPIO_toggle(Board_GPIO_LED1); // LED B - visual clue that we send a reply over USB
-    UART_write(uart, data, len); // todo: check if this needs to be writePolling()
+    UART_write(uart, data, len);
     GPIO_toggle(Board_GPIO_LED1); // LED B - visual clue offB
     return len;
 }

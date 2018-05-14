@@ -23,7 +23,6 @@
 
 #include "i2c_impl.h"
 
-// todo: check if this IS the right I2C port - was MSP_EXP432P401R_I2CB0 on the MSP432 black
 #define I2C_IMPL_I2C_PORT               MSP_EXP432E401Y_I2C0
 
 /**
