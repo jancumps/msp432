@@ -142,7 +142,7 @@ void eloadInputEnable(bool bEnable) {
     /* enqueue message */
     mqd_t mq;
     mq = mq_open(QUEUE_NAME_INPUTENABLE, O_WRONLY);
-    if (mq != -1) { // only send data if the message queue has been initialised by the receiving end. Else our instrument isn't ready
+    if (mq != (mqd_t)-1) { // only send data if the message queue has been initialised by the receiving end. Else our instrument isn't ready
         mq_send(mq, (char *)&pMsg, MSGINPUTENABLE_SIZE, 0);
     }
 }
@@ -169,7 +169,7 @@ void eloadRawSetDac(uint32_t uModule, uint32_t value) { // module is 0 based
     /* enqueue message */
     mqd_t mq;
     mq = mq_open(QUEUE_NAME_DAC, O_WRONLY);
-    if (mq != -1) { // only send data if the message queue has been initialised by the receiving end. Else our instrument isn't ready
+    if (mq != (mqd_t)-1) { // only send data if the message queue has been initialised by the receiving end. Else our instrument isn't ready
         mq_send(mq, (char *)&pMsg, MSGDAC_SIZE, 0);
     }
 
