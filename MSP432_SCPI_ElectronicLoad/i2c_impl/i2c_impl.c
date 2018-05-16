@@ -23,7 +23,8 @@
 
 #include "i2c_impl.h"
 
-#define I2C_IMPL_I2C_PORT               MSP_EXP432E401Y_I2C0
+
+#define I2C_IMPL_I2C_PORT               Board_I2C0
 
 /**
  *
