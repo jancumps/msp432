@@ -25,7 +25,7 @@ void ConstantCurrentStrategyControlFunction () {
 }
 
 uint32_t ConstantCurrentGStrategyGetSchedule() {
-    return  999999U;
+    return  500000U; // adjust every half second
 }
 
 eload_mode ConstantCurrentStrategyGetMode () {
