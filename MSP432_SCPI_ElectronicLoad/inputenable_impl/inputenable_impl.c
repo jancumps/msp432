@@ -25,7 +25,7 @@ uint8_t         d_iorxBuffer[1]; // DAC doesn't read
 I2C_Transaction d_ioi2cTransaction;
 
 /*
- *  ======== threadTemperatureOverProtection ========
+ *  ======== threadInputEnable ========
 
  */
 void *threadInputEnable(void *arg0) {
