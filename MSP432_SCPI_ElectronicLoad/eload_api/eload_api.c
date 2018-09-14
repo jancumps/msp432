@@ -56,7 +56,7 @@ float eloadGetCurrentDC() {
     float fRetVal = 0.0;
     fRetVal = (
             (adcImplToFloat(adcImplGetAdc(0) - (calibrationGetCurrentReadOffset())))
-            * (1/calibrationGetSenseResistance())/calibrationGetCurrentReadMultiplier()
+            / ( calibrationGetCurrentReadMultiplier() * calibrationGetSenseResistance() )
     );
     return fRetVal;
 }
