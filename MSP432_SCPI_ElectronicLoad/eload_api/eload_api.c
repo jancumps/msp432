@@ -56,9 +56,8 @@ float eloadGetCurrentDC() {
     float fRetVal = 0.0;
     fRetVal = (
             (adcImplToFloat(adcImplGetAdc(0) - (calibrationGetCurrentReadOffset())))
-            *20/calibrationGetCurrentReadMultiplier()
+            * (1/calibrationGetSenseResistor())/calibrationGetCurrentReadMultiplier()
     );
-    // 20 (1/0.05) is the sense resistor
     return fRetVal;
 }
 
@@ -254,9 +253,14 @@ float eloadCalibrateGetCurrentWriteOffset() {
     return calibrationGetCurrentWriteOffset();
 }
 
-
 float eloadCalibrateGetAdcVolt(uint32_t uModule) { // module is 0 based
-
     return adcImplToFloat(adcImplGetAdc(uModule));
 }
 
+bool eloadCalibrationSetSenseResistor(float value) {
+    return calibrationSetSenseResistor(value);
+}
+
+float eloadCalibrationGetSenseResistor() {
+    return calibrationGetSenseResistor();
+}

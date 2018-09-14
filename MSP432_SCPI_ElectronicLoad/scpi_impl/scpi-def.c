@@ -444,6 +444,28 @@ static scpi_result_t ELOAD_CalibrationCurrentWriteOffsetQ(scpi_t * context) {
     return SCPI_RES_OK;
 }
 
+static scpi_result_t ELOAD_CalibrationSenseResistor(scpi_t * context) {
+    float param1;
+    if (!SCPI_ParamFloat(context, &param1, TRUE)) {
+        return SCPI_RES_ERR;
+    }
+    if (param1 == 0.0f) {  // sense resistor can't be 0. Also would result in divide by 0 errors.
+        SCPI_ErrorPush(context, SCPI_ERROR_ILLEGAL_PARAMETER_VALUE);
+        return SCPI_RES_ERR;
+    }
+    if (!eloadCalibrationSetSenseResistor(param1)){
+        SCPI_ErrorPush(context, SCPI_ERROR_EXECUTION_ERROR);
+        return SCPI_RES_ERR;
+    }
+    return SCPI_RES_OK;
+}
+
+static scpi_result_t ELOAD_CalibrationSenseResistorQ(scpi_t * context) {
+    SCPI_ResultFloat(context, eloadCalibrationGetSenseResistor());
+    return SCPI_RES_OK;
+}
+
+
 const scpi_command_t scpi_commands[] = {
     /* IEEE Mandated Commands (SCPI std V1999.0 4.1.1) */
     { .pattern = "*CLS", .callback = SCPI_CoreCls,},
@@ -511,6 +533,8 @@ const scpi_command_t scpi_commands[] = {
     {.pattern = "CALibration:CURRENTWRITEMultiplier?", .callback = ELOAD_CalibrationCurrentWriteMultiplierQ,},
     {.pattern = "CALibration:CURRENTWRITEOffset", .callback = ELOAD_CalibrationCurrentWriteOffset,},
     {.pattern = "CALibration:CURRENTWRITEOffset?", .callback = ELOAD_CalibrationCurrentWriteOffsetQ,},
+    {.pattern = "CALibration:SENSEResistor", .callback = ELOAD_CalibrationSenseResistor,},
+    {.pattern = "CALibration:SENSEResistor?", .callback = ELOAD_CalibrationSenseResistorQ,},
 
     SCPI_CMD_LIST_END
 };

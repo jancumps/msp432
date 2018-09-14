@@ -27,6 +27,7 @@ typedef struct CalibrationData {
     float current_read_offset;
     float current_write_multiplier;
     float current_write_offset;
+    float sense_resistor;
 } CalibrationData;
 
 #define CALIBRATION_DATA_SIZE (sizeof(CalibrationData))
@@ -70,6 +71,7 @@ bool calibrationErase() {
         _CalibrationData.current_read_offset = 0.0;
         _CalibrationData.current_write_multiplier = 0.000116;
         _CalibrationData.current_write_offset = 0.008;
+        _CalibrationData.sense_resistor = 0.05; //  Ohm
         bRetVal = true;
     }
     return (bRetVal);
@@ -229,4 +231,23 @@ float calibrationGetCurrentWriteOffset() {
     float fRetval = 0.0;
     fRetval = _CalibrationData.current_write_offset;
     return fRetval;
+}
+
+// sense resistor calibration
+
+bool calibrationSetSenseResistor(float value) {
+    bool bRetval = false;
+    if(_bCalibrationActive) {
+        if(value > 0.0f) {
+            bRetval = true;
+            _CalibrationData.sense_resistor = value;
+        }
+    }
+    return bRetval;
+}
+
+float calibrationGetSenseResistor() {
+    float fRetval = 0.0;
+    fRetval = _CalibrationData.sense_resistor;
+    return fRetval > 0.0 ? fRetval : 0.05;
 }
