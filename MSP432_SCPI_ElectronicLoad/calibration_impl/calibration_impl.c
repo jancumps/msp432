@@ -14,6 +14,7 @@
 //#include "adc_impl.h"
 
 // update the version only when adding new fields
+// when changing the version number, update the compatibility section in _calibrationStructureBackwardCompatibility()
 #define CALIBRATION_DATA_VERSION 2U
 #define CALIBRATION_START 0x00
 
@@ -91,6 +92,15 @@ void calibrationInit() {
     }
 }
 
+void _calibrationStructureBackwardCompatibility() {
+    // compatibility with older versions of calibration structure
+    if(_CalibrationData.version < CALIBRATION_DATA_VERSION) {
+        if(_CalibrationData.version < 2U) { // initialise fields added in version 2 of the calibration structure
+            _CalibrationData.sense_resistor = 0.05;
+        }
+    }
+}
+
 void calibrationRead() {
     calibrationInit();
     EEPROMRead((uint32_t *)&_CalibrationData, (uint32_t)(CALIBRATION_START),
@@ -99,18 +109,8 @@ void calibrationRead() {
         calibrationErase();
     }
 
-    // compatibility with older versions od firmware
-    if(_CalibrationData.version < CALIBRATION_DATA_VERSION) {
-        switch (_CalibrationData.version) {
-        case 1U:
-            _CalibrationData.sense_resistor = 0.05;
-            break;
-        default:
-            break;
-        }
-
-    }
-
+    // compatibility with older versions of calibration structure
+    _calibrationStructureBackwardCompatibility();
 }
 
 void calibrationWrite() {
