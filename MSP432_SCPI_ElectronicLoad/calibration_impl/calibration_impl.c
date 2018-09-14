@@ -14,7 +14,7 @@
 //#include "adc_impl.h"
 
 // update the version only when adding new fields
-#define CALIBRATION_DATA_VERSION 1U
+#define CALIBRATION_DATA_VERSION 2U
 #define CALIBRATION_START 0x00
 
 typedef struct CalibrationData {
@@ -98,6 +98,19 @@ void calibrationRead() {
     if(strcmp(_CalibrationData.code, "eload")) { // check if code == "eload"s
         calibrationErase();
     }
+
+    // compatibility with older versions od firmware
+    if(_CalibrationData.version < CALIBRATION_DATA_VERSION) {
+        switch (_CalibrationData.version) {
+        case 1U:
+            _CalibrationData.sense_resistor = 0.05;
+            break;
+        default:
+            break;
+        }
+
+    }
+
 }
 
 void calibrationWrite() {
