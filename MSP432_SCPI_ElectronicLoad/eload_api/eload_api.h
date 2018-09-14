@@ -79,7 +79,7 @@ float eloadCalibrateGetCurrentWriteMultiplier();
 bool eloadCalibrateSetCurrentWriteOffset(float value);
 float eloadCalibrateGetCurrentWriteOffset();
 float eloadCalibrateGetAdcVolt(uint32_t uModule);
-bool eloadCalibrationSetSenseResistor(float value);
-float eloadCalibrationGetSenseResistor();
+bool eloadCalibrationSetSenseResistance(float value);
+float eloadCalibrationGetSenseResistance();
 
 #endif /* ELOAD_API_ELOAD_API_H_ */

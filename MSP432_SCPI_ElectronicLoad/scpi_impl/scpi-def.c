@@ -444,7 +444,7 @@ static scpi_result_t ELOAD_CalibrationCurrentWriteOffsetQ(scpi_t * context) {
     return SCPI_RES_OK;
 }
 
-static scpi_result_t ELOAD_CalibrationSenseResistor(scpi_t * context) {
+static scpi_result_t ELOAD_CalibrationSenseResistance(scpi_t * context) {
     float param1;
     if (!SCPI_ParamFloat(context, &param1, TRUE)) {
         return SCPI_RES_ERR;
@@ -453,15 +453,15 @@ static scpi_result_t ELOAD_CalibrationSenseResistor(scpi_t * context) {
         SCPI_ErrorPush(context, SCPI_ERROR_ILLEGAL_PARAMETER_VALUE);
         return SCPI_RES_ERR;
     }
-    if (!eloadCalibrationSetSenseResistor(param1)){
+    if (!eloadCalibrationSetSenseResistance(param1)){
         SCPI_ErrorPush(context, SCPI_ERROR_EXECUTION_ERROR);
         return SCPI_RES_ERR;
     }
     return SCPI_RES_OK;
 }
 
-static scpi_result_t ELOAD_CalibrationSenseResistorQ(scpi_t * context) {
-    SCPI_ResultFloat(context, eloadCalibrationGetSenseResistor());
+static scpi_result_t ELOAD_CalibrationSenseResistanceQ(scpi_t * context) {
+    SCPI_ResultFloat(context, eloadCalibrationGetSenseResistance());
     return SCPI_RES_OK;
 }
 
@@ -533,8 +533,8 @@ const scpi_command_t scpi_commands[] = {
     {.pattern = "CALibration:CURRENTWRITEMultiplier?", .callback = ELOAD_CalibrationCurrentWriteMultiplierQ,},
     {.pattern = "CALibration:CURRENTWRITEOffset", .callback = ELOAD_CalibrationCurrentWriteOffset,},
     {.pattern = "CALibration:CURRENTWRITEOffset?", .callback = ELOAD_CalibrationCurrentWriteOffsetQ,},
-    {.pattern = "CALibration:SENSEResistor", .callback = ELOAD_CalibrationSenseResistor,},
-    {.pattern = "CALibration:SENSEResistor?", .callback = ELOAD_CalibrationSenseResistorQ,},
+    {.pattern = "CALibration:SENSEResistance", .callback = ELOAD_CalibrationSenseResistance,},
+    {.pattern = "CALibration:SENSEResistance?", .callback = ELOAD_CalibrationSenseResistanceQ,},
 
     SCPI_CMD_LIST_END
 };

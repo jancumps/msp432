@@ -37,7 +37,7 @@ float calibrationGetCurrentWriteMultiplier();
 bool calibrationSetCurrentWriteOffset(float value);
 float calibrationGetCurrentWriteOffset();
 
-bool calibrationSetSenseResistor(float value);
-float calibrationGetSenseResistor();
+bool calibrationSetSenseResistance(float value);
+float calibrationGetSenseResistance();
 
 #endif /* CALIBRATION_IMPL_CALIBRATION_IMPL_H_ */

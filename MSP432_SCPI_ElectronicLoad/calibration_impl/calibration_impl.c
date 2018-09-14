@@ -28,7 +28,7 @@ typedef struct CalibrationData {
     float current_read_offset;
     float current_write_multiplier;
     float current_write_offset;
-    float sense_resistor;
+    float sense_resistance;
 } CalibrationData;
 
 #define CALIBRATION_DATA_SIZE (sizeof(CalibrationData))
@@ -72,7 +72,7 @@ bool calibrationErase() {
         _CalibrationData.current_read_offset = 0.0;
         _CalibrationData.current_write_multiplier = 0.000116;
         _CalibrationData.current_write_offset = 0.008;
-        _CalibrationData.sense_resistor = 0.05; //  Ohm
+        _CalibrationData.sense_resistance = 0.05; //  Ohm
         bRetVal = true;
     }
     return (bRetVal);
@@ -96,7 +96,7 @@ void _calibrationStructureBackwardCompatibility() {
     // compatibility with older versions of calibration structure
     if(_CalibrationData.version < CALIBRATION_DATA_VERSION) {
         if(_CalibrationData.version < 2U) { // initialise fields added in version 2 of the calibration structure
-            _CalibrationData.sense_resistor = 0.05;
+            _CalibrationData.sense_resistance = 0.05;
         }
     }
 }
@@ -248,19 +248,19 @@ float calibrationGetCurrentWriteOffset() {
 
 // sense resistor calibration
 
-bool calibrationSetSenseResistor(float value) {
+bool calibrationSetSenseResistance(float value) {
     bool bRetval = false;
     if(_bCalibrationActive) {
         if(value > 0.0f) {
             bRetval = true;
-            _CalibrationData.sense_resistor = value;
+            _CalibrationData.sense_resistance = value;
         }
     }
     return bRetval;
 }
 
-float calibrationGetSenseResistor() {
+float calibrationGetSenseResistance() {
     float fRetval = 0.0;
-    fRetval = _CalibrationData.sense_resistor;
+    fRetval = _CalibrationData.sense_resistance;
     return fRetval > 0.0 ? fRetval : 0.05;
 }
