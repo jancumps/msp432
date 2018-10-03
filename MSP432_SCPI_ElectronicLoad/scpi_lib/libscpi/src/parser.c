@@ -1,28 +1,29 @@
 /*-
- * Copyright (c) 2012-2013 Jan Breuer,
+ * BSD 2-Clause License
  *
- * All Rights Reserved
+ * Copyright (c) 2012-2018, Jan Breuer
+ * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are
- * met:
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
+ * modification, are permitted provided that the following conditions are met:
  *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR
- * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
- * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
- * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
- * IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * * Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ *
+ * * Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 /**
@@ -339,7 +340,8 @@ scpi_bool_t SCPI_Input(scpi_t * context, const char * data, int len) {
                 context->buffer.position -= totcmdlen;
                 totcmdlen = 0;
             } else {
-                if (context->parser_state.programHeader.type == SCPI_TOKEN_UNKNOWN) break;
+                if (context->parser_state.programHeader.type == SCPI_TOKEN_UNKNOWN
+                        && context->parser_state.termination == SCPI_MESSAGE_TERMINATION_NONE) break;
                 if (totcmdlen >= context->buffer.position) break;
             }
         }
@@ -1270,6 +1272,15 @@ scpi_bool_t SCPI_ChoiceToName(const scpi_choice_def_t * options, int32_t tag, co
     return FALSE;
 }
 
+/*
+ * Definition of BOOL choice list
+ */
+const scpi_choice_def_t scpi_bool_def[] = {
+    {"OFF", 0},
+    {"ON", 1},
+    SCPI_CHOICE_LIST_END /* termination of option list */
+};
+
 /**
  * Read BOOL parameter (0,1,ON,OFF)
  * @param context
@@ -1281,12 +1292,6 @@ scpi_bool_t SCPI_ParamBool(scpi_t * context, scpi_bool_t * value, scpi_bool_t ma
     scpi_bool_t result;
     scpi_parameter_t param;
     int32_t intval;
-
-    scpi_choice_def_t bool_options[] = {
-        {"OFF", 0},
-        {"ON", 1},
-        SCPI_CHOICE_LIST_END /* termination of option list */
-    };
 
     if (!value) {
         SCPI_ErrorPush(context, SCPI_ERROR_SYSTEM_ERROR);
@@ -1300,7 +1305,7 @@ scpi_bool_t SCPI_ParamBool(scpi_t * context, scpi_bool_t * value, scpi_bool_t ma
             SCPI_ParamToInt32(context, &param, &intval);
             *value = intval ? TRUE : FALSE;
         } else {
-            result = SCPI_ParamToChoice(context, &param, bool_options, &intval);
+            result = SCPI_ParamToChoice(context, &param, scpi_bool_def, &intval);
             if (result) {
                 *value = intval ? TRUE : FALSE;
             }

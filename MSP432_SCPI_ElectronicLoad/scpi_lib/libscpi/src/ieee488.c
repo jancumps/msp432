@@ -1,28 +1,29 @@
 /*-
- * Copyright (c) 2012-2013 Jan Breuer,
+ * BSD 2-Clause License
  *
- * All Rights Reserved
- * 
+ * Copyright (c) 2012-2018, Jan Breuer
+ * All rights reserved.
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are
- * met:
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR
- * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
- * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
- * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
- * IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * * Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ *
+ * * Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 /**
@@ -48,6 +49,17 @@
  */
 static void regUpdate(scpi_t * context, scpi_reg_name_t name) {
     SCPI_RegSet(context, name, SCPI_RegGet(context, name));
+}
+
+/**
+ * Update latching event register value based on bit transitions from 0 -> 1
+ * in the condition register
+ * @param context
+ * @param condReg - condition register name
+ * @param eventReg - event register name
+ */
+static void regUpdateEvent(scpi_t * context, scpi_reg_val_t oldCondVal, scpi_reg_val_t newCondVal, scpi_reg_name_t eventReg) {
+    SCPI_RegSet(context, eventReg, ((oldCondVal ^ newCondVal) & newCondVal) | SCPI_RegGet(context, eventReg));
 }
 
 /**
@@ -142,11 +154,17 @@ void SCPI_RegSet(scpi_t * context, scpi_reg_name_t name, scpi_reg_val_t val) {
         case SCPI_REG_QUESE:
             regUpdate(context, SCPI_REG_QUES);
             break;
+        case SCPI_REG_QUESC:
+            regUpdateEvent(context, old_val, val, SCPI_REG_QUES);
+            break;
         case SCPI_REG_OPER:
             regUpdateSTB(context, val, SCPI_REG_OPERE, STB_OPS);
             break;
         case SCPI_REG_OPERE:
             regUpdate(context, SCPI_REG_OPER);
+            break;
+        case SCPI_REG_OPERC:
+            regUpdateEvent(context, old_val, val, SCPI_REG_OPER);
             break;
 
 
