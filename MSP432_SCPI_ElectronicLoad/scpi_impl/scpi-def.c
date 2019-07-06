@@ -290,6 +290,34 @@ static scpi_result_t ELOAD_SetFunction(scpi_t * context) {
     return retval;
 }
 
+static scpi_result_t ELOAD_GetFunction(scpi_t * context) {
+    const char * text;
+    int32_t tag;
+    scpi_result_t retval;
+
+    switch (eloadGetMode()) {
+    case ELOAD_MODE_CURRENT:
+        tag = SCPI_MODE_CURRENT;
+        retval = SCPI_RES_OK;
+        break;
+    default:
+        SCPI_ErrorPush(context, SCPI_ERROR_ILLEGAL_PARAMETER_VALUE);
+        retval = SCPI_RES_ERR;
+    }
+    if (retval == SCPI_RES_OK) {
+
+        if (SCPI_ChoiceToName(scpi_mode_def, tag, &text)) {
+            SCPI_ResultText(context, text);
+        } else {
+            SCPI_ErrorPush(context, SCPI_ERROR_SYSTEM_ERROR);
+            retval = SCPI_RES_ERR;
+        }
+    }
+
+    return SCPI_RES_OK;
+
+}
+
 /* CALIBRATION AND CONFIGURATION COMMANDS */
 
 static scpi_result_t ELOAD_CalibrationStart(scpi_t * context) {
@@ -513,6 +541,7 @@ const scpi_command_t scpi_commands[] = {
     {.pattern = "[:SOURce]:INPut[:STATe]", .callback = ELOAD_SetInputState,},
     {.pattern = "[:SOURce]:INPut[:STATe]?", .callback = ELOAD_GetInputState,},
     {.pattern = "[:SOURce]:FUNCtion", .callback = ELOAD_SetFunction,},
+    {.pattern = "[:SOURce]:FUNCtion?", .callback = ELOAD_GetFunction,},
 
     /* CALIBRATION AND CONFIGURATION COMMANDS */
     {.pattern = "CALibration:STArt", .callback = ELOAD_CalibrationStart,},
