@@ -223,6 +223,23 @@ static scpi_result_t ELOAD_SetCurrentImmediate(scpi_t * context) {
     return SCPI_RES_OK;
 }
 
+// return the set current. Only if in current mode
+static scpi_result_t ELOAD_GetCurrentImmediate(scpi_t * context) {
+    scpi_result_t retval;
+
+    switch (eloadGetMode()) {
+    case ELOAD_MODE_CURRENT:
+        SCPI_ResultFloat(context, eloadGetSetpoint());
+        retval = SCPI_RES_OK;
+        break;
+    default:
+        SCPI_ErrorPush(context, SCPI_ERROR_EXECUTION_ERROR); // fail. function only supported in constant current mode
+        retval = SCPI_RES_ERR;
+    }
+    return retval;
+}
+
+
 static scpi_result_t ELOAD_SetVoltageImmediate(scpi_t * context) {
     uint32_t param1;
 
@@ -537,6 +554,7 @@ const scpi_command_t scpi_commands[] = {
 
     /* ELECTRONIC LOAD COMMANDS */
     {.pattern = "[:SOURce]:CURRent[:LEVel][:IMMediate]", .callback = ELOAD_SetCurrentImmediate,},
+    {.pattern = "[:SOURce]:CURRent[:LEVel][:IMMediate]?", .callback = ELOAD_GetCurrentImmediate,},
     {.pattern = "[:SOURce]:VOLTage[:LEVel][:IMMediate]", .callback = ELOAD_SetVoltageImmediate,},
     {.pattern = "[:SOURce]:INPut[:STATe]", .callback = ELOAD_SetInputState,},
     {.pattern = "[:SOURce]:INPut[:STATe]?", .callback = ELOAD_GetInputState,},
