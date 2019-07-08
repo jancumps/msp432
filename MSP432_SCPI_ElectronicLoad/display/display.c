@@ -38,10 +38,10 @@ void *threadDisplay(void *arg0)
         return NULL; // we didn't get a display handle. Check if the following is defined: BOARD_DISPLAY_USE_LCD
     }
     Graphics_Context *context = DisplayExt_getGraphicsContext(hLcd);
-//    GrContextForegroundSet(context, ClrBlack);
-//    GrContextBackgroundSet(context, ClrWhite);
-    GrContextForegroundSet(context, ClrWhite);
-    GrContextBackgroundSet(context, ClrBlack);
+    GrContextForegroundSet(context, ClrBlack);
+    GrContextBackgroundSet(context, ClrWhite);
+//    GrContextForegroundSet(context, ClrWhite);
+//    GrContextBackgroundSet(context, ClrBlack);
 
     GrClearDisplay(context);
     GrContextFontSet(context, &g_sFontCmss12);
