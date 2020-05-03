@@ -11,5 +11,5 @@ Else, you can fork the project, then create pull requests from the fork.
 - developing new features: create a pull request to the development branch
 - break fix: create a pull request to master 
 
-
-Can I commit from master?
+Current work: 
+branch development_adc_rework
