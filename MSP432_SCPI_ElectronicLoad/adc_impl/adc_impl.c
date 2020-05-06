@@ -20,11 +20,13 @@
 
 #define ADC_I2C_ADDR (0x48)
 
-// bits 15-8, 0xC2 Continuous conversion mode, AIN0, +- 6.144V
-#define ADS1115_CFG_H0 0b11000000
-#define ADS1115_CFG_H1 0b11010000
-#define ADS1115_CFG_H2 0b11100000
-#define ADS1115_CFG_H3 0b11110000
+// single conversion mode, +- 6.144V
+#define ADS1115_CFG_H0 0b11000001
+#define ADS1115_CFG_H1 0b11010001
+#define ADS1115_CFG_H2 0b11100001
+#define ADS1115_CFG_H3 0b11110001
+
+#define ADS1115_MUX_DELAY 9000
 
 // adc 4 is not used. Sample 3 channels
 #define ADC_ACTIVE_INPUTS 3
@@ -66,7 +68,7 @@ static const uint8_t array_ADS1115_CFG_H[4] = {ADS1115_CFG_H0, ADS1115_CFG_H1, A
 
 
 
-uint16_t sampleADC(uint32_t uModule, uint32_t uSleep);
+uint16_t sampleADC(uint32_t uModule);
 
 /*
  *  ======== threadADC  ========
@@ -79,9 +81,6 @@ void *threadADC(void *arg0) {
     a_i2cTransaction.readBuf = a_rxBuffer;
     a_i2cTransaction.slaveAddress = ADC_I2C_ADDR;
 
-    // this buffer value never changes. Let's set it at the start.
-    // If for some reason this becomes a variable value,
-    // move to sampleADC()
     a_txBuffer[2] = ADS1115_CFG_L;
 
     while (1)
@@ -89,18 +88,10 @@ void *threadADC(void *arg0) {
         for (i =0; i< ADC_ACTIVE_INPUTS; i++) {
             // we write value to the inactive robin
             // store value of ADC[i]
-            // the ADC needs time between channel selection and sampling
-            // we assign 1/ADC_ACTIVE_INPUTS of the task sleep time to
-            // each of the ADC_ACTIVE_INPUTS samples
-            // this puts more burden on the RTOS switcher - a compromise
-            // - but certainly preferable to a loop
-            // (except when later on we find out that the wait is only a few cpu cycles)
-            adcRoundRobin[adcRoundRobinIndex[i] ? 0 : 1].raw[i] = sampleADC(i, THREAD_USLEEP_ADC / ADC_ACTIVE_INPUTS);
+            adcRoundRobin[adcRoundRobinIndex[i] ? 0 : 1].raw[i] = sampleADC(i);
             // after value(s) written, we activate the inactive robin
             adcRoundRobinIndex[i] = adcRoundRobinIndex[i] ? 0 : 1;
         }
-
-
 
         // commented because mcu spends more time in these lines than in the remainder
         // enable when needed, then comment out again
@@ -111,8 +102,10 @@ void *threadADC(void *arg0) {
         //            System_flush();
 
 
+        // the thread delays ADS1115_MUX_DELAY per sample
+        // so let's deduct the total delay from the requested sleep time
+        usleep(THREAD_USLEEP_ADC -  (unsigned int)(ADS1115_MUX_DELAY * ADC_ACTIVE_INPUTS));
     }
-
 }
 
 uint16_t adcImplGetAdc(uint32_t uModule) {
@@ -139,39 +132,31 @@ float adcImplToFloat(uint16_t uRaw) {
     return ADCVoltage;
 }
 
-
-uint16_t sampleADC(uint32_t uModule, uint32_t uSleep) {
+uint16_t sampleADC(uint32_t uModule) {
     uint16_t uRetval = 0u;
 
-    /* Point to the ADC ASD1115 and read input uModule */
-    a_i2cTransaction.writeCount = 3;
-    a_i2cTransaction.readCount = 0;
-    a_txBuffer[0] = 0x01;
+    /* Init ADC and Start Sampling */
     a_txBuffer[1] = array_ADS1115_CFG_H[uModule];
 
-
-
-    /* Init ADC and Start Sampling */
+    a_txBuffer[0] = 0x01;
+    a_i2cTransaction.writeCount = 3;
+    a_i2cTransaction.readCount = 0;
     if (! I2C_transfer(i2c_implGetHandle(), &a_i2cTransaction)){
-//        System_printf("Sampling Start Failed \n");
+      //        System_printf("Sampling Start Failed \n");
     }
 
-    // there's a pause required between channel selection and data retrieval
-    // we consume that part of the task sleep time that's assigned to us by the task.
-    usleep(uSleep);
+    // inspiration: https://github.com/adafruit/Adafruit_ADS1X15/blob/master/Adafruit_ADS1015.cpp
+    usleep(ADS1115_MUX_DELAY);
 
+    /* Read ADC */
     a_txBuffer[0] = 0x00;
     a_i2cTransaction.writeCount = 1;
     a_i2cTransaction.readCount = 2;
-    /* Read ADC */
     if (I2C_transfer(i2c_implGetHandle(), &a_i2cTransaction)) {
         uRetval = ((a_rxBuffer[0] << 8) | a_rxBuffer[1]);
-    }
-    else {
+    }     else {
 //        System_printf("ADC Read I2C Bus fault\n");
     }
-
-
 
     return uRetval;
 }
