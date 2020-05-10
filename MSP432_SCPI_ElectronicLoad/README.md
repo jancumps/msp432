@@ -12,6 +12,8 @@ Else, you can fork the project, then create pull requests from the fork.
 - break fix: create a pull request to master 
 
 Current work: 
+bug fix: java gui times out after latest release
+
 
 Done:
 branch development_adc_rework
