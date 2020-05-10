@@ -41,6 +41,8 @@ void *threadADC(void *arg0);
 // sleep has to be higher than 81000 (81 ms idled when sampling 3 ADCs
 // 100 ms : 100000 - 81000
 #define THREAD_USLEEP_ADC 19000
+// 1s : 100000 - 81000
+// #define THREAD_USLEEP_ADC 919999
 
 void *threadControl(void *arg0);
 #define THREAD_PRIORITY_CONTROL 15
