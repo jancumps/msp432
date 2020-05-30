@@ -11,12 +11,13 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+
 typedef enum eload_mode {
-    ELOAD_MODE_CURRENT = 0,
-    ELOAD_MODE_VOLTAGE,
-    ELOAD_MODE_POWER,
-    ELOAD_MODE_RESISTANCE,
-    ELOAD_MODE_COUNT
+    ELOAD_MODE_CURRENT = 0,//!< ELOAD_MODE_CURRENT
+    ELOAD_MODE_VOLTAGE,    //!< ELOAD_MODE_VOLTAGE
+    ELOAD_MODE_POWER,      //!< ELOAD_MODE_POWER
+    ELOAD_MODE_RESISTANCE, //!< ELOAD_MODE_RESISTANCE
+    ELOAD_MODE_COUNT       //!< ELOAD_MODE_COUNT
 }eload_mode;
 
 /*!
@@ -28,6 +29,7 @@ typedef enum eload_mode {
  *
 e.
  */
+
 
 void eloadInit();
 void eloadReset();
@@ -64,6 +66,13 @@ uint32_t eloadDevelopGetAdcRaw();
 void eloadCalibrationStart();
 bool eloadCalibrationEnd();
 bool eloadCalibrationErase();
+/**
+ * This function expects the resistance of the NTC thermistor at the point where the electronic load is overheated.
+ * It then calculates, based on the fact that the voltage is 5V and that the NTC is the lower part of a voltage divider
+ * where the other resistor is 10K, the voltage that appears on ADC 3 if the maximum temperature is reached
+ * @param value the NTC cutoff resistance
+ * @return true if in calibration mode. false if executed while the instrument was not in calibration mode.
+ */
 bool eloadCalibrateSetTemperatureMaxResistance(uint32_t value);
 uint32_t eloadCalibrateGetTemperatureMaxResistance();
 bool eloadCalibrateSetSenseVoltReadMultiplier(float value);
