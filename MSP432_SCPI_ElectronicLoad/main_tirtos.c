@@ -80,14 +80,19 @@ void NDK_hookInit(int32_t id) {}
  * All functionality that can be used by user interface, programming interface or other modules are
  * written as API functions.
  * The API knows the current state of the instrument. There's no need to cache any state.
- * The prefered pattern is to ask the instrument for any setting, value or state.
+ * The preferred pattern is to ask the instrument for any setting, value or state.
  *
  * @section apilist API list
  *
  * @subsection eloadapi eload core instrument API
  * eload_api.h
- * This API provides the query and alter the core instrument operation.
  *
+ * This API provides the functions to query and alter the core instrument operation.
+ * You can get and set values, turn input on and off, change operation mode.
+ * It allows low level access to DAC and ADC too. That gives control over virtually
+ * everything but is to be used with care.
+ *
+ * @subsection scpi SCPI API
  *
  *
  */

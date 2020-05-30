@@ -65,6 +65,7 @@ void eloadReset();
  *
  */
 float eloadGetVoltageDC();
+
 /**
  *  @brief Retrieve current through the sense resistor
  *
@@ -75,7 +76,21 @@ float eloadGetVoltageDC();
  */
 float eloadGetCurrentDC();
 
+/**
+ * @brief Set the instrument operation mode
+ *
+ * You call this function when you want to put the instrument in one of the supported operation modes.
+ * This function switches the input off, because the settings of the new mode aren't know at switching time.
+ * @param mode the new operation mode
+ */
 void eloadSetMode(eload_mode mode);
+
+/**
+ * @brief Get the active instrument mode
+ *
+ * This function returns the mode the instrument is currently in.
+ * @return the active operation mode
+ */
 eload_mode eloadGetMode();
 int8_t eloadGetChar();
 void eloadControlLoop();
