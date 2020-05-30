@@ -197,10 +197,10 @@ bool calibrationSetCurrentReadMultiplier(float value) {
 }
 
 float calibrationGetCurrentReadMultiplier() {
-    // The opamp U3C has a gain of -6.8, U3B -1. !! populate R32 with a 68K resistor
+    // The opamp U3C has a gain of 7.8, U3B -1. !! populate R32 with a 68K resistor
     float fRetval = 0.0;
     fRetval = _CalibrationData.current_read_multiplier;
-    return fRetval > 0.0 ? fRetval : 6.8;
+    return fRetval > 0.0 ? fRetval : 7.8;
 }
 
 bool calibrationSetCurrentReadOffset(float value) {

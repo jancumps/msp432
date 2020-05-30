@@ -34,7 +34,7 @@ void eloadReset() {
 
 
 
-/**
+/*
  * return the voltage on the sense inputs, as sampled by ADC 2.
  * The opamp U3D has a gain of .033.
  * The calibrated multiplier to calculate the voltage at the sense inputs
@@ -48,9 +48,9 @@ float eloadGetVoltageDC() {
     return fRetVal;
 }
 
-/**
+/*
  * return the current on the sense resistor, as sampled by ADC 1.
- * The opamp U3C has a gain of -6.8, U3B -1. !! populate R32 with a 68K resistor
+ * The opamp U3C has a gain of 7.8, U3B -1. !! populate R32 with a 68K resistor
  */
 float eloadGetCurrentDC() {
     float fRetVal = 0.0;

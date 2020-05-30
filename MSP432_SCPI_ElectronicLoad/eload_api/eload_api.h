@@ -1,9 +1,10 @@
-/*
- * eload_api.h
- *
- *  Created on: 24 dec. 2016
- *      Author: jancu
- */
+/**
+* \file eload_api.h
+* \brief public eload API
+* \details Definition of all public functions for the electronic load..
+* \author Jan Cumps
+* \date 24 dec 2016
+*/
 
 #ifndef ELOAD_API_ELOAD_API_H_
 #define ELOAD_API_ELOAD_API_H_
@@ -13,28 +14,38 @@
 
 
 typedef enum eload_mode {
-    ELOAD_MODE_CURRENT = 0,//!< ELOAD_MODE_CURRENT
-    ELOAD_MODE_VOLTAGE,    //!< ELOAD_MODE_VOLTAGE
-    ELOAD_MODE_POWER,      //!< ELOAD_MODE_POWER
-    ELOAD_MODE_RESISTANCE, //!< ELOAD_MODE_RESISTANCE
-    ELOAD_MODE_COUNT       //!< ELOAD_MODE_COUNT
+    ELOAD_MODE_CURRENT = 0,//!< constant current mode
+    ELOAD_MODE_VOLTAGE,    //!< constant voltage mode
+    ELOAD_MODE_POWER,      //!< constant power mode
+    ELOAD_MODE_RESISTANCE, //!< constant resistance mode
+    ELOAD_MODE_COUNT       //!< number of modes
 }eload_mode;
 
-/*!
- *  @brief  Retrieve voltage sampled from the instrument terminals
+void eloadInit();
+void eloadReset();
+
+/**
+ *  Retrieve voltage sampled from the instrument terminals
  *
  *  This function returns the most recent sampled voltage on the instruments main terminals.
  *  Calling this function doesn't initiate a sample. There's a scheduled task that collects
  *  the info in the background.
  *
-e.
+ *  This represents the voltage on the sense inputs, as sampled by ADC 2.
+ *  The opamp U3D has a gain of .033.
+ *  The calibrated multiplier to calculate the voltage at the sense inputs
+ *  is stored in the calibration structure.
+ *  We fetch that in this function. If not set yet, we use the theoretical multiplier 33.3333
+ *  @return most recent sampled voltage
+ *
  */
-
-
-void eloadInit();
-void eloadReset();
-
 float eloadGetVoltageDC();
+/**
+ *  Return the current on the sense resistor, as sampled by ADC 1.
+ *  The opamp U3C has a gain of 7.8, U3B -1. !! populate R32 with a 68K resistor
+ *  @return most recent sampled current
+ *
+ */
 float eloadGetCurrentDC();
 
 void eloadSetMode(eload_mode mode);
