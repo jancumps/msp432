@@ -1,9 +1,13 @@
 /**
-* \file eload_api.h
-* \brief public eload API
-* \details Definition of all public functions for the electronic load..
-* \author Jan Cumps
-* \date 24 dec 2016
+* @file eload_api.h
+* @brief public eload instrument API
+*
+* Definition of all public functions for the electronic load.
+* These functions can be used by user interface and remote access to
+* control and poll the instrument.
+*
+* @author Jan Cumps
+* @date 24 dec 2016
 */
 
 #ifndef ELOAD_API_ELOAD_API_H_
@@ -12,20 +16,31 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-
+/**
+ * @brief Supported (and at this time unsupported) operation modes
+ *
+ * The different modes the load can operate in.
+ * Each mode is implemented by a strategy in the control_impl module.
+ */
 typedef enum eload_mode {
     ELOAD_MODE_CURRENT = 0,//!< constant current mode
-    ELOAD_MODE_VOLTAGE,    //!< constant voltage mode
-    ELOAD_MODE_POWER,      //!< constant power mode
-    ELOAD_MODE_RESISTANCE, //!< constant resistance mode
+    ELOAD_MODE_VOLTAGE,    //!< constant voltage mode. Unsupported
+    ELOAD_MODE_POWER,      //!< constant power mode. Unsupported
+    ELOAD_MODE_RESISTANCE, //!< constant resistance mode. Unsupported
     ELOAD_MODE_COUNT       //!< number of modes
 }eload_mode;
 
+/**
+ * @brief Get calibration values and initialise the device
+ *
+ * The function reads calibration settings from persistent memory. It then calls eloadReset()
+ * to initialise the instrument.
+ */
 void eloadInit();
 void eloadReset();
 
 /**
- *  Retrieve voltage sampled from the instrument terminals
+ *  @brief Retrieve voltage sampled from the instrument terminals
  *
  *  This function returns the most recent sampled voltage on the instruments main terminals.
  *  Calling this function doesn't initiate a sample. There's a scheduled task that collects
@@ -41,8 +56,10 @@ void eloadReset();
  */
 float eloadGetVoltageDC();
 /**
+ *  @brief Retrieve current through the sense resistor
+ *
  *  Return the current on the sense resistor, as sampled by ADC 1.
- *  The opamp U3C has a gain of 7.8, U3B -1. !! populate R32 with a 68K resistor
+ *  The opamp U3C has a gain of 7.8, U3B -1. (switch to 6.8 if R32 populated with a 68K resistor)
  *  @return most recent sampled current
  *
  */
@@ -78,6 +95,8 @@ void eloadCalibrationStart();
 bool eloadCalibrationEnd();
 bool eloadCalibrationErase();
 /**
+ * @brief Set the resistance of the NTC where the overheat protection should kick in
+ *
  * This function expects the resistance of the NTC thermistor at the point where the electronic load is overheated.
  * It then calculates, based on the fact that the voltage is 5V and that the NTC is the lower part of a voltage divider
  * where the other resistor is 10K, the voltage that appears on ADC 3 if the maximum temperature is reached
