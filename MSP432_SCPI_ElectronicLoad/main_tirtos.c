@@ -71,6 +71,28 @@ void __attribute__((weak)) NDK_hookInit(int32_t id) {}
 void NDK_hookInit(int32_t id) {}
 #endif
 
+
+/**
+ * @mainpage electronic load firmware API documentation
+ *
+ * @section publicapis public accessible APIs
+ *
+ * All functionality that can be used by user interface, programming interface or other modules are
+ * written as API functions.
+ * The API knows the current state of the instrument. There's no need to cache any state.
+ * The prefered pattern is to ask the instrument for any setting, value or state.
+ *
+ * @section apilist API list
+ *
+ * @subsection eloadapi eload core instrument API
+ * eload_api.h
+ * This API provides the query and alter the core instrument operation.
+ *
+ *
+ *
+ */
+
+
 /*
  *  ======== main ========
  */

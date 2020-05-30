@@ -37,6 +37,16 @@ typedef enum eload_mode {
  * to initialise the instrument.
  */
 void eloadInit();
+
+/**
+ * @brief Initialise the instrument before use
+ *
+ * The function sets all instrument modules in their initial state.
+ * It does not load calibration data from persistent storage.
+ * The calibration settings in RAM are not changed.
+ * Input is switched off, and eloadSetMode() is called
+ * to set the device in constant current mode.
+ */
 void eloadReset();
 
 /**
