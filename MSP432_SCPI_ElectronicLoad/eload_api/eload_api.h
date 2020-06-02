@@ -92,8 +92,35 @@ void eloadSetMode(eload_mode mode);
  * @return the active operation mode
  */
 eload_mode eloadGetMode();
+
+/**
+ * @brief Get the active instrument mode, as a single char
+ *
+ * This function returns the mode the instrument is currently in its 1-char representation.
+ * E.g.: "I" in constan current mode.
+ * This is used on the display.
+ * @return the active operation mode
+ */
 int8_t eloadGetChar();
+
+/**
+ * @brief Execute control loop
+ *
+ * For some control strategies (any but constant current) the loop is done in software.
+ * It's usuall called from an RTOS task.
+ * In constant current mode, regulation is done in hardware, and there this loop does nothing.
+ */
 void eloadControlLoop();
+
+/**
+ * @brief The desired schedule for the active control strategy.
+ *
+ * Some control strategies require fast repeat of execution.
+ * Others (in particular constant current) don't need the control loop to be called
+ * because the mode is not software controlled.
+ * Each strategy can inform RTOS what the ideal callback frequency is (in microseconds).
+ * @return requested callback schedule in us
+ */
 uint32_t eloadControlLoopGetSchedule();
 
 // instrument operations

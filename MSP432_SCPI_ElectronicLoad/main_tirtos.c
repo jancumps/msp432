@@ -93,6 +93,9 @@ void NDK_hookInit(int32_t id) {}
  * everything but is to be used with care.
  *
  * @subsection scpi SCPI API
+ * scpi-def.h
+ *
+ * Available SCPI calls.
  *
  *
  */

@@ -6,16 +6,6 @@
  *
  */
 
- /**
- * @file   scpi-def.c
- * @date   Thu Nov 15 10:58:45 UTC 2012
- *
- * @brief  SCPI parser test
- *
- *
- */
-
-
 /*-
  * Copyright (c) 2012-2013 Jan Breuer,
  *
