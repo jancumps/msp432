@@ -2,6 +2,10 @@
 * @file scpi-def.h
 * @brief SCPI Commands
 *
+* @section scpiall All commands
+*
+* @subsection scpicommon Common commands
+*
 * *CLS
 *
 * *ESE
@@ -26,15 +30,21 @@
 *
 * *WAI
 *
+*  @subsection scpierror System commands
+*
 * SYSTem:ERRor[:NEXT]?
 *
 * SYSTem:ERRor:COUNt?
 *
 * SYSTem:VERSion?
 *
+*  @subsection scpidmm DMM commands
+*
 * MEASure:VOLTage:DC?
 *
 * MEASure:CURRent:DC?
+*
+*  @subsection scpidev Development and Low Level commands
 *
 * DEVElop:DAC#
 *
@@ -43,6 +53,8 @@
 * DEVElop:ADC#:RAW?
 *
 * DEVElop:ADC#:VOLTage?
+*
+*  @subsection scpiload Electronic Load commands
 *
 * \c \[:SOURce]:CURRent[:LEVel][:IMMediate]
 *
@@ -55,6 +67,8 @@
 * \c \[:SOURce]:FUNCtion
 *
 * \c \[:SOURce]:FUNCtion?
+*
+*  @subsection scpical Callibration commands
 *
 * CALibration:STArt
 *

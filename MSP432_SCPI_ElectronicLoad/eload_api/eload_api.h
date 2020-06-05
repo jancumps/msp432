@@ -113,7 +113,7 @@ int8_t eloadGetChar();
 void eloadControlLoop();
 
 /**
- * @brief The desired schedule for the active control strategy.
+ * @brief The desired schedule for the active control strategy
  *
  * Some control strategies require fast repeat of execution.
  * Others (in particular constant current) don't need the control loop to be called
@@ -124,8 +124,34 @@ void eloadControlLoop();
 uint32_t eloadControlLoopGetSchedule();
 
 // instrument operations
+/**
+ * @brief Ask active instrument mode to set constant current level
+ *
+ * Request the instrument to maintain constant current.
+ * Depending on the instrument mode, this may be supported or not.
+ * If it's supported, the instrument will from now on try to maintain the requested constant current.
+ * @param value Requested constant current to maintain.
+ * @return true if the active mode supports constant current. Else false.
+ */
 bool eloadSetConstantCurrent(float value);
-bool eloadSetConstantVoltage(float value);
+
+/**
+ * @brief Ask active instrument mode to set constant voltage level
+ *
+ * Request the instrument to maintain constant voltage.
+ * Depending on the instrument mode, this may be supported or not.
+ * If it's supported, the instrument will from now on try to maintain the requested constant voltage.
+ * @param value Requested constant voltage to maintain.
+ * @return true if the active mode supports constant voltage. Else false.
+ */bool eloadSetConstantVoltage(float value);
+
+ /**
+  * @brief Get the regulation point that the instrument was set to
+  *
+  * Retrieve the regulation point. The unit of measure is dependent on the active mode of the instrument.
+  * If it's in constant current mode, the UoM will be Ampere. In constant voltage mode in Volt. Etc ...
+  * @return the regulation value that the instrument is set to.
+  */
 float eloadGetSetpoint();
 
 uint32_t eloadGetCurrentRangeMax();
