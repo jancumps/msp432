@@ -154,24 +154,106 @@ bool eloadSetConstantCurrent(float value);
   */
 float eloadGetSetpoint();
 
+/**
+ * @brief Get the maximum value that can be read for the current.
+ *
+ * @return maximum possible current setting (raw, in DAC values)
+ */
 uint32_t eloadGetCurrentRangeMax();
+
+/**
+ * @brief Get the maximum value that can be read for the voltage.
+ *
+ * @return maximum possible voltage setting (raw, in DAC values)
+ */
 uint32_t eloadGetVoltageRangeMax();
+
+/**
+ * @brief Get the maximum value that can be read for the output.
+ *
+ * @return maximum possible voltage value (raw, in DAC values)
+ */
 uint32_t eloadGetOutputRangeMax();
 
+/**
+ * @brief Enable / disable the load
+ * @param bEnable true to enable, false to disable
+ */
 void eloadInputEnable(bool bEnable);
+
+/**
+ * @brief Check if the load is enabled
+ * @return true if the input is enabed. Else false.
+ */
 bool eloadInputEnabled();
 
-
+/**
+ * @brief Test the instrument
+ *
+ * At this moment, while the device is under development, I put checks here related to what I'm developing.
+ * @todo for a proper release, perform self test.
+ */
 void eloadTest();
-void eloadRawSetDac(uint32_t uModule, uint32_t value);
-uint32_t eloadDevelopGetAdc(uint32_t uModule);
-uint32_t eloadDevelopGetAdcRaw();
 
+/**
+ * @brief Low level function to directly set a DAC's raw value.
+ *
+ * This low level function directly sets a DAC to the requested value.
+ * The instrument does not store this state. It's intended for testing, playing around, calibrations purposes and learning.
+ * Use with caution.
+ * @param uModule the DAC to set
+ * @param value the value to set
+ */
+void eloadRawSetDac(uint32_t uModule, uint32_t value);
+
+/**
+ * @brief Low level function to directly get an ADC's value
+ *
+ * This low level function directly gets a DAC's processed value.
+ * It's intended for testing, playing around, calibrations purposes and learning..
+ * @param uModule the ADC to get the processed value from
+ */
+uint32_t eloadDevelopGetAdc(uint32_t uModule);
+
+/**
+ * @brief Low level function to directly get an ADC's raw value
+ *
+ * This low level function directly gets a DAC's value.
+ * It's intended for testing, playing around, calibrations purposes and learning..
+ * @param uModule the ADC to get the value from
+ */
+uint32_t eloadDevelopGetAdcRaw(uint32_t uModule);
 
 // calibration
+
+/**
+ * @brief Start a calibration session
+ *
+ * This function sets the instrument in calibration active mode.
+ * It reads refreshes) the stored values from persistent storage.
+ */
 void eloadCalibrationStart();
+
+/**
+ * @brief Persists any changes made during calibration and deactivate calibration session
+ *
+ * If the instument is in an active calibration session, write all in-memory values to persistent storage.
+ * Then deactivate calibration mode.
+ * This is the only function in the API that overwrites persistent stored calibration data.
+ * @return true if the instrument is in active calibration. Else false.
+ */
 bool eloadCalibrationEnd();
+
+/**
+ * @brief Reinitialise the in-memory calibation with default values.
+ *
+ * If the instument is in an active calibration session, write the original values (firmware defaults) to all in-memory values.
+ * The persistent calibration data is not touched.
+ * This can be used if a calibration exercise went wrong. It gives a fresh starting point.
+ * @return true if the instrument is in active calibration. Else false.
+ */
 bool eloadCalibrationErase();
+
 /**
  * @brief Set the resistance of the NTC where the overheat protection should kick in
  *
@@ -182,7 +264,18 @@ bool eloadCalibrationErase();
  * @return true if in calibration mode. false if executed while the instrument was not in calibration mode.
  */
 bool eloadCalibrateSetTemperatureMaxResistance(uint32_t value);
+
+/**
+ * @brief Get the resistance that was set for the NTC where the overheat protection should kick in
+ *
+ * This function returns the set resistance of the NTC thermistor at the point where the electronic load is overheated.
+ * The value currently in RAM is returned. Not the one stored in persistent memory.\n
+ * When the device is in normal mode, these values are the same.
+ * When it's in calibration mode, it's either the stored value or the change made in the current calibration setting.
+ * @return the NTC resistance currently stored in calibration.
+ */
 uint32_t eloadCalibrateGetTemperatureMaxResistance();
+
 bool eloadCalibrateSetSenseVoltReadMultiplier(float value);
 float eloadCalibrateGetSenseVoltReadMultiplier();
 bool eloadCalibrateSetSenseVoltReadOffset(float value);
