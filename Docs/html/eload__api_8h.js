@@ -1,0 +1,37 @@
+var eload__api_8h =
+[
+    [ "eload_mode", "eload__api_8h.html#a8bde4a1bf0123495a6541a7457fda6a7", null ],
+    [ "eload_mode", "eload__api_8h.html#a074ed0be855f4f2b7c04133d9fb755cc", [
+      [ "ELOAD_MODE_CURRENT", "eload__api_8h.html#a074ed0be855f4f2b7c04133d9fb755cca418d7207e6e708170e213af3eaef9117", null ],
+      [ "ELOAD_MODE_VOLTAGE", "eload__api_8h.html#a074ed0be855f4f2b7c04133d9fb755ccaff35e86789c99e9411bc3577fb7cd4ab", null ],
+      [ "ELOAD_MODE_POWER", "eload__api_8h.html#a074ed0be855f4f2b7c04133d9fb755cca0e39598f2db54f7a2d6c7916c3477d1b", null ],
+      [ "ELOAD_MODE_RESISTANCE", "eload__api_8h.html#a074ed0be855f4f2b7c04133d9fb755ccabf0c0943a0769899726a4dd0d7b77401", null ],
+      [ "ELOAD_MODE_COUNT", "eload__api_8h.html#a074ed0be855f4f2b7c04133d9fb755ccaaa11890f1ca9a6f5eedb1a0af1b060af", null ]
+    ] ],
+    [ "eloadCalibrateGetTemperatureMaxResistance", "eload__api_8h.html#ab6c013324ea137cbf3e1af2b652ca135", null ],
+    [ "eloadCalibrateSetTemperatureMaxResistance", "eload__api_8h.html#a8dd5e7092d5f964074a70af23e2d4a82", null ],
+    [ "eloadCalibrationEnd", "eload__api_8h.html#a91b4689c5473048aa69384f19b8514ff", null ],
+    [ "eloadCalibrationErase", "eload__api_8h.html#a07de5f8569223ce03dba852b918c635e", null ],
+    [ "eloadCalibrationStart", "eload__api_8h.html#a8424d974a8ceb2ad4c852a5d823b49f5", null ],
+    [ "eloadControlLoop", "eload__api_8h.html#ae09e6566af2e3168b76e74175270038a", null ],
+    [ "eloadControlLoopGetSchedule", "eload__api_8h.html#a3814702db30aa41c6d81aeefbdd568e3", null ],
+    [ "eloadDevelopGetAdc", "eload__api_8h.html#aaeba79b22a8daa1c6a5f3b7d2759ca02", null ],
+    [ "eloadDevelopGetAdcRaw", "eload__api_8h.html#aa81b7acc2d380bc318bd4056593807df", null ],
+    [ "eloadGetChar", "eload__api_8h.html#a8b1b4a8731e51363221d1af95361d082", null ],
+    [ "eloadGetCurrentDC", "eload__api_8h.html#ab9df147403e140c93322a6e4c218beb7", null ],
+    [ "eloadGetCurrentRangeMax", "eload__api_8h.html#aa80f7a14f421957cd068fa6c2ac597eb", null ],
+    [ "eloadGetMode", "eload__api_8h.html#afbfda7e1333f7f739de37b65ddeacd62", null ],
+    [ "eloadGetOutputRangeMax", "eload__api_8h.html#a3986c23496a155066c39126ed33698f5", null ],
+    [ "eloadGetSetpoint", "eload__api_8h.html#ac9fdd98769748ead17290b46235d8648", null ],
+    [ "eloadGetVoltageDC", "eload__api_8h.html#a21df5fef0cad4f0f3e84769b8ffb888a", null ],
+    [ "eloadGetVoltageRangeMax", "eload__api_8h.html#a7285ec25d54a11b01074665d8dd0dec4", null ],
+    [ "eloadInit", "eload__api_8h.html#a838211560c72bd23c666793ae4ea7063", null ],
+    [ "eloadInputEnable", "eload__api_8h.html#a11a5c473a512b8c574f06e5a2df22d12", null ],
+    [ "eloadInputEnabled", "eload__api_8h.html#a97e38499c445613097bd4b9973f1375a", null ],
+    [ "eloadRawSetDac", "eload__api_8h.html#aa30e8c176fc01c77526a899470d1e6dc", null ],
+    [ "eloadReset", "eload__api_8h.html#a03b8ef08bc8721f9b42ea5a2313226d6", null ],
+    [ "eloadSetConstantCurrent", "eload__api_8h.html#ad7a5c572616379d882bcbde21a11c55d", null ],
+    [ "eloadSetConstantVoltage", "eload__api_8h.html#aa3cb57cf2637e9c80f159001a253b9b9", null ],
+    [ "eloadSetMode", "eload__api_8h.html#afc96a6c6d4e53868b0c0131cf4cf39e7", null ],
+    [ "eloadTest", "eload__api_8h.html#a8d827249638792f722c99850fb0e9bcf", null ]
+];
