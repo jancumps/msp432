@@ -55,15 +55,19 @@ void *threadUART(void *arg0)
     uartParams.readDataMode = UART_DATA_BINARY;
     uartParams.readReturnMode = UART_RETURN_FULL;
     uartParams.readEcho = UART_ECHO_OFF;
-    uartParams.baudRate = 9600;
+//    uartParams.baudRate = 9600;
     uartParams.readMode = UART_MODE_CALLBACK; // the uart uses a read interrupt
-    uartParams.readCallback = &UART00_IRQHandler; // function called when the uart interrupt fires
+//    uartParams.readCallback = &UART00_IRQHandler; // function called when the uart interrupt fires
 
 #ifdef SCPI_UART_0
+    uartParams.baudRate = 9600;
+    uartParams.readCallback = &UART00_IRQHandler; // function called when the uart interrupt fires
     uart = UART_open(Board_UART0, &uartParams);
 #else
-#ifdef SCPI_UART_1
-    uart = UART_open(Board_UART1, &uartParams);
+#ifdef SCPI_UART_6
+    uartParams.baudRate = 115200;
+    uartParams.readCallback = &UART00_IRQHandler; // function called when the uart interrupt fires
+    uart = UART_open(Board_UART6, &uartParams);
 #else
 #error "define a valid UART"
 #endif

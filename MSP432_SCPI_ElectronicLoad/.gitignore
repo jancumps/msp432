@@ -15,8 +15,8 @@ MSP432_SCPI_ElectronicLoad*.zip
 *.ccxml
 *.json
 MSP_EXP432E401Y_TIRTOS.cmd
-MSP_EXP432E401Y.c
-MSP_EXP432E401Y.h
-Board.h
+#MSP_EXP432E401Y.c
+#MSP_EXP432E401Y.h
+#Board.h
 /html/
 /latex/

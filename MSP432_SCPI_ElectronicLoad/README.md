@@ -12,6 +12,7 @@ Else, you can fork the project, then create pull requests from the fork.
 - break fix: create a pull request to master 
 
 Current work: 
+Allow SCPI reads from two sources (two UARTS / UART + socket)
 
 Done:
 branch development_adc_rework
